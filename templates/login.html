@@ -8,40 +8,19 @@
 
 <body>
 	<div class="container">
-		<h1 class="display-3 centred">Welcome!</h1>
+		<h1 class="thin centred">Log in</h1>
 	</div>
+	
 	<div class="container">
-		<div class="row">
-			<div class="col">
-				<div class="card">
-					<h5 class="card-header">Login</h5>
-					<div class="card-body">
-						<form>
-							<label for="email">Email</label><br>
-							<input type="email" class="form-control" name="email">
-							<label for="password">Password</label><br>
-							<input type="password" class="form-control" name="password">
-						</form>
-					</div>
-				</div>
-			</div>
-
-			<div class="col">
-				<div class="card">
-					<h5 class="card-header">Create account</h5>
-					<div class="card-body">
-						<form>
-							<label for="email">Email</label><br>
-							<input type="email" class="form-control" name="email">
-							<label for="password">Password</label><br>
-							<input type="password" class="form-control" name="password">
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-		<hr />
+		<form>
+				<label for="email">Email</label><br>
+				<input type="email" name="email" placeholder="you@example.com">
+				<br>
+				<label for="password">Password</label><br>
+				<input type="password" name="password" placeholder="password">
+			</form>
 	</div>
-</body>
 
+	{% include 'footer.html' %}
+</body>
 </html>
