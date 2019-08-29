@@ -10,6 +10,9 @@ body {
 	background-color: #444a5c;
 	padding:10px;
 }
+.container.light {
+	background-color: #4d5366;
+}
 .column {
 	flex-grow: 1;
 	flex-basis: 0;
@@ -17,6 +20,18 @@ body {
 }
 .large {
 	font-size: 1.2em;
+}
+.centred {
+	text-align: center;
+}
+.thin {
+	font-weight: 300;
+}
+.subtle {
+	color: #dddddd;
+}
+.row {
+	display: flex;
 }
 
 a.button {
@@ -62,22 +77,9 @@ a:visited {
 
 h1 {
 	font-size: 4em;
+	margin-top: 10px !important;
 }
 h1, h2, h3, h4, h5, h6 {
 	font-weight: 400;
 	margin: 0;
-}
-
-.centred {
-	text-align: center;
-}
-.thin {
-	font-weight: 300;
-}
-.subtle {
-	color: #dddddd;
-}
-
-.row {
-	display: flex;
 }
