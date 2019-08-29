@@ -6,11 +6,11 @@
 	{% include 'imports.html' %}
 </head>
 <body>
-	<div class="container">
+	<div class="container light">
 		<h1 class='thin centred'>FediBooks</h1>
 		<p class="centred large">Easily create your own Mastodon/Pleroma ebooks bot from your browser. No coding required.</p>
-		<p class="centred">
-			<a class="button btn-primary btn-large" href="/login" role="button"><i class="fas fa-play"></i> Get started</a>
+		<p class="centred" style="margin: 50px 0;">
+			<a class="button btn-primary btn-large" href="/welcome" role="button"><i class="fas fa-play"></i> Get started</a>
 			<br>
 			<a class="button btn-secondary" href="https://github.com/Lynnesbian/FediBooks" role="button"><i class="fas fa-code"></i> Source code</a>
 		</p>
@@ -40,11 +40,6 @@
 		<a class="button btn-primary" href="https://paypal.me/Lynnesbian" role="button"><i class="fab fa-paypal"></i> PayPal</a>
 		<a class="button btn-primary" href="https://ko-fi.com/Lynnesbian" role="button"><i class="fas fa-coffee"></i> Ko-fi</a>
 	</div>
-
-	<footer>
-		<div class='subtle'>
-			<p>Website design and FediBooks program by <a href='https://fedi.lynnesbian.space/@LynnearSoftware'>Lynne</a>. This site uses <a href="https://fontawesome.com">Font Awesome</a>. Source code available <a href="https://github.com/Lynnesbian/Fedibooks">here</a>.</p>
-		</div>
-	</footer>
+	{% include 'footer.html' %}
 </body>
 </html>
