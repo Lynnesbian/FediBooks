@@ -1,10 +1,15 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, session
 
 app = Flask(__name__)
+app.secret_key = "debug key"
 
 @app.route("/")
 def hello():
-	return render_template("front_page.html")
+	session['userid'] = 1
+	if 'userid' in session:
+		return render_template("home.html")
+	else:
+		return render_template("front_page.html")
 
 @app.route("/welcome")
 def welcome():

@@ -12,7 +12,7 @@ body {
 	background-color: #444a5c;
 	padding:10px;
 }
-.container.light {
+.light {
 	background-color: #4d5366;
 }
 .column {
@@ -40,6 +40,27 @@ body {
 }
 .full-width {
 	width: 100%;
+}
+
+.bot-icon {
+	width: 100px;
+	height: 100px;
+	background: center/contain url("https://lynnesbian.space/img/bune.png");
+}
+.bot-icon, .bot-text, .bot-actions {
+	display: inline-block;
+	align-self: center;
+}
+.bot-text {
+	flex-grow: 1;
+	margin: 0 10px;
+}
+.bot-name {
+	font-size: 1.8em;
+	margin: 10px 0;
+}
+.bot-actions {
+	margin-right: 10px;
 }
 
 .button {
@@ -78,6 +99,13 @@ input.button {
 
 .btn-large {
 	font-size: 1.6em;
+}
+
+.btn-dangerous {
+	background-color: #e22;
+}
+.btn-dangerous:hover {
+	background-color: #c22;
 }
 
 a {
