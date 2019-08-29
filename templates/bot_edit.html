@@ -27,8 +27,8 @@
 				<input type="text" placeholder="None">
 			</div>
 			<div class="row">
-				<label for="cw-learning" class="large">Learn from posts with content warnings (subjects)</label>
-				<input type="checkbox">
+				<label for="length" class="large">Maximum post length (characters)</label>
+				<input type="number" min="100" max="5000" value="500">
 			</div>
 			<div class="row">
 				<label for="fake-mentions" class="large">Insert fake mentions</label>
@@ -39,8 +39,16 @@
 				</select>
 			</div>
 			<div class="row">
-				<label for="length" class="large">Maximum post length (characters)</label>
-				<input type="number" min="100" max="5000" value="500">
+				<label for="privacy">Post privacy</label>
+				<select>
+					<option value="public">Public</option>
+					<option value="unlisted">Unlisted</option>
+					<option value="followers">Followers only</option>
+				</select>
+			</div>
+			<div class="row">
+				<label for="cw-learning" class="large">Learn from posts with content warnings (subjects)</label>
+				<input type="checkbox">
 			</div>
 		</form>
 	</div>
