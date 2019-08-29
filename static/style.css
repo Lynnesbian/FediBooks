@@ -3,6 +3,8 @@ body {
 	margin: 2.5%;
 	background-color: #282c37;
 	color: white;
+}
+* {
 	box-sizing: border-box;
 }
 
@@ -20,6 +22,9 @@ body {
 }
 .large {
 	font-size: 1.2em;
+}
+.small {
+	font-size: 0.8em;
 }
 .centred {
 	text-align: center;
@@ -52,6 +57,7 @@ body {
 }
 input.button {
 	font-size: 1em;
+	cursor:	pointer;
 }
 
 .btn-primary {
@@ -100,4 +106,15 @@ label.important {
 	margin: 10px 0;
 	font-weight: 300;
 	display:block;
+}
+input {
+	width: 100%;
+	font-size: 1.2em;
+	line-height:1.4em;
+	border: 3px grey solid;
+	border-radius: none;
+	padding: 3px;
+}
+input:focus {
+	border: 3px mediumpurple solid;
 }

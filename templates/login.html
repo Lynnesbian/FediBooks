@@ -8,19 +8,29 @@
 
 <body>
 	<div class="container">
-		<h1 class="thin centred">Log in</h1>
+		<h1 class="thin centred">{% if signup %}Sign up{% else %}Log in{% endif %}</h1>
 	</div>
 	
 	<div class="container centred">
-		<form action="/do/login" method="POST">
+		<form action="/do/{% if signup %}signup{% else %}login{% endif %}" method="POST">
 			<p>
 				<label for="email" class="important">Email</label>
 				<input type="email" name="email" placeholder="you@example.com">
+				{% if signup %}
+				<p class="small">
+					FediBooks requires your email address in order to send you alerts when your bot stops working, and for password resets.
+				</p>
+				{% endif %}
 				<br>
 				<label for="password" class="important">Password</label>
-				<input type="password" name="password" placeholder="password">
+				<input type="password" name="password">
+				{% if signup %}
+				<p class="small">
+					Passwords must be at least eight characters long.
+				</p>
+				{% endif %}
 			</p>
-			<input type="submit" value="Log in" class="button btn-primary full-width">
+			<input type="submit" value="{% if signup %}Create my account{% else %}Log in{% endif %}" class="button btn-primary full-width">
 		</form>
 	</div>
 

@@ -12,4 +12,8 @@ def welcome():
 
 @app.route("/login")
 def show_login_page():
-	return render_template("login.html")
+	return render_template("login.html", signup = False)
+
+@app.route("/signup")
+def show_signup_page():
+	return render_template("login.html", signup = True)
