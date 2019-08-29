@@ -135,14 +135,24 @@ label.important {
 	font-weight: 300;
 	display:block;
 }
-input {
-	width: 100%;
+input, select {
 	font-size: 1.2em;
 	line-height:1.4em;
 	border: 3px grey solid;
 	border-radius: none;
 	padding: 3px;
 }
-input:focus {
+input:focus, select:focus {
 	border: 3px mediumpurple solid;
+}
+
+label, input {
+	flex-basis: 0;
+}
+label {
+	flex-grow: 1;
+}
+
+form .row {
+	margin: 10px 0;
 }

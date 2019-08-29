@@ -22,3 +22,7 @@ def show_login_page():
 @app.route("/signup")
 def show_signup_page():
 	return render_template("login.html", signup = True)
+
+@app.route("/bot/edit/<id>")
+def bot_edit(id):
+	return render_template("bot_edit.html")

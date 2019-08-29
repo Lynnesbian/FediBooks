@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FediBooks</title>
+	{% include 'imports.html' %}
+</head>
+
+<body>
+	<div class="container">
+		<h1 class="thin centred">Edit bot</h1>
+		<p class="large centred">@botname@example.com</p>
+	</div>
+	
+	<div class="container centred">
+		<form action="/do/bot/edit" method="post" class="full-width">
+			<div class="row">
+				<label for="username" class="large">Username</label>
+				<input type="text" name="username" value="Bot Name"><br>
+			</div>
+			<div class="row">
+				<label for="freq" class="large">Post frequency (minutes)</label>
+				<input type="number" min="5" max="240" step="5" value="30"> 
+			</div>
+			<div class="row">
+				<label for="cw" class="large">Content warning (subject)</label>
+				<input type="text" placeholder="None">
+			</div>
+			<div class="row">
+				<label for="cw-learning" class="large">Learn from posts with content warnings (subjects)</label>
+				<input type="checkbox">
+			</div>
+			<div class="row">
+				<label for="fake-mentions" class="large">Insert fake mentions</label>
+				<select>
+					<option value="full">At any time</option>
+					<option value="start" default>Only at the start of posts</option>
+					<option value="never">Never</option>
+				</select>
+			</div>
+			<div class="row">
+				<label for="length" class="large">Maximum post length (characters)</label>
+				<input type="number" min="100" max="5000" value="500">
+			</div>
+		</form>
+	</div>
+
+	{% include 'footer.html' %}
+</body>
+</html>

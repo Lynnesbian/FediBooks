@@ -14,7 +14,7 @@
 	<div class="container centred">
 		<form action="/do/{% if signup %}signup{% else %}login{% endif %}" method="POST">
 			<p>
-				<label for="email" class="important">Email</label>
+				<label for="email" class="important full-width">Email</label>
 				<input type="email" name="email" placeholder="you@example.com">
 				{% if signup %}
 				<p class="small">
@@ -22,7 +22,7 @@
 				</p>
 				{% endif %}
 				<br>
-				<label for="password" class="important">Password</label>
+				<label for="password" class="important full-width">Password</label>
 				<input type="password" name="password">
 				{% if signup %}
 				<p class="small">
