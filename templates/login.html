@@ -11,14 +11,17 @@
 		<h1 class="thin centred">Log in</h1>
 	</div>
 	
-	<div class="container">
-		<form>
-				<label for="email">Email</label><br>
+	<div class="container centred">
+		<form action="/do/login" method="POST">
+			<p>
+				<label for="email" class="important">Email</label>
 				<input type="email" name="email" placeholder="you@example.com">
 				<br>
-				<label for="password">Password</label><br>
+				<label for="password" class="important">Password</label>
 				<input type="password" name="password" placeholder="password">
-			</form>
+			</p>
+			<input type="submit" value="Log in" class="button btn-primary full-width">
+		</form>
 	</div>
 
 	{% include 'footer.html' %}

@@ -33,8 +33,11 @@ body {
 .row {
 	display: flex;
 }
+.full-width {
+	width: 100%;
+}
 
-a.button {
+.button {
 	color: white;
 	line-height:1.2em;
 	padding:10px;
@@ -42,28 +45,32 @@ a.button {
 	display: inline-block;
 	margin: 5px 0;
 	transition: 0.2s linear;
+	border:none;
 }
-a.button:visited {
+.button:visited {
 	color:white;
 }
+input.button {
+	font-size: 1em;
+}
 
-a.btn-primary {
+.btn-primary {
 	background-color: #9370db;
 	border-color: #9370db;
 }
-a.btn-primary:hover {
+.btn-primary:hover {
 	background-color: #7859b6;
 	border-color: #7859b6;
 }
 
-a.btn-secondary {
+.btn-secondary {
 	background-color: #999;
 }
-a.btn-secondary:hover {
+.btn-secondary:hover {
 	background-color: #777;
 }
 
-a.btn-large {
+.btn-large {
 	font-size: 1.6em;
 }
 
@@ -82,4 +89,15 @@ h1 {
 h1, h2, h3, h4, h5, h6 {
 	font-weight: 400;
 	margin: 0;
+}
+
+form {
+	text-align: justify;
+	display:inline-block;
+}
+label.important {
+	font-size: 1.4em;
+	margin: 10px 0;
+	font-weight: 300;
+	display:block;
 }
