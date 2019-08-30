@@ -76,7 +76,7 @@ body {
 .button:visited {
 	color:white;
 }
-input.button {
+input.button, button.button {
 	font-size: 1em;
 	cursor:	pointer;
 }
