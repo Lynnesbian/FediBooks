@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FediBooks</title>
+	{% include 'imports.html' %}
+</head>
+
+<body>
+	<div class="container">
+		<h1 class="thin centred">Account settings</h1>
+	</div>
+	
+	<div class="container">
+		<form action="/do/bot/edit" method="post" class="full-width">
+			<div class="container light">
+				<h2 class="thin centred">Login settings</h2>
+				<p class="centred">Update your email and password here.</p>
+			</div>
+
+			<div class="row">
+				<label for="email" class="large">Email address</label>
+				<input type="email" name="email" value="me@my.site">
+			</div>
+			<div class="row">
+				<label for="password" class="large">Password</label>
+				<input type="password" name="password" placeholder="Unchanged">
+			</div>
+
+			<div class="container light">
+				<h2 class="thin centred">Contact settings</h2>
+				<p class="centred">When should FediBooks send you email?</p>
+			</div>
+
+			<div class="row">
+				<label for="download-error" class="large">When my bot(s) can't get new posts</label>
+				<select name="download-error">
+					<option value="once">Once</option>
+					<option value="every-time">Every time</option>
+					<option value="never">Never</option>
+				</select>
+			</div>
+			<div class="row">
+				<label for="post-error" class="large">When my bot(s) can't submit new posts</label>
+				<select name="post-error">
+					<option value="once">Once</option>
+					<option value="every-time">Every time</option>
+					<option value="never">Never</option>
+				</select>
+			</div>
+			<div class="row">
+				<label for="generation-error" class="large">When my bot(s) encounter an error generating new posts</label>
+				<select name="generation-error">
+					<option value="once">Once</option>
+					<option value="every-time">Every time</option>
+					<option value="never">Never</option>
+				</select>
+			</div>
+			<div class="row">
+				<label for="reply-error" class="large">When my bot(s) can't send replies</label>
+				<select name="reply-error">
+					<option value="once">Once</option>
+					<option value="every-time">Every time</option>
+					<option value="never">Never</option>
+				</select>
+			</div>
+
+			<div class="container centred">
+					<button class="button btn-primary"><i class="fas fa-save"></i> Save</button>
+					<a href="/" class="button btn-secondary"><i class="fas fa-times"></i> Cancel</a>
+					<a href="#" class="button btn-secondary"><i class="fas fa-question"></i> Help</a>
+				</div>
+		</form>
+	</div>
+
+	{% include 'footer.html' %}
+</body>
+</html>

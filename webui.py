@@ -23,6 +23,10 @@ def show_login_page():
 def show_signup_page():
 	return render_template("login.html", signup = True)
 
+@app.route("/settings")
+def settings():
+	return render_template("settings.html")
+
 @app.route("/bot/edit/<id>")
 def bot_edit(id):
 	return render_template("bot_edit.html")
