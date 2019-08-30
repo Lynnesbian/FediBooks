@@ -31,13 +31,20 @@
 				<input type="number" min="100" max="5000" value="500">
 			</div>
 			<div class="row">
-				<label for="fake-mentions" class="large">Insert fake mentions</label>
-				<select>
+				<label for="fake-mentions" class="large">Fake mentions</label>
+				<select name="fake-mentions">
 					<option value="full">At any time</option>
 					<option value="start" default>Only at the start of posts</option>
 					<option value="never">Never</option>
 				</select>
 			</div>
+			<div class="row">
+					<label for="fake-mention-style" class="large">Fake mention style</label>
+					<select name="fake-mention-style">
+						<option value="full">@user@instan.ce</option>
+						<option value="brief" default>@user</option>
+					</select>
+				</div>
 			<div class="row">
 				<label for="privacy" class="large">Post privacy</label>
 				<select>
