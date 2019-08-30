@@ -45,7 +45,7 @@ body {
 .bot-icon {
 	width: 100px;
 	height: 100px;
-	background: center/contain url("https://lynnesbian.space/img/bune.png");
+	background: center/contain url("https://cloud.lynnesbian.space/s/JZCPTs3DzMLAspC/preview");
 }
 .bot-icon, .bot-text, .bot-actions {
 	display: inline-block;
@@ -53,7 +53,7 @@ body {
 }
 .bot-text {
 	flex-grow: 1;
-	margin: 0 10px;
+	margin-bottom: 10px;
 }
 .bot-name {
 	font-size: 1.8em;
