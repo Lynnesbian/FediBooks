@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FediBooks</title>
+	{% include 'imports.html' %}
+</head>
+<body>
+	<div class="container light">
+		<h1 class='thin centred'>About FediBooks</h1>
+		<p class="centred">
+			<a class="button btn-primary" href="/" role="button"><i class="fas fa-home"></i> Home</a>
+		</p>
+	</div>
+
+	<div class="container">
+		<h2 class="thin">What's an ebooks bot?</h2>
+		<p>An ebooks bot, named after the Twitter account horse_ebooks, is a bot that learns from posts made by users and generates its own posts, similarly to how your phone keyboard predicts what you're about to type next. The results are always messy, frequently nonsensical, and occasionally hilarious.</p>
+
+		<h2 class="thin">What happened to the old FediBooks?</h2>
+		<p>It was too ambitious a project, and I got burned out on it. Progress was slow and the code was messy. I had a ridiculous number of features planned for it, such as complex decision trees, allowing for absurdly specific rules like "only reply to users with a T in their username if it's between 4am and 5pm on a Wednesday". I had too much planned, and additionally, I don't particularly like developing desktop apos.</p>
+		<p>The source code is still available <a href="https://github.com/Lynnesbian/OldFediBooks">here</a>, although it's of little use to anyone.</p>
+
+		<h2 class="thin">Why create FediBooks?</h2>
+		<p>I've been working on ebooks bots for a long time. My first project, <a href="https://github.com/Lynnesbian/mstdn-ebooks/">mstdn-ebooks</a>, dates back to October 2018. It's a much less ambitious project than FediBooks, but maintaining and developing it has still been a formidable undertaking. It's changed a lot since the initial version, and has worked very well for a long time.</p>
+		<p>Using mstdn-ebooks is nowhere near as easy as using FediBooks. There's <a href="https://cloud.lynnesbian.space/s/jozbRi69t4TpD95">a long guide</a> you'll need to follow, and you'll have to install some programs like Python and possibly Git to get working. It runs on your own computer, meaning that if you put it into sleep mode, it stops working. Updating it to the latest version is also your responsibility, and the error messages it gives aren't exactly user friendly.</p>
+		<p>To help with this issue, I decided to create a Patreon where I offered a $2.50 per month tier to host up to three bots for you. I would take care of configuration, maintenance, updating, et cetera. This worked pretty well up until recently.</p>
+		<p>A new change in Mastodon and Pleroma adds something called <em>authenticated fetches</em>. Reffered to as "authorised mode" by Mastodon, this new feature prevents unauthorised instances and programs from accessing the API. In other words, if instance A blocks instance B, then instance B won't be able to see instance A's public posts anymore. However, this also means mstdn-ebooks can't see your posts. This can be fixed, however, by requesting permission from instance B. So what's the problem?</p>
+		<p>I would need to ask every single person I run a bot for to click a link I send to them, and then send me back the authentication code they received. This is messy and annoying, and greatly tedious. Furthermore, mstdn-ebooks' code base is starting to show its age (I used to be even worse at programming, believe it or not), and I thought this gave me a good motivation to create a new project.</p>
+		<p>When FediBooks needs permission from instance B, all you need to do is click "authorise". No copy and pasting codes and sending them in a Patreon DM. This is much cleaner and easier for the end user, which is what this is all about!</p>
+		<p>FediBooks is one of the biggest projects I've ever taken on, and it's been wonderful working on it. I hope you enjoy it!</p>
+
+		<h2 class="thin">You used to charge for hosting ebooks bots for people. Why make it free? Aren't you automating yourself out of a job?</h2>
+		<p>Yup! I'm making this free because I believe all software should be free, not just in cost, but in distributability, accessibility, and so on. mstdn-ebooks is also free software. I used to provide free hosting for mstdn-ebooks bots, but stopped when it became too much for me to handle. In the end, I was running 108 ebooks bots! The worst moment was when I accidentally wiped all the configuration files for them and had to log in to all 108 accounts and re-authorise them all...</p>
+		<p>FediBooks should (fingers crossed!) require much less maintenance on my part. All I have to do is make sure the server is running, which it is at all times, and make the occasional change or update to reflect new needs. The real concern is my server, not me - let's hope it can handle all these bots!</p>
+		<p>FediBooks doesn't display ads. It doesn't have any subscription models, donation bonuses, or cryptocurrency mining JavaScript (as useless as that is). What it does have is a donation link at the bottom of the main page. If you have some money to spare and you want to donate, feel free to do so. Paying for the server will be a little tricky since I've just cut off my main source of income, but I should manage. Hopefully.</p>
+
+		<h2 class="thin">I'm concerned about my privacy. If FediBooks learns from my posts, doesn't that mean you have access to all my posts?</h2>
+		<p>By necessity, yes. FediBooks will have access to all of your <em>public</em> posts. Anything you've set to followers only will not be seen by FediBooks. However, if you delete a post, FediBooks will still have it stored in its database. This is because checking if every single post has been deleted is impractically slow, and your instance would soon tell FediBooks to stop making so many API requests.</p>
+		<p>If you create two bots that learn from account X, and then delete one of them, account X's posts will still stay in the database. If you delete both bots, and no other bots are learning from account X, then account X's posts will be deleted from the database permanently. If you then add a new bot that learns from account X, FediBooks will need to download all of your posts again, which can take quite a while.</p>
+	</div>
+	{% include 'footer.html' %}
+</body>
+</html>
