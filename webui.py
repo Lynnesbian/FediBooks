@@ -30,3 +30,8 @@ def settings():
 @app.route("/bot/edit/<id>")
 def bot_edit(id):
 	return render_template("bot_edit.html")
+
+@app.route("/bot/create/")
+def bot_create():
+	session['step'] = 1
+	return render_template("bot_create.html")

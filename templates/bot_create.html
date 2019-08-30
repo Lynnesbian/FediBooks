@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FediBooks</title>
+	{% include 'imports.html' %}
+</head>
+
+<body>
+	<div class="container">
+		<h1 class="thin centred">Create bot</h1>
+		<p class="large centred">Step {{ session['step'] }}</p>
+	</div>
+	
+	<div class="container centred">
+		<form action="/bot/create" method="POST">
+			<label for="instance" class="important">What instance will your bot's account be on?</label>
+			<input type="text" name="instance" class="full-width" placeholder="botsin.space">
+			<br>
+			<div class="container centred">
+				<button class="button btn-primary"><i class="fas fa-play"></i> Next</button>
+			</div>
+		</form>
+	</div>
+
+	{% include 'footer.html' %}
+</body>
+</html>
