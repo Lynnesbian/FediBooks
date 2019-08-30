@@ -33,7 +33,7 @@ def bot_edit(id):
 
 @app.route("/bot/create/")
 def bot_create():
-	session['step'] = 2
+	session['step'] = 3
 	session['instance'] = "botsin.space"
 	session['instance_type'] = "Mastodon"
 	return render_template("bot_create.html")
