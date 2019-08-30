@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FediBooks</title>
+	{% include 'imports.html' %}
+</head>
+
+<body>
+	<div class="container centred">
+		<h1 class="thin centred">Delete bot</h1>
+		<div class="bot-icon"></div>
+	</div>
+	
+	<div class="container centred">
+		<form>
+			<div class="container centred">
+				<p>Are you sure you want to <strong>permanently</strong> delete bot name?</p>
+				<p>The account on instan.ce will remain open, but your bot will stop posting from it.</p>
+				<button class="button btn-secondary"><i class="fas fa-times"></i> Cancel</button>
+				<button class="button btn-dangerous"><i class="fas fa-trash"></i> Delete bot</button>
+			</div>
+		</form>
+	</div>
+
+	{% include 'footer.html' %}
+</body>
+</html>
