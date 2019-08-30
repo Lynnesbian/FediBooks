@@ -6,6 +6,7 @@ app.secret_key = "debug key"
 @app.route("/")
 def hello():
 	session['userid'] = 1
+	# session.clear()
 	if 'userid' in session:
 		return render_template("home.html")
 	else:
