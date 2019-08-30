@@ -9,17 +9,25 @@
 <body>
 	<div class="container">
 		<h1 class="thin centred">Create bot</h1>
-		<p class="large centred">Step {{ session['step'] }}</p>
+		<p class="large thin centred">Step {{ session['step'] }}</p>
 	</div>
 	
 	<div class="container centred">
 		<form action="/bot/create" method="POST">
+			{% if session['step'] == 1 %}
 			<label for="instance" class="important">What instance will your bot's account be on?</label>
 			<input type="text" name="instance" class="full-width" placeholder="botsin.space">
 			<br>
+
+			{% elif session['step'] == 2 %}
+			<h2 class="thin centred">Detected instance type: {{ session['instance_type'] }}</h2>
+			<p>{{ session['instance'] }} is a {{ session['instance_type'] }} instance. {% if session['instance_type'] == Pleroma %}Unfortunately, bots on Pleroma instances cannot listen for replies yet. This means that your bot will have its reply functionality disabled.{% else %}{{ session['instance_type'] }} instances are fully supported, and your bot will have all functionality available.{% endif %}</p>
+
+			{% endif %}
+
 			<div class="container centred">
-				<button class="button btn-primary"><i class="fas fa-play"></i> Next</button>
-			</div>
+					<button class="button btn-primary"><i class="fas fa-arrow-right"></i> Next</button>
+				</div>
 		</form>
 	</div>
 
