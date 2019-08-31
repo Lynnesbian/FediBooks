@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS `credentials` (
   `secret` VARCHAR(128) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS `fedi_account` (
-  `handle` VARCHAR(128) NOT NULL,
-  `outbox` VARCHAR(256) PRIMARY KEY,
+  `handle` VARCHAR(128) NOT NULL PRIMARY KEY,
+  `outbox` VARCHAR(256),
   FOREIGN KEY (`credentials_id`) REFERENCES credentials(id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS `posts` (
