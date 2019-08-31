@@ -42,24 +42,24 @@ body {
 	width: 100%;
 }
 
-.bot-icon {
+.panel-icon {
 	width: 100px;
 	height: 100px;
 	background: center/contain url("https://cloud.lynnesbian.space/s/JZCPTs3DzMLAspC/preview");
 }
-.bot-icon, .bot-text, .bot-actions {
+.panel-icon, .panel-text, .panel-actions {
 	display: inline-block;
 	align-self: center;
 }
-.bot-text {
+.panel-text {
 	flex-grow: 1;
 	margin: 0 0 10px 10px;
 }
-.bot-name {
+.panel-name {
 	font-size: 1.8em;
 	margin: 10px 0;
 }
-.bot-actions {
+.panel-actions {
 	margin-right: 10px;
 }
 
