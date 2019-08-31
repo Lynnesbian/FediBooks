@@ -1,7 +1,10 @@
 from flask import Flask, render_template, session
+import json
+
+cfg = json.load(open("config.json"))
 
 app = Flask(__name__)
-app.secret_key = "debug key"
+app.secret_key = cfg['secret_key']
 
 @app.route("/")
 def hello():
