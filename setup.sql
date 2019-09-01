@@ -1,11 +1,11 @@
 USE `fedibooks`;
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` BINARY(64) PRIMARY KEY,
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
   `email` VARCHAR(128) UNIQUE NOT NULL,
   `password` BINARY(60) NOT NULL
 ) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `contact_settings` (
-  `user_id` BINARY(64) NOT NULL,
+  `user_id` INT NOT NULL,
   `fetch` ENUM('always', 'once', 'never') DEFAULT 'once',
   `submit` ENUM('always', 'once', 'never') DEFAULT 'once',
   `generation` ENUM('always', 'once', 'never') DEFAULT 'once',
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `credentials` (
 ) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `bots` (
   `id` BINARY(64) PRIMARY KEY,
-  `user_id` BINARY(64) NOT NULL,
+  `user_id` INT NOT NULL,
   `credentials_id` INT NOT NULL,
   `enabled` BOOLEAN DEFAULT 1,
   `replies_enabled` BOOLEAN DEFAULT 1,
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `word_blacklist` (
   FOREIGN KEY (`bot_id`) REFERENCES bots(id) ON DELETE CASCADE
 ) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `contact_history` (
-  `user_id` BINARY(64) NOT NULL,
+  `user_id` INT NOT NULL,
   `fetch` BOOLEAN DEFAULT 0,
   `submit` BOOLEAN DEFAULT 0,
   `generation` BOOLEAN DEFAULT 0,

@@ -82,7 +82,7 @@ def do_signup():
 
 	# try to sign up
 	c = mysql.connection.cursor()
-	c.execute("INSERT INTO `users` (id, email, password) VALUES (%s, %s, %s)", (user_id, request.form['email'], pw))
+	c.execute("INSERT INTO `users` (email, password) VALUES (%s, %s)", (request.form['email'], pw))
 	mysql.connection.commit()
 	c.close()
 
