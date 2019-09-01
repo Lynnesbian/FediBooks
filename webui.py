@@ -77,7 +77,7 @@ def do_signup():
 	user_id = hashlib.sha256(request.form['email'].encode('utf-8')).digest()
 
 	pw_hashed = hashlib.sha256(request.form['password'].encode('utf-8')).digest()
-	pw = bcrypt.hashpw(pw_hashed, bcrypt.gensalt(16))
+	pw = bcrypt.hashpw(pw_hashed, bcrypt.gensalt(12))
 
 	# try to sign up
 	c = mysql.connection.cursor()
