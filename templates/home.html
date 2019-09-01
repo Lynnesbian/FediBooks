@@ -8,7 +8,7 @@
 <body>
 	<div class="container light">
 		<h1 class='thin centred'>Home</h1>
-		<p class="centred large">Hi there! You have 1 bots, all of which are currently active.</p>
+		<p class="centred large">Hi there! You have {{ bot_count }} bot{% if bot_count != 1 %}s{% endif %}{% if bot_count != 0 %}, {{ active_count }} of which {% if active_count == 1 %}is{% else %}are{% endif %} currently active.{% else %}.{% endif %}</p>
 		<p class="centred" style="margin: 50px 0;">
 			<a class="button btn-primary btn-large" href="/bot/create" role="button"><i class="fas fa-robot"></i> New bot</a>
 			<a class="button btn-secondary btn-large" href="/settings" role="button"><i class="fas fa-cog"></i> Account settings</a>

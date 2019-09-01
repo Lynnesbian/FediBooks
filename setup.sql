@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `posts` (
   `post_id` VARCHAR(64) NOT NULL,
   `content` TEXT NOT NULL,
   `cw` BOOLEAN NOT NULL,
-  FOREIGN KEY (`fedi_id`) REFERENCES fedi_account(handle) ON DELETE CASCADE;
+  FOREIGN KEY (`fedi_id`) REFERENCES fedi_account(handle) ON DELETE CASCADE
 ) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `word_blacklist` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,

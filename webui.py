@@ -20,7 +20,15 @@ mysql = MySQL(app)
 def home():
 	if 'userid' in session:
 		session['step'] = 1
-		return render_template("home.html")
+		c = mysql.connection.cursor()
+		c.execute("SELECT COUNT(*) FROM `bots` WHERE user_id = %s", (session['userid'],))
+		bot_count = c.fetchone()[0]
+		active_count = None
+		if bot_count > 0:
+			c.execute("SELECT COUNT(*) FROM `bots` WHERE user_id = %s AND enabled = TRUE", (session['userid'],))
+			active_count = c.fetchone()[0]
+		c.close()
+		return render_template("home.html", bot_count = bot_count, active_count = active_count)
 	else:
 		return render_template("front_page.html")
 
