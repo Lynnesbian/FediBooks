@@ -47,4 +47,11 @@ CREATE TABLE IF NOT EXISTS `word_blacklist` (
   FOREIGN KEY (`bot_id`) REFERENCES bots(id) ON DELETE CASCADE,
   `phrase` VARCHAR(128) NOT NULL,
   `whole_word` BOOLEAN NOT NULL
-)
+);
+CREATE TABLE IF NOT EXISTS `contact_history` (
+  FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE,
+  `fetch` BOOLEAN DEFAULT 0,
+  `submit` BOOLEAN DEFAULT 0,
+  `generation` BOOLEAN DEFAULT 0,
+  `reply` BOOLEAN DEFAULT 0
+);
