@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS `bots` (
   `post_privacy` ENUM('public', 'unlisted', 'followers_only') DEFAULT 'unlisted',
   `learn_from_cw` BOOLEAN DEFAULT 0,
   `last_post` DATETIME DEFAULT 0,
+  `icon` VARCHAR(512),
+  `icon_update_time` DATETIME DEFAULT 0,
   FOREIGN KEY (`credentials_id`) REFERENCES credentials(id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS `credentials` (
@@ -34,6 +36,8 @@ CREATE TABLE IF NOT EXISTS `credentials` (
 CREATE TABLE IF NOT EXISTS `fedi_account` (
   `handle` VARCHAR(128) NOT NULL PRIMARY KEY,
   `outbox` VARCHAR(256),
+  `icon` VARCHAR(512),
+  `icon_update_time` DATETIME DEFAULT 0,
   FOREIGN KEY (`credentials_id`) REFERENCES credentials(id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS `posts` (
