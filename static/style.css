@@ -43,9 +43,12 @@ body {
 }
 
 .panel-icon {
-	width: 105px;
+	width: 100px;
 	height: 100px;
 	background: center/contain url("https://cloud.lynnesbian.space/s/JZCPTs3DzMLAspC/preview");
+}
+.panel-icon.online, .panel-icon.offline {
+	width: 105px;
 }
 .panel-icon.online {
 	border-left: 5px #5c5 solid;
