@@ -88,3 +88,8 @@ def do_signup():
 	# success!
 	session['userid'] = user_id
 	return redirect(url_for('home'))
+
+@app.route("/do/signout")
+def do_signout():
+	session.clear()
+	return redirect(url_for("home"))
