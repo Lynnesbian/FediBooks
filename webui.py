@@ -3,7 +3,7 @@ from flask_mysqldb import MySQL
 import requests
 import MySQLdb
 import bcrypt
-import json, hashlib
+import json, hashlib, re
 
 cfg = json.load(open("config.json"))
 
@@ -70,8 +70,39 @@ def bot_accounts(id):
 def bot_accounts_add():
 	return render_template("bot_accounts_add.html")
 
-@app.route("/bot/create/")
+@app.route("/bot/create/", methods=['GET', 'POST'])
 def bot_create():
+	if request.method == 'POST':
+		if session['step'] == 1:
+			# strip leading https://, if provided
+			session['instance'] = re.match(r"^(?:https?:\/\/)?(.*)", request.form['instance']).group(1)
+			
+			# check for mastodon/pleroma
+			r = requests.get("https://{}/api/v1/instance".format(session['instance']))
+			if r.status_code == 200:
+				j = r.json()
+				if "Pleroma" in j['version']:
+					session['instance_type'] = "Pleroma"
+					session['step'] += 1
+				else:
+					if 'is_pro' in j['contact_account']:
+						# gab instance
+						session['error'] = "Eat shit and die, fascist scum."
+					else:
+						session['instance_type'] = "Mastodon"
+						session['step'] += 1
+
+			else:
+				# not a masto/pleroma instance
+				# misskey is currently unsupported
+				# all other instance types are also unsupported
+				# return an error message
+				#TODO: misskey
+				session['error'] = "Unsupported instance type."
+
+		elif session['step'] == 2:
+			pass
+
 	return render_template("bot_create.html")
 
 @app.route("/do/signup", methods=['POST'])
