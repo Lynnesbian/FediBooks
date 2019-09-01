@@ -1,10 +1,18 @@
 from flask import Flask, render_template, session
+from flask_mysqldb import MySQL
 import json
 
 cfg = json.load(open("config.json"))
 
 app = Flask(__name__)
 app.secret_key = cfg['secret_key']
+
+# app.config['MYSQL_HOST'] = cfg['db_host']
+# app.config['MYSQL_DB'] = cfg['db_name']
+# app.config['MYSQL_USER'] = cfg['db_user']
+# app.config['MYSQL_PASSWORD'] = cfg['db_password']
+
+# mysql = MySQL(app)
 
 @app.route("/")
 def hello():
