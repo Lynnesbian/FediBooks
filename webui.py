@@ -43,6 +43,10 @@ def bot_edit(id):
 def bot_delete(id):
 	return render_template("bot_delete.html")
 
+@app.route("/bot/accounts/<id>")
+def bot_accounts(id):
+	return render_template("bot_accounts.html")
+
 @app.route("/bot/create/")
 def bot_create():
 	session['step'] = 4

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FediBooks</title>
+	{% include 'imports.html' %}
+</head>
+
+<body>
+	<div class="container centred">
+		<h1 class="thin centred">Set accounts to learn from</h1>
+		<p class="large centred">@botname@example.com</p>
+		<p class="centred" style="margin: 50px 0;">
+			<a class="button btn-primary btn-large" href="/bot/accounts/add" role="button"><i class="fas fa-plus"></i> Add account</a>
+			<a class="button btn-secondary btn-large" href="/" role="button"><i class="fas fa-arrow-left"></i> Back</a>
+		</p>
+	</div>
+	
+	<div class="container centred">
+		<div class="container" style="min-height: 300px;">
+			<div class="row light">
+				<div class="panel-icon"></div>
+				<div class="panel-text">
+					<div class="panel-name">@user<span class="subtle">@instan.ce</span></div>
+					<div class="panel-status">12345 posts stored</div>
+				</div>
+				<div class="panel-actions">
+					<a class="button btn-secondary" href="/bot/accounts/toggle/insert id here" title="Turn on/off"></i></a><a class="button btn-dangerous" href="/bot/accounts/delete/insert id here" title="Delete"><i class="fas fa-trash"></i></a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{% include 'footer.html' %}
+</body>
+</html>
