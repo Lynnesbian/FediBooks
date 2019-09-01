@@ -1,5 +1,6 @@
 from flask import Flask, render_template, session, request, redirect, url_for
 from flask_mysqldb import MySQL
+import MySQLdb
 import bcrypt
 import json, hashlib
 
@@ -93,3 +94,17 @@ def do_signup():
 def do_signout():
 	session.clear()
 	return redirect(url_for("home"))
+
+@app.route("/do/login", methods=['POST'])
+def do_login():
+	pw_hashed = hashlib.sha256(request.form['password'].encode('utf-8')).digest()
+	c = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+	c.execute("SELECT * FROM users WHERE email = %s", (request.form['email'],))
+	data = c.fetchone()
+	c.close()
+	if bcrypt.checkpw(pw_hashed, data['password']):
+		session['userid'] = data['id']
+		return redirect(url_for("home"))
+
+	else:
+		return "invalid login"
