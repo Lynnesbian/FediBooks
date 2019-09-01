@@ -11,6 +11,7 @@ def hello():
 	session['userid'] = 1
 	# session.clear()
 	if 'userid' in session:
+		session['step'] = 1
 		return render_template("home.html")
 	else:
 		return render_template("front_page.html")
