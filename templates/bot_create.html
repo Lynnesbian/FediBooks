@@ -35,7 +35,9 @@
 			{% endif %}
 
 			<div class="container centred">
+				{% if session['step'] != 1 %}
 					<button class="button btn-secondary"><i class="fas fa-arrow-left"></i> Back</button>
+				{% endif %}
 					<button class="button btn-primary"><i class="fas fa-arrow-right"></i> Next</button>
 				</div>
 		</form>
