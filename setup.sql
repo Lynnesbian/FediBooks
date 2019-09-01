@@ -9,12 +9,18 @@ CREATE TABLE IF NOT EXISTS `contact_settings` (
   `fetch` ENUM('always', 'once', 'never') DEFAULT 'once',
   `submit` ENUM('always', 'once', 'never') DEFAULT 'once',
   `generation` ENUM('always', 'once', 'never') DEFAULT 'once',
-  `reply` ENUM('always', 'once', 'never') DEFAULT 'once'
-  FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE,
+  `reply` ENUM('always', 'once', 'never') DEFAULT 'once',
+  FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=INNODB;
+CREATE TABLE IF NOT EXISTS `credentials` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `client_id` VARCHAR(128) NOT NULL,
+  `client_secret` VARCHAR(128) NOT NULL,
+  `secret` VARCHAR(128) NOT NULL
 ) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `bots` (
   `id` BINARY(64) PRIMARY KEY,
-  `user_id` BINARY(64) PRIMARY KEY,
+  `user_id` BINARY(64) NOT NULL,
   `credentials_id` INT NOT NULL,
   `enabled` BOOLEAN DEFAULT 1,
   `replies_enabled` BOOLEAN DEFAULT 1,
@@ -30,12 +36,6 @@ CREATE TABLE IF NOT EXISTS `bots` (
   `icon_update_time` DATETIME DEFAULT 0,
   FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (`credentials_id`) REFERENCES credentials(id) ON DELETE CASCADE
-) ENGINE=INNODB;
-CREATE TABLE IF NOT EXISTS `credentials` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `client_id` VARCHAR(128) NOT NULL,
-  `client_secret` VARCHAR(128) NOT NULL,
-  `secret` VARCHAR(128) NOT NULL
 ) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `fedi_account` (
   `handle` VARCHAR(128) NOT NULL PRIMARY KEY,
@@ -55,14 +55,14 @@ CREATE TABLE IF NOT EXISTS `word_blacklist` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `bot_id` BINARY(64) NOT NULL,
   `phrase` VARCHAR(128) NOT NULL,
-  `whole_word` BOOLEAN NOT NULL
-  FOREIGN KEY (`bot_id`) REFERENCES bots(id) ON DELETE CASCADE,
+  `whole_word` BOOLEAN NOT NULL,
+  FOREIGN KEY (`bot_id`) REFERENCES bots(id) ON DELETE CASCADE
 ) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `contact_history` (
   `user_id` BINARY(64) NOT NULL,
   `fetch` BOOLEAN DEFAULT 0,
   `submit` BOOLEAN DEFAULT 0,
   `generation` BOOLEAN DEFAULT 0,
-  `reply` BOOLEAN DEFAULT 0
-  FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE,
+  `reply` BOOLEAN DEFAULT 0,
+  FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=INNODB;
