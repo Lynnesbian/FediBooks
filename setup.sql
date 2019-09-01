@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` BINARY(64) PRIMARY KEY,
   `email` VARCHAR(128) UNIQUE NOT NULL,
   `password` BINARY(60) NOT NULL
-);
+) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `contact_settings` (
   `user_id` BINARY(64) NOT NULL,
   `fetch` ENUM('always', 'once', 'never') DEFAULT 'once',
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `contact_settings` (
   `generation` ENUM('always', 'once', 'never') DEFAULT 'once',
   `reply` ENUM('always', 'once', 'never') DEFAULT 'once'
   FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE,
-);
+) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `bots` (
   `id` BINARY(64) PRIMARY KEY,
   `user_id` BINARY(64) PRIMARY KEY,
@@ -30,13 +30,13 @@ CREATE TABLE IF NOT EXISTS `bots` (
   `icon_update_time` DATETIME DEFAULT 0,
   FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (`credentials_id`) REFERENCES credentials(id) ON DELETE CASCADE
-);
+) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `credentials` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `client_id` VARCHAR(128) NOT NULL,
   `client_secret` VARCHAR(128) NOT NULL,
   `secret` VARCHAR(128) NOT NULL
-);
+) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `fedi_account` (
   `handle` VARCHAR(128) NOT NULL PRIMARY KEY,
   `outbox` VARCHAR(256),
@@ -44,20 +44,20 @@ CREATE TABLE IF NOT EXISTS `fedi_account` (
   `icon` VARCHAR(512),
   `icon_update_time` DATETIME DEFAULT 0,
   FOREIGN KEY (`credentials_id`) REFERENCES credentials(id) ON DELETE CASCADE
-);
+) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `posts` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
   `post_id` VARCHAR(64) NOT NULL,
   `content` TEXT NOT NULL,
   `cw` BOOLEAN NOT NULL
-);
+) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `word_blacklist` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `bot_id` BINARY(64) NOT NULL,
   `phrase` VARCHAR(128) NOT NULL,
   `whole_word` BOOLEAN NOT NULL
   FOREIGN KEY (`bot_id`) REFERENCES bots(id) ON DELETE CASCADE,
-);
+) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `contact_history` (
   `user_id` BINARY(64) NOT NULL,
   `fetch` BOOLEAN DEFAULT 0,
@@ -65,4 +65,4 @@ CREATE TABLE IF NOT EXISTS `contact_history` (
   `generation` BOOLEAN DEFAULT 0,
   `reply` BOOLEAN DEFAULT 0
   FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE,
-);
+) ENGINE=INNODB;
