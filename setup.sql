@@ -5,15 +5,17 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` BINARY(60) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS `contact_settings` (
-  FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE,
+  `user_id` BINARY(64) NOT NULL,
   `fetch` ENUM('always', 'once', 'never') DEFAULT 'once',
   `submit` ENUM('always', 'once', 'never') DEFAULT 'once',
   `generation` ENUM('always', 'once', 'never') DEFAULT 'once',
   `reply` ENUM('always', 'once', 'never') DEFAULT 'once'
+  FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE,
 );
 CREATE TABLE IF NOT EXISTS `bots` (
   `id` BINARY(64) PRIMARY KEY,
-  FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE,
+  `user_id` BINARY(64) PRIMARY KEY,
+  `credentials_id` INT NOT NULL,
   `enabled` BOOLEAN DEFAULT 1,
   `replies_enabled` BOOLEAN DEFAULT 1,
   `post_frequency` SMALLINT UNSIGNED DEFAULT 30,
@@ -26,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `bots` (
   `last_post` DATETIME DEFAULT 0,
   `icon` VARCHAR(512),
   `icon_update_time` DATETIME DEFAULT 0,
+  FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (`credentials_id`) REFERENCES credentials(id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS `credentials` (
@@ -37,6 +40,7 @@ CREATE TABLE IF NOT EXISTS `credentials` (
 CREATE TABLE IF NOT EXISTS `fedi_account` (
   `handle` VARCHAR(128) NOT NULL PRIMARY KEY,
   `outbox` VARCHAR(256),
+  `credentials_id` INT NOT NULL,
   `icon` VARCHAR(512),
   `icon_update_time` DATETIME DEFAULT 0,
   FOREIGN KEY (`credentials_id`) REFERENCES credentials(id) ON DELETE CASCADE
@@ -49,14 +53,16 @@ CREATE TABLE IF NOT EXISTS `posts` (
 );
 CREATE TABLE IF NOT EXISTS `word_blacklist` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  FOREIGN KEY (`bot_id`) REFERENCES bots(id) ON DELETE CASCADE,
+  `bot_id` BINARY(64) NOT NULL,
   `phrase` VARCHAR(128) NOT NULL,
   `whole_word` BOOLEAN NOT NULL
+  FOREIGN KEY (`bot_id`) REFERENCES bots(id) ON DELETE CASCADE,
 );
 CREATE TABLE IF NOT EXISTS `contact_history` (
-  FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE,
+  `user_id` BINARY(64) NOT NULL,
   `fetch` BOOLEAN DEFAULT 0,
   `submit` BOOLEAN DEFAULT 0,
   `generation` BOOLEAN DEFAULT 0,
   `reply` BOOLEAN DEFAULT 0
+  FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE,
 );
