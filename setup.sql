@@ -2,15 +2,11 @@ USE `fedibooks`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `email` VARCHAR(128) UNIQUE NOT NULL,
-  `password` BINARY(60) NOT NULL
-) ENGINE=INNODB;
-CREATE TABLE IF NOT EXISTS `contact_settings` (
-  `user_id` INT NOT NULL,
+  `password` BINARY(60) NOT NULL,
   `fetch` ENUM('always', 'once', 'never') DEFAULT 'once',
   `submit` ENUM('always', 'once', 'never') DEFAULT 'once',
   `generation` ENUM('always', 'once', 'never') DEFAULT 'once',
-  `reply` ENUM('always', 'once', 'never') DEFAULT 'once',
-  FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE
+  `reply` ENUM('always', 'once', 'never') DEFAULT 'once'
 ) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `credentials` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
