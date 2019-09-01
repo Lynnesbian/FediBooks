@@ -7,17 +7,15 @@ cfg = json.load(open("config.json"))
 app = Flask(__name__)
 app.secret_key = cfg['secret_key']
 
-# app.config['MYSQL_HOST'] = cfg['db_host']
-# app.config['MYSQL_DB'] = cfg['db_name']
-# app.config['MYSQL_USER'] = cfg['db_user']
-# app.config['MYSQL_PASSWORD'] = cfg['db_password']
+app.config['MYSQL_HOST'] = cfg['db_host']
+app.config['MYSQL_DB'] = cfg['db_name']
+app.config['MYSQL_USER'] = cfg['db_user']
+app.config['MYSQL_PASSWORD'] = cfg['db_pass']
 
-# mysql = MySQL(app)
+mysql = MySQL(app)
 
 @app.route("/")
-def hello():
-	session['userid'] = 1
-	# session.clear()
+def home():
 	if 'userid' in session:
 		session['step'] = 1
 		return render_template("home.html")
@@ -62,7 +60,4 @@ def bot_accounts_add():
 
 @app.route("/bot/create/")
 def bot_create():
-	session['step'] = 4
-	session['instance'] = "botsin.space"
-	session['instance_type'] = "Mastodon"
 	return render_template("bot_create.html")
