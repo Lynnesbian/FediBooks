@@ -1,5 +1,6 @@
 from flask import Flask, render_template, session, request, redirect, url_for
 from flask_mysqldb import MySQL
+import requests
 import MySQLdb
 import bcrypt
 import json, hashlib
