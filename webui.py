@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session, request, redirect, url_for
 from flask_mysqldb import MySQL
 import bcrypt
 import json, hashlib
@@ -84,3 +84,7 @@ def do_signup():
 	c.execute("INSERT INTO `users` (id, email, password) VALUES (%s, %s, %s)", (user_id, request.form['email'], pw))
 	mysql.connection.commit()
 	c.close()
+
+	# success!
+	session['userid'] = user_id
+	return redirect(url_for('home'))
