@@ -20,15 +20,15 @@
 			</div>
 			<div class="row">
 				<label for="freq" class="large">Post frequency (minutes)</label>
-				<input type="number" min="15" max="240" step="5" value="30"> 
+				<input type="number" min="15" max="240" step="5" value="30" name="freq"> 
 			</div>
 			<div class="row">
 				<label for="cw" class="large">Content warning (subject)</label>
-				<input type="text" placeholder="None">
+				<input type="text" placeholder="None" name="cw">
 			</div>
 			<div class="row">
 				<label for="length" class="large">Maximum post length (characters)</label>
-				<input type="number" min="100" max="5000" value="500">
+				<input type="number" min="100" max="5000" value="500" name="length">
 			</div>
 			<div class="row">
 				<label for="fake-mentions" class="large">Fake mentions</label>
@@ -47,7 +47,7 @@
 				</div>
 			<div class="row">
 				<label for="privacy" class="large">Post privacy</label>
-				<select>
+				<select name="privacy">
 					<option value="public">Public</option>
 					<option value="unlisted">Unlisted</option>
 					<option value="followers">Followers only</option>
@@ -55,7 +55,7 @@
 			</div>
 			<div class="row">
 				<label for="cw-learning" class="large">Learn from posts with content warnings (subjects)</label>
-				<input type="checkbox">
+				<input type="checkbox" name="cw-learning">
 			</div>
 			<div class="container centred">
 				<button class="button btn-primary"><i class="fas fa-save"></i> Save</button>
