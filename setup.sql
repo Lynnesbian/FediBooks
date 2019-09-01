@@ -1,3 +1,4 @@
+USE `fedibooks`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` BINARY(64) PRIMARY KEY,
   `email` VARCHAR(128) UNIQUE NOT NULL,
@@ -43,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `fedi_account` (
 CREATE TABLE IF NOT EXISTS `posts` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
   `post_id` VARCHAR(64) NOT NULL,
-  `content` VARCHAR(65535) NOT NULL,
+  `content` TEXT NOT NULL,
   `cw` BOOLEAN NOT NULL
 );
 CREATE TABLE IF NOT EXISTS `word_blacklist` (
