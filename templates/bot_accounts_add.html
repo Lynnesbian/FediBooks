@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FediBooks</title>
+	{% include 'imports.html' %}
+</head>
+
+<body>
+	<div class="container">
+		<h1 class="thin centred">Create bot</h1>
+		<p class="large thin centred">Step {{ session['step'] }}</p>
+	</div>
+	
+	<div class="container centred">
+		<form action="/bot/accounts/add" method="POST">
+			{% if session['step'] == 1 %}
+			<label for="account" class="important">Account handle</label>
+			<input type="text" name="account" class="full-width" placeholder="@user@example.com">
+			<br>
+
+			{% elif session['step'] == 2 %}
+			<h2 class="thin centred">Authentication required</h2>
+			<p>{{ session['instance'] }} requires authentication to view public posts. Ensure you're signed in as {{ session['account'] }}, and click Next. You will be prompted to give FediBooks access to read your posts, which is required for your bot.</p>
+
+			{% elif session['step'] == 3 %}
+
+			<h2 class="thin centred">Authentication failure</h2>
+			<p>FediBooks was unable to authenticate with {{ session['instance'] }}.</p>
+			<p>Click back to try again. If you believe this is in error, you may <a href="https://github.com/Lynnesbian/FediBooks/issues/new/choose">file a bug report</a>.</p>
+
+			{% endif %}
+
+			<div class="container centred">
+					<button class="button btn-secondary"><i class="fas fa-arrow-left"></i> Back</button>
+					<button class="button btn-primary"><i class="fas fa-arrow-right"></i> Next</button>
+				</div>
+		</form>
+	</div>
+
+	{% include 'footer.html' %}
+</body>
+</html>
