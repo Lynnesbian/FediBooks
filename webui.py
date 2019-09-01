@@ -1,6 +1,7 @@
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, request
 from flask_mysqldb import MySQL
-import json
+import bcrypt
+import json, hashlib
 
 cfg = json.load(open("config.json"))
 
@@ -35,7 +36,8 @@ def show_login_page():
 	return render_template("login.html", signup = False)
 
 @app.route("/signup")
-def show_signup_page():
+def show_signup_page(error = None):
+	#TODO: display error if any
 	return render_template("login.html", signup = True)
 
 @app.route("/settings")
@@ -61,3 +63,24 @@ def bot_accounts_add():
 @app.route("/bot/create/")
 def bot_create():
 	return render_template("bot_create.html")
+
+@app.route("/do/signup", methods=['POST'])
+def do_signup():
+	# email validation is basically impossible without actually sending an email to the address
+	# because fedibooks can't send email yet, we'll just check if the string contains an @ ;)
+	if "@" not in request.form['email']:
+		return show_signup_page("Invalid email address.")
+
+	if len(request.form['password']) < 8:
+		return show_signup_page("Password too short.")
+
+	user_id = hashlib.sha256(request.form['email'].encode('utf-8')).digest()
+
+	pw_hashed = hashlib.sha256(request.form['password'].encode('utf-8')).digest()
+	pw = bcrypt.hashpw(pw_hashed, bcrypt.gensalt(16))
+
+	# try to sign up
+	c = mysql.connection.cursor()
+	c.execute("INSERT INTO `users` (id, email, password) VALUES (%s, %s, %s)", (user_id, request.form['email'], pw))
+	mysql.connection.commit()
+	c.close()

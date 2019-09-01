@@ -23,7 +23,7 @@
 				{% endif %}
 				<br>
 				<label for="password" class="important full-width">Password</label>
-				<input type="password" name="password">
+				<input type="password" pattern=".{8,}" name="password">
 				{% if signup %}
 				<p class="small">
 					Passwords must be at least eight characters long.
