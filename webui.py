@@ -28,22 +28,22 @@ def home():
 		c.execute("SELECT COUNT(*) FROM `bots` WHERE user_id = %s", (session['user_id'],))
 		bot_count = c.fetchone()[0]
 		active_count = None
-		bots = None
+		bots = {}
 		bot_users = None
 
 		if bot_count > 0:
 			c.execute("SELECT COUNT(*) FROM `bots` WHERE user_id = %s AND enabled = TRUE", (session['user_id'],))
 			active_count = c.fetchone()[0]
 			dc = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-			dc.execute("SELECT * FROM `bots` WHERE user_id = %s", (session['user_id'],))
+			dc.execute("SELECT handle` FROM `bots` WHERE user_id = %s", (session['user_id'],))
 			bots = dc.fetchall()
 			dc.close()
 			bot_users = {}
 
 			for bot in bots:
 				# multiple SELECTS is slow, maybe SELECT all at once and filter with python?
-				c.execute("SELECT COUNT(*) FROM `bot_learned_accounts` WHERE bot_id = %s", (bot['id'],))
-				bot_users[bot['id']] = c.fetchone()[0]
+				c.execute("SELECT COUNT(*) FROM `bot_learned_accounts` WHERE bot_id = %s", (bot['handle'],))
+				bot_users[bot['handle']] = c.fetchone()[0]
 
 		c.close()
 		return render_template("home.html", bot_count = bot_count, active_count = active_count, bots = bots, bot_users = bot_users)
@@ -173,8 +173,7 @@ def bot_create():
 			credentials_id = c.lastrowid
 			mysql.connection.commit()
 
-			bot_id = hashlib.sha256(handle.encode('utf-8')).digest()
-			c.execute("INSERT INTO `bots` (id, user_id, credentials_id, handle) VALUES (%s, %s, %s, %s)", (bot_id, session['user_id'], credentials_id, handle))
+			c.execute("INSERT INTO `bots` (handle, user_id, credentials_id) VALUES (%s, %s, %s)", (handle, session['user_id'], credentials_id))
 			mysql.connection.commit()
 
 			c.close()
