@@ -172,9 +172,18 @@ def bot_accounts_add():
 				c.close()
 				mysql.connection.commit()
 
-				return redirect("/bot/accounts/{}".format(session['bot']))
+				return redirect("/bot/accounts/{}".format(session['bot']), 303)
 
 	return render_template("bot_accounts_add.html")
+
+@app.route("/bot/accounts/toggle/<id>")
+def bot_accounts_toggle(id):
+	c = mysql.connection.cursor()
+	c.execute("UPDATE `bot_learned_accounts` SET `enabled` = NOT `enabled` WHERE `fedi_id` = %s AND `bot_id` = %s", (id, session['bot']))
+	mysql.connection.commit()
+	c.close()
+	return redirect("/bot/accounts/{}".format(session['bot']), 303)
+
 
 @app.route("/bot/create/", methods=['GET', 'POST'])
 def bot_create():

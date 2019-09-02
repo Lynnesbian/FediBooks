@@ -26,7 +26,7 @@
 				<div class="panel-status">{{ "Active" if user['enabled'] else "Inactive" }}</div>
 			</div>
 			<div class="panel-actions">
-				<a class="button btn-secondary" href="/bot/accounts/toggle/insert id here" title="Turn on/off"><i class="fas fa-power-off"></i></a><a class="button btn-dangerous" href="/bot/accounts/delete/insert id here" title="Delete"><i class="fas fa-trash"></i></a>
+				<a class="button btn-secondary" href="/bot/accounts/toggle/{{ user['fedi_id'] }}" title="Turn on/off"><i class="fas fa-power-off"></i></a><a class="button btn-dangerous" href="/bot/accounts/delete/{{ user['fedi_id'] }}" title="Delete"><i class="fas fa-trash"></i></a>
 			</div>
 		</div>
 		{% endfor %}
