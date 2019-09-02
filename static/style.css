@@ -10,7 +10,7 @@ body {
 
 .container {
 	background-color: #444a5c;
-	padding:10px;
+	padding: 10px;
 }
 .light {
 	background-color: #4d5366;
@@ -81,20 +81,20 @@ body {
 
 .button {
 	color: white;
-	line-height:1.2em;
-	padding:10px;
+	line-height: 1.2em;
+	padding: 10px;
 	text-decoration: none;
 	display: inline-block;
 	margin: 5px 0;
 	transition: 0.2s linear;
-	border:none;
+	border: none;
 }
 .button:visited {
-	color:white;
+	color: white;
 }
 input.button, button.button {
 	font-size: 1em;
-	cursor:	pointer;
+	cursor: pointer;
 }
 
 .btn-primary {
@@ -142,17 +142,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 form {
-	display:inline-block;
+	display: inline-block;
 }
 label.important {
 	font-size: 1.4em;
 	margin: 10px 0;
 	font-weight: 300;
-	display:block;
+	display: block;
 }
 input, select {
 	font-size: 1.2em;
-	line-height:1.4em;
+	line-height: 1.4em;
 	border: 3px grey solid;
 	border-radius: none;
 	padding: 3px;
