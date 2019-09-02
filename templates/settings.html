@@ -20,7 +20,7 @@
 
 			<div class="row">
 				<label for="email" class="large">Email address</label>
-				<input type="email" name="email" value="me@my.site">
+				<input type="email" name="email" value="{{ user['email'] }}">
 			</div>
 			<div class="row">
 				<label for="password" class="large">Password</label>
@@ -33,35 +33,35 @@
 			</div>
 
 			<div class="row">
-				<label for="download-error" class="large">When my bot(s) can't get new posts</label>
-				<select name="download-error">
-					<option value="once">Once</option>
-					<option value="every-time">Every time</option>
-					<option value="never">Never</option>
+				<label for="fetch-error" class="large">When my bot(s) can't get new posts</label>
+				<select name="fetch-error">
+					<option value="always" {{ 'selected' if user['fetch'] == "always"}}>Always</option>
+					<option value="once" {{ 'selected' if user['fetch'] == "once"}}>Once</option>
+					<option value="never" {{ 'selected' if user['fetch'] == "never"}}>Never</option>
 				</select>
 			</div>
 			<div class="row">
-				<label for="post-error" class="large">When my bot(s) can't submit new posts</label>
-				<select name="post-error">
-					<option value="once">Once</option>
-					<option value="every-time">Every time</option>
-					<option value="never">Never</option>
+				<label for="submit-error" class="large">When my bot(s) can't submit new posts</label>
+				<select name="submit-error">
+					<option value="always" {{ 'selected' if user['submit'] == "always"}}>Always</option>
+					<option value="once" {{ 'selected' if user['submit'] == "once"}}>Once</option>
+					<option value="never" {{ 'selected' if user['submit'] == "never"}}>Never</option>
 				</select>
 			</div>
 			<div class="row">
 				<label for="generation-error" class="large">When my bot(s) encounter an error generating new posts</label>
 				<select name="generation-error">
-					<option value="once">Once</option>
-					<option value="every-time">Every time</option>
-					<option value="never">Never</option>
+					<option value="always" {{ 'selected' if user['generation'] == "always"}}>Always</option>
+					<option value="once" {{ 'selected' if user['generation'] == "once"}}>Once</option>
+					<option value="never" {{ 'selected' if user['generation'] == "never"}}>Never</option>
 				</select>
 			</div>
 			<div class="row">
 				<label for="reply-error" class="large">When my bot(s) can't send replies</label>
 				<select name="reply-error">
-					<option value="once">Once</option>
-					<option value="every-time">Every time</option>
-					<option value="never">Never</option>
+					<option value="always" {{ 'selected' if user['reply'] == "always"}}>Always</option>
+					<option value="once" {{ 'selected' if user['reply'] == "once"}}>Once</option>
+					<option value="never" {{ 'selected' if user['reply'] == "never"}}>Never</option>
 				</select>
 			</div>
 

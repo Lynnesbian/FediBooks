@@ -69,7 +69,11 @@ def show_signup_page(error = None):
 
 @app.route("/settings")
 def settings():
-	return render_template("settings.html")
+	dc = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+	dc.execute("SELECT * FROM `users` WHERE id = %s", (session['user_id'],))
+	user = dc.fetchone()
+	dc.close()
+	return render_template("settings.html", user = user)
 
 @app.route("/bot/edit/<id>")
 def bot_edit(id):
