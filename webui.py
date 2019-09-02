@@ -117,10 +117,50 @@ def bot_blacklist(id):
 
 @app.route("/bot/accounts/<id>")
 def bot_accounts(id):
-	return render_template("bot_accounts.html")
+	if bot_check(id):
+		session['bot'] = id
+		return render_template("bot_accounts.html")
 
-@app.route("/bot/accounts/add")
+@app.route("/bot/accounts/add", methods = ['GET', 'POST'])
 def bot_accounts_add():
+	if request.method == 'POST':
+		if session['step'] == 1:
+			# look up user
+			handle_list = request.form['account'].split('@')
+			username = handle_list[1]
+			instance = handle_list[2]
+
+			# 1. download host-meta to find webfinger URL
+			r = requests.get("https://{}/.well-known/host-meta".format(instance), timeout=10)
+			# 2. use webfinger to find user's info page
+			#TODO: use more reliable method
+			uri = re.search(r'template="([^"]+)"', r.text).group(1)
+			uri = uri.format(uri = "{}@{}".format(username, instance))
+			r = requests.get(uri, headers={"Accept": "application/json"}, timeout=10)
+			j = r.json()
+			found = False
+			for link in j['links']:
+				if link['rel'] == 'self':
+					#this is a link formatted like "https://instan.ce/users/username", which is what we need
+					uri = link['href']
+					found = True
+					break
+			if not found:
+				return "Couldn't find a valid ActivityPub outbox URL."
+
+			# 3. format as outbox URL and check to make sure it works
+			outbox = "{}/outbox?page=true".format(uri)
+			r = requests.get(uri, headers={"Accept": "application/json"}, timeout=10)
+			if r.status_code == 200:
+				# success!!
+				c = mysql.connection.cursor()
+				c.execute("INSERT INTO `fedi_accounts` (`handle`, `outbox`) VALUES (%s, %s)", (request.form['account'], outbox))
+				c.execute("INSERT INTO `bot_learned_accounts` (`bot_id`, `fedi_id`) VALUES (%s, %s)", (session['bot'], request.form['account']))
+				c.close()
+				mysql.connection.commit()
+
+				return redirect("/bot/accounts/{}".format(session['bot']))
+
 	return render_template("bot_accounts_add.html")
 
 @app.route("/bot/create/", methods=['GET', 'POST'])

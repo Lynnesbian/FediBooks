@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `bots` (
 CREATE TABLE IF NOT EXISTS `fedi_accounts` (
   `handle` VARCHAR(128) PRIMARY KEY,
   `outbox` VARCHAR(256),
-  `credentials_id` INT NOT NULL,
+  `credentials_id` INT,
   `icon` VARCHAR(512),
   `icon_update_time` DATETIME DEFAULT 0,
   FOREIGN KEY (`credentials_id`) REFERENCES credentials(id) ON DELETE CASCADE
