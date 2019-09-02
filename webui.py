@@ -28,11 +28,24 @@ def home():
 		c.execute("SELECT COUNT(*) FROM `bots` WHERE user_id = %s", (session['user_id'],))
 		bot_count = c.fetchone()[0]
 		active_count = None
+		bots = None
+		bot_users = None
+
 		if bot_count > 0:
 			c.execute("SELECT COUNT(*) FROM `bots` WHERE user_id = %s AND enabled = TRUE", (session['user_id'],))
 			active_count = c.fetchone()[0]
+			dc = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+			dc.execute("SELECT * FROM `bots` WHERE user_id = %s", (session['user_id'],))
+			bots = dc.fetchall()
+			dc.close()
+			bot_users = {}
+
+			for bot in bots:
+				c.execute("SELECT COUNT(*) FROM `bot_learned_accounts` WHERE bot_id = %s", (bot['id'],))
+				bot_users[bot['id']] = c.fetchone()[0]
+
 		c.close()
-		return render_template("home.html", bot_count = bot_count, active_count = active_count)
+		return render_template("home.html", bot_count = bot_count, active_count = active_count, bots = bots, bot_users = bot_users)
 	else:
 		return render_template("front_page.html")
 
