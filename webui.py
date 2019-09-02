@@ -78,7 +78,7 @@ def settings():
 
 @app.route("/bot/edit/<id>")
 def bot_edit(id):
-	return render_template("bot_edit.html")
+	return render_template("coming_soon.html")
 
 @app.route("/bot/delete/<id>", methods=['GET', 'POST'])
 def bot_delete(id):
@@ -119,7 +119,20 @@ def bot_blacklist(id):
 def bot_accounts(id):
 	if bot_check(id):
 		session['bot'] = id
-		return render_template("bot_accounts.html")
+		c = mysql.connection.cursor()
+		c.execute("SELECT COUNT(*) FROM `bot_learned_accounts` WHERE `bot_id` = %s", (id,))
+		user_count = c.fetchone()[0]
+		users = {}
+
+		if user_count > 0:
+			dc = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+			dc.execute("SELECT `fedi_id`, `enabled` FROM `bot_learned_accounts` WHERE `bot_id` = %s", (id,))
+			users = dc.fetchall()
+			dc.close()
+
+		c.close()
+
+		return render_template("bot_accounts.html", users = users)
 
 @app.route("/bot/accounts/add", methods = ['GET', 'POST'])
 def bot_accounts_add():

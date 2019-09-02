@@ -17,16 +17,19 @@
 	</div>
 	
 	<div class="container" style="min-height: 300px;">
+		{% for user in users %}
 		<div class="row light">
-			<div class="panel-icon"></div>
+			<div class="panel-icon {{ "online" if user['enabled'] else "offline" }}"></div>
 			<div class="panel-text">
-				<div class="panel-name">@user<span class="subtle tiny">@instan.ce</span></div>
-				<div class="panel-status">12345 posts stored</div>
+				{% set handle_list = user['fedi_id'].split('@') %}
+				<div class="panel-name">@{{ handle_list[1] }}<span class="subtle tiny">@{{ handle_list[2] }}</span></div>				
+				<div class="panel-status">{{ "Active" if user['enabled'] else "Inactive" }}</div>
 			</div>
 			<div class="panel-actions">
 				<a class="button btn-secondary" href="/bot/accounts/toggle/insert id here" title="Turn on/off"><i class="fas fa-power-off"></i></a><a class="button btn-dangerous" href="/bot/accounts/delete/insert id here" title="Delete"><i class="fas fa-trash"></i></a>
 			</div>
 		</div>
+		{% endfor %}
 	</div>
 
 	{% include 'footer.html' %}
