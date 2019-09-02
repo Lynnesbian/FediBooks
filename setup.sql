@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `bots` (
   `id` BINARY(64) PRIMARY KEY,
   `user_id` INT NOT NULL,
   `credentials_id` INT NOT NULL,
+  `handle` VARCHAR(128) NOT NULL,
   `enabled` BOOLEAN DEFAULT 1,
   `replies_enabled` BOOLEAN DEFAULT 1,
   `post_frequency` SMALLINT UNSIGNED DEFAULT 30,
