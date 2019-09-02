@@ -21,7 +21,8 @@
 		<div class="row light">
 			<div class="panel-icon {% if bot['enabled'] %}online{% else %}offline{% endif %}"></div>
 			<div class="panel-text">
-				<div class="panel-name">{{ bot['handle'] }}</div>
+				{% set handle_list = bot['handle'].split('@') %}
+				<div class="panel-name">@{{ handle_list[1] }}<span class="subtle tiny">@{{ handle_list[2] }}</span></div>
 				<div class="panel-status">{% if bot['enabled'] %}Online{% else %}Offline{% endif %}, learning from {{ bot_users[bot['handle']] }} accounts</div>
 			</div>
 			<div class="panel-actions">

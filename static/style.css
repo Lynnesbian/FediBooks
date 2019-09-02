@@ -26,6 +26,9 @@ body {
 .small {
 	font-size: 0.8em;
 }
+.tiny {
+	font-size: 0.5em;
+}
 .centred {
 	text-align: center;
 }
