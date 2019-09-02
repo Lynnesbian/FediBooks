@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, redirect, url_for
+from flask import Flask, render_template, session, request, redirect, url_for, send_file
 from flask_mysqldb import MySQL
 from mastodon import Mastodon
 import requests
@@ -80,6 +80,15 @@ def bot_delete(id):
 	if bot_check(id):
 		instance = id.split("@")[2]
 		return render_template("bot_delete.html", instance = instance)
+
+@app.route("/bot/toggle/<id>")
+def bot_toggle(id):
+	if bot_check(id):
+		c = mysql.connection.cursor()
+		c.execute("UPDATE `bots` SET `enabled` = NOT `enabled` WHERE `handle` = %s", (id,))
+		mysql.connection.commit()
+		c.close()
+		return redirect(url_for("home"), 303)
 
 @app.route("/bot/chat/<id>")
 def bot_chat(id):
@@ -250,6 +259,10 @@ def do_login():
 
 	else:
 		return "invalid login"
+
+@app.route("/img/bot_generic.png")
+def img_bot_generic():
+	return send_file("static/bot_generic.png", mimetype="image/png")
 
 def bot_check(bot):
 	c = mysql.connection.cursor()

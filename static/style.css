@@ -45,7 +45,7 @@ body {
 .panel-icon {
 	width: 100px;
 	height: 100px;
-	background: center/contain url("https://cloud.lynnesbian.space/s/JZCPTs3DzMLAspC/preview");
+	background: center/contain url("/img/bot_generic.png");
 }
 .panel-icon.large {
 	width: 150px;
