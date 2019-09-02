@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS `fedi_accounts` (
 CREATE TABLE IF NOT EXISTS `bot_learned_accounts` (
   `bot_id` VARCHAR(128) NOT NULL,
   `fedi_id` VARCHAR(128) NOT NULL,
+  `enabled` BOOLEAN DEFAULT 1,
   FOREIGN KEY (`bot_id`) REFERENCES bots(handle) ON DELETE CASCADE,
   FOREIGN KEY (`fedi_id`) REFERENCES fedi_accounts(handle) ON DELETE CASCADE
 ) ENGINE=INNODB;
