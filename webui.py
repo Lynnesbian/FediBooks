@@ -69,6 +69,7 @@ def show_signup_page(error = None):
 
 @app.route("/settings")
 def settings():
+	return render_template("coming_soon.html")
 	dc = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 	dc.execute("SELECT * FROM `users` WHERE id = %s", (session['user_id'],))
 	user = dc.fetchone()
@@ -79,11 +80,23 @@ def settings():
 def bot_edit(id):
 	return render_template("bot_edit.html")
 
-@app.route("/bot/delete/<id>")
+@app.route("/bot/delete/<id>", methods=['GET', 'POST'])
 def bot_delete(id):
 	if bot_check(id):
-		instance = id.split("@")[2]
-		return render_template("bot_delete.html", instance = instance)
+		if request.method == 'GET':
+			instance = id.split("@")[2]
+			return render_template("bot_delete.html", instance = instance)
+		else:
+			# delete bot by deleting its credentials
+			# FK constraint will delete bot
+			c = mysql.connection.cursor()
+			c.execute("SELECT `credentials_id` FROM `bots` WHERE `handle` = %s", (id,))
+			credentials_id = c.fetchone()[0]
+			c.execute("DELETE FROM `credentials` WHERE `id` = %s", (credentials_id,))
+			c.close()
+			mysql.connection.commit()
+
+			return redirect(url_for("home"), 303)
 
 @app.route("/bot/toggle/<id>")
 def bot_toggle(id):
