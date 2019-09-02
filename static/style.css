@@ -168,3 +168,10 @@ label {
 form .row {
 	margin: 10px 0;
 }
+
+.coming-soon {
+	height: 200px;
+	width: 200px;
+	background: center/contain url("https://lynnesbian.space/img/bune.png");
+	display: inline-block;
+}

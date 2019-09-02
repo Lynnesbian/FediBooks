@@ -81,6 +81,14 @@ def bot_delete(id):
 		instance = id.split("@")[2]
 		return render_template("bot_delete.html", instance = instance)
 
+@app.route("/bot/chat/<id>")
+def bot_chat(id):
+	return render_template("coming_soon.html")
+
+@app.route("/bot/blacklist/<id>")
+def bot_blacklist(id):
+	return render_template("coming_soon.html")
+
 @app.route("/bot/accounts/<id>")
 def bot_accounts(id):
 	return render_template("bot_accounts.html")
