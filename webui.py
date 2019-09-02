@@ -77,7 +77,9 @@ def bot_edit(id):
 
 @app.route("/bot/delete/<id>")
 def bot_delete(id):
-	return render_template("bot_delete.html")
+	if bot_check(id):
+		instance = id.split("@")[2]
+		return render_template("bot_delete.html", instance = instance)
 
 @app.route("/bot/accounts/<id>")
 def bot_accounts(id):
@@ -240,3 +242,8 @@ def do_login():
 
 	else:
 		return "invalid login"
+
+def bot_check(bot):
+	c = mysql.connection.cursor()
+	c.execute("SELECT COUNT(*) FROM `bots` WHERE `handle` = %s AND `user_id` = %s", (bot, session['user_id']))
+	return c.fetchone()[0] == 1

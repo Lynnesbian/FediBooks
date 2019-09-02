@@ -47,6 +47,10 @@ body {
 	height: 100px;
 	background: center/contain url("https://cloud.lynnesbian.space/s/JZCPTs3DzMLAspC/preview");
 }
+.panel-icon.large {
+	width: 150px;
+	height: 150px;
+}
 .panel-icon.online, .panel-icon.offline {
 	width: 105px;
 }
