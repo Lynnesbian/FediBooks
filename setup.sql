@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `credentials` (
   `secret` VARCHAR(128) NOT NULL
 ) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `bots` (
-  `id` BINARY(64) PRIMARY KEY,
+  `id` BINARY(32) PRIMARY KEY,
   `user_id` INT NOT NULL,
   `credentials_id` INT NOT NULL,
   `handle` VARCHAR(128) NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `fedi_accounts` (
   FOREIGN KEY (`credentials_id`) REFERENCES credentials(id) ON DELETE CASCADE
 ) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `bot_learned_accounts` (
-  `bot_id` BINARY(64) NOT NULL,
+  `bot_id` BINARY(32) NOT NULL,
   `fedi_id` VARCHAR(128) NOT NULL,
   FOREIGN KEY (`bot_id`) REFERENCES bots(id) ON DELETE CASCADE,
   FOREIGN KEY (`fedi_id`) REFERENCES fedi_accounts(handle) ON DELETE CASCADE
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `posts` (
 ) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `word_blacklist` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `bot_id` BINARY(64) NOT NULL,
+  `bot_id` BINARY(32) NOT NULL,
   `phrase` VARCHAR(128) NOT NULL,
   `whole_word` BOOLEAN NOT NULL,
   FOREIGN KEY (`bot_id`) REFERENCES bots(id) ON DELETE CASCADE
