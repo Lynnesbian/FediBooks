@@ -34,13 +34,19 @@ CREATE TABLE IF NOT EXISTS `bots` (
   FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (`credentials_id`) REFERENCES credentials(id) ON DELETE CASCADE
 ) ENGINE=INNODB;
-CREATE TABLE IF NOT EXISTS `fedi_account` (
+CREATE TABLE IF NOT EXISTS `fedi_accounts` (
   `handle` VARCHAR(128) PRIMARY KEY,
   `outbox` VARCHAR(256),
   `credentials_id` INT NOT NULL,
   `icon` VARCHAR(512),
   `icon_update_time` DATETIME DEFAULT 0,
   FOREIGN KEY (`credentials_id`) REFERENCES credentials(id) ON DELETE CASCADE
+) ENGINE=INNODB;
+CREATE TABLE IF NOT EXISTS `bot_learned_accounts` (
+  `bot_id` BINARY(64) NOT NULL,
+  `fedi_id` VARCHAR(128) NOT NULL,
+  FOREIGN KEY (`bot_id`) REFERENCES bots(id) ON DELETE CASCADE,
+  FOREIGN KEY (`fedi_id`) REFERENCES fedi_accounts(handle) ON DELETE CASCADE
 ) ENGINE=INNODB;
 CREATE TABLE IF NOT EXISTS `posts` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
