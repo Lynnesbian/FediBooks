@@ -35,7 +35,7 @@ def home():
 			c.execute("SELECT COUNT(*) FROM `bots` WHERE user_id = %s AND enabled = TRUE", (session['user_id'],))
 			active_count = c.fetchone()[0]
 			dc = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-			dc.execute("SELECT handle` FROM `bots` WHERE user_id = %s", (session['user_id'],))
+			dc.execute("SELECT `handle` FROM `bots` WHERE user_id = %s", (session['user_id'],))
 			bots = dc.fetchall()
 			dc.close()
 			bot_users = {}
@@ -156,7 +156,8 @@ def bot_create():
 				session['step'] = 1
 				return bot_create()
 
-		elif session['step'] == 4:
+	else:
+		if session['step'] == 4:
 			try:
 				# test authentication
 				client = Mastodon(client_id=session['client_id'], client_secret=session['client_secret'], api_base_url=session['instance'])
@@ -175,7 +176,6 @@ def bot_create():
 
 			c.execute("INSERT INTO `bots` (handle, user_id, credentials_id) VALUES (%s, %s, %s)", (handle, session['user_id'], credentials_id))
 			mysql.connection.commit()
-
 			c.close()
 
 			# clean up unneeded variables
