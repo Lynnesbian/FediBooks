@@ -35,7 +35,7 @@ def home():
 			c.execute("SELECT COUNT(*) FROM `bots` WHERE user_id = %s AND enabled = TRUE", (session['user_id'],))
 			active_count = c.fetchone()[0]
 			dc = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-			dc.execute("SELECT `handle` FROM `bots` WHERE user_id = %s", (session['user_id'],))
+			dc.execute("SELECT `handle`, `enabled` FROM `bots` WHERE user_id = %s", (session['user_id'],))
 			bots = dc.fetchall()
 			dc.close()
 			bot_users = {}
