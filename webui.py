@@ -132,7 +132,7 @@ def bot_create():
 			session['instance'] = re.match(r"^(?:https?:\/\/)?(.*)", request.form['instance']).group(1)
 			
 			# check for mastodon/pleroma
-			r = requests.get("https://{}/api/v1/instance".format(session['instance']))
+			r = requests.get("https://{}/api/v1/instance".format(session['instance']), timeout=10)
 			if r.status_code == 200:
 				j = r.json()
 				if "Pleroma" in j['version']:
