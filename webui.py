@@ -41,6 +41,7 @@ def home():
 			bot_users = {}
 
 			for bot in bots:
+				# multiple SELECTS is slow, maybe SELECT all at once and filter with python?
 				c.execute("SELECT COUNT(*) FROM `bot_learned_accounts` WHERE bot_id = %s", (bot['id'],))
 				bot_users[bot['id']] = c.fetchone()[0]
 
@@ -186,6 +187,11 @@ def bot_create():
 			del session['client_secret']
 
 	return render_template("bot_create.html")
+
+@app.route("/bot/create/back")
+def bot_create_back():
+	session['step'] -= 1
+	return redirect(url_for("bot_create"), 303)
 
 @app.route("/do/authenticate_bot")
 def do_authenticate_bot():
