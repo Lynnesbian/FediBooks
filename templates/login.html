@@ -10,6 +10,8 @@
 	<div class="container">
 		<h1 class="thin centred">{% if signup %}Sign up{% else %}Log in{% endif %}</h1>
 	</div>
+
+	{% include 'error.html' %}
 	
 	<div class="container centred">
 		<form action="/do/{% if signup %}signup{% else %}login{% endif %}" method="POST">

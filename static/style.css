@@ -178,3 +178,11 @@ form .row {
 	background: center/contain url("https://lynnesbian.space/img/bune.png");
 	display: inline-block;
 }
+
+.error {
+	background-color: #e66;
+	color: white;
+	text-align: center;
+	font-size: 1.6em;
+	padding: 10px;
+}

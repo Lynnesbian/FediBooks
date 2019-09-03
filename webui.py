@@ -60,11 +60,16 @@ def about():
 
 @app.route("/login")
 def show_login_page():
-	return render_template("login.html", signup = False)
+	error = None
+	if 'error' in session:
+		error = session.pop('error')
+	return render_template("login.html", signup = False, error = error)
 
 @app.route("/signup")
-def show_signup_page(error = None):
-	#TODO: display error if any
+def show_signup_page():
+	error = None
+	if 'error' in session:
+		error = session.pop('error')
 	return render_template("login.html", signup = True)
 
 @app.route("/settings")
@@ -136,8 +141,13 @@ def bot_accounts(id):
 
 @app.route("/bot/accounts/add", methods = ['GET', 'POST'])
 def bot_accounts_add():
+	error = None
 	if request.method == 'POST':
 		if session['step'] == 1:
+			if request.form['account'] == session['bot']:
+				error = "Bots cannot learn from themselves."
+				return render_template("bot_accounts_add.html", error)
+
 			# look up user
 			handle_list = request.form['account'].split('@')
 			username = handle_list[1]
@@ -159,7 +169,8 @@ def bot_accounts_add():
 					found = True
 					break
 			if not found:
-				return "Couldn't find a valid ActivityPub outbox URL."
+				error = "Couldn't find a valid ActivityPub outbox URL."
+				return render_template("bot_accounts_add.html", error = error)
 
 			# 3. format as outbox URL and check to make sure it works
 			outbox = "{}/outbox?page=true".format(uri)
@@ -171,10 +182,13 @@ def bot_accounts_add():
 				c.execute("INSERT INTO `bot_learned_accounts` (`bot_id`, `fedi_id`) VALUES (%s, %s)", (session['bot'], request.form['account']))
 				c.close()
 				mysql.connection.commit()
+			else:
+				error = "Couldn't access ActivityPub outbox. {} may require authenticated fetches, which FediBooks doesn't support yet."
+				return render_template("bot_accounts_add.html", error = error)
 
 				return redirect("/bot/accounts/{}".format(session['bot']), 303)
 
-	return render_template("bot_accounts_add.html")
+	return render_template("bot_accounts_add.html", error = error)
 
 @app.route("/bot/accounts/toggle/<id>")
 def bot_accounts_toggle(id):
@@ -205,7 +219,7 @@ def bot_accounts_delete(id):
 
 @app.route("/bot/create/", methods=['GET', 'POST'])
 def bot_create():
-	#TODO: error handling
+	error = None
 	if request.method == 'POST':
 		if session['step'] == 1:
 			# strip leading https://, if provided
@@ -270,7 +284,7 @@ def bot_create():
 				del session['instance']
 				del session['instance_type']
 				session['step'] = 1
-				return bot_create()
+				return redirect(url_for("bot_create"), 303)
 
 	else:
 		if session['step'] == 4:
@@ -282,7 +296,8 @@ def bot_create():
 				handle = "@{}@{}".format(username, session['instance'])
 			except:
 				# authentication error occurred
-				return render_template("bot_oauth_error.html")
+				error = "Authentication failed."
+				return render_template("bot_create.html", error = error)
 
 			# authentication success!!
 			c = mysql.connection.cursor()
@@ -301,7 +316,9 @@ def bot_create():
 			del session['client_id']
 			del session['client_secret']
 
-	return render_template("bot_create.html")
+	if 'error' in session:
+		error = session.pop('error')
+	return render_template("bot_create.html", error = error)
 
 @app.route("/bot/create/back")
 def bot_create_back():
@@ -319,10 +336,12 @@ def do_signup():
 	# email validation is basically impossible without actually sending an email to the address
 	# because fedibooks can't send email yet, we'll just check if the string contains an @ ;)
 	if "@" not in request.form['email']:
-		return show_signup_page("Invalid email address.")
+		session['error'] = "Invalid email address."
+		return redirect(url_for("show_signup_page"), 303)
 
 	if len(request.form['password']) < 8:
-		return show_signup_page("Password too short.")
+		session['error'] = "Password too short."
+		return redirect(url_for("show_signup_page"), 303)
 
 	pw_hashed = hashlib.sha256(request.form['password'].encode('utf-8')).digest()
 	pw = bcrypt.hashpw(pw_hashed, bcrypt.gensalt(12))
@@ -350,12 +369,17 @@ def do_login():
 	c.execute("SELECT * FROM users WHERE email = %s", (request.form['email'],))
 	data = c.fetchone()
 	c.close()
+	if data == None:
+		session['error'] = "Incorrect login information."
+		return redirect(url_for("show_login_page"), 303)
+	
 	if bcrypt.checkpw(pw_hashed, data['password']):
 		session['user_id'] = data['id']
 		return redirect(url_for("home"))
 
 	else:
-		return "invalid login"
+		session['error'] = "Incorrect login information."
+		return redirect(url_for("show_login_page"), 303)
 
 @app.route("/img/bot_generic.png")
 def img_bot_generic():
