@@ -70,7 +70,7 @@ def show_signup_page():
 	error = None
 	if 'error' in session:
 		error = session.pop('error')
-	return render_template("login.html", signup = True)
+	return render_template("login.html", signup = True, error = error)
 
 @app.route("/settings")
 def settings():
@@ -146,7 +146,7 @@ def bot_accounts_add():
 		if session['step'] == 1:
 			if request.form['account'] == session['bot']:
 				error = "Bots cannot learn from themselves."
-				return render_template("bot_accounts_add.html", error)
+				return render_template("bot_accounts_add.html", error = error)
 
 			# look up user
 			handle_list = request.form['account'].split('@')
@@ -185,8 +185,6 @@ def bot_accounts_add():
 			else:
 				error = "Couldn't access ActivityPub outbox. {} may require authenticated fetches, which FediBooks doesn't support yet."
 				return render_template("bot_accounts_add.html", error = error)
-
-				return redirect("/bot/accounts/{}".format(session['bot']), 303)
 
 	return render_template("bot_accounts_add.html", error = error)
 
