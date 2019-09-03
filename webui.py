@@ -18,7 +18,7 @@ app.config['MYSQL_PASSWORD'] = cfg['db_pass']
 
 mysql = MySQL(app)
 
-scopes = ['write:statuses', 'write:accounts', 'read:accounts', 'read:notifications', 'read:statuses']
+scopes = ['write:statuses', 'write:accounts', 'read:accounts', 'read:notifications', 'read:statuses', 'push']
 
 @app.route("/")
 def home():
