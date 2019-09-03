@@ -182,6 +182,7 @@ def bot_accounts_add():
 				c.execute("INSERT INTO `bot_learned_accounts` (`bot_id`, `fedi_id`) VALUES (%s, %s)", (session['bot'], request.form['account']))
 				c.close()
 				mysql.connection.commit()
+				return redirect("/bot/accounts/{}".format(session['bot']), 303)
 			else:
 				error = "Couldn't access ActivityPub outbox. {} may require authenticated fetches, which FediBooks doesn't support yet."
 				return render_template("bot_accounts_add.html", error = error)
