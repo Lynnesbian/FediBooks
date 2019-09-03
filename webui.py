@@ -184,6 +184,24 @@ def bot_accounts_toggle(id):
 	c.close()
 	return redirect("/bot/accounts/{}".format(session['bot']), 303)
 
+@app.route("/bot/accounts/delete/<id>", methods=['GET', 'POST'])
+def bot_accounts_delete(id):
+	if request.method == 'GET':
+		instance = id.split("@")[2]
+		return render_template("bot_accounts_delete.html", user = id, instance = instance)
+	else:
+		#NOTE: when user credential support is added, we'll need to delete the creds too
+		c = mysql.connection.cursor()
+		c.execute("DELETE FROM `bot_learned_accounts` WHERE `fedi_id` = %s AND bot_id = %s", (id, session['bot']))
+		# check to see if anyone else is learning from this account
+		c.execute("SELECT COUNT(*) FROM `bot_learned_accounts` WHERE `fedi_id` = %s", (id,))
+		if c.fetchone()[0] == 0:
+			# nobody else learns from this account, remove it from the db
+			c.execute("DELETE FROM `fedi_accounts` WHERE `handle` = %s", (id,))
+		c.close()
+		mysql.connection.commit()
+
+		return redirect(url_for("/bot/accounts/{}".format(session['bot'])), 303)
 
 @app.route("/bot/create/", methods=['GET', 'POST'])
 def bot_create():

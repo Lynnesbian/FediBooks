@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FediBooks</title>
+	{% include 'imports.html' %}
+</head>
+
+<body>
+	<div class="container centred">
+		<h1 class="thin centred">Stop learning from account</h1>
+	</div>
+	
+	<div class="container centred">
+		<form method='POST'>
+			<div class="panel-icon large"></div>
+			<div class="container centred">
+				<p>Are you sure you want {{ bot }} to stop learning from {{ user }}?</p>
+				<a class="button btn-secondary" href="/"><i class="fas fa-times"></i> Cancel</a>
+				<button class="button btn-dangerous"><i class="fas fa-trash"></i> Stop learning</button>
+			</div>
+		</form>
+	</div>
+
+	{% include 'footer.html' %}
+</body>
+</html>
