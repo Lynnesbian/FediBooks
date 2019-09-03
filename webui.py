@@ -304,7 +304,15 @@ def bot_create():
 			credentials_id = c.lastrowid
 			mysql.connection.commit()
 
-			c.execute("INSERT INTO `bots` (handle, user_id, credentials_id) VALUES (%s, %s, %s)", (handle, session['user_id'], credentials_id))
+			# get webpush url
+			privated, publicd = client.push_subscription_generate_keys()
+			private = privated['privkey']
+			public = publicd['pubkey']
+			secret = privated['auth']
+			# replace fedibooks.com with cfg['base_uri'] on release
+			client.push_subscription_set("https://fedibooks.com/push/{}".format(handle), publicd, mention_events = True)
+
+			c.execute("INSERT INTO `bots` (handle, user_id, credentials_id, push_public_key, push_private_key, push_secret) VALUES (%s, %s, %s, %s, %s, %s)", (handle, session['user_id'], credentials_id, public, private, secret))
 			mysql.connection.commit()
 			c.close()
 
