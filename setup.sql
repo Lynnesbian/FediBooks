@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `bots` (
   `push_private_key` BINARY(128) NOT NULL,
   `push_public_key` BINARY(128) NOT NULL,
   `push_secret` BINARY(16)),
-  `enabled` BOOLEAN DEFAULT 1,
+  `enabled` BOOLEAN DEFAULT 0,
   `replies_enabled` BOOLEAN DEFAULT 1,
   `post_frequency` SMALLINT UNSIGNED DEFAULT 30,
   `content_warning` VARCHAR(128),
