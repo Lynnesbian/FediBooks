@@ -246,7 +246,7 @@ def bot_create():
 				# all other instance types are also unsupported
 				# return an error message
 				#TODO: misskey
-				session['error'] = "Unsupported instance type."
+				session['error'] = "Unsupported instance type. Misskey support is planned."
 
 		elif session['step'] == 2:
 			# nothing needs to be done here, this step just informs the user that their instance type is supported
@@ -297,6 +297,7 @@ def bot_create():
 			except:
 				# authentication error occurred
 				error = "Authentication failed."
+				session['step'] = 3
 				return render_template("bot_create.html", error = error)
 
 			# authentication success!!
@@ -386,6 +387,7 @@ def img_bot_generic():
 	return send_file("static/bot_generic.png", mimetype="image/png")
 
 def bot_check(bot):
+	# check to ensure bot is owned by user
 	c = mysql.connection.cursor()
 	c.execute("SELECT COUNT(*) FROM `bots` WHERE `handle` = %s AND `user_id` = %s", (bot, session['user_id']))
 	return c.fetchone()[0] == 1
