@@ -395,6 +395,10 @@ def do_login():
 		session['error'] = "Incorrect login information."
 		return redirect(url_for("show_login_page"), 303)
 
+@app.route("/issue/bug")
+def report_bug():
+	return render_template("report_bug.html")
+
 @app.route("/img/bot_generic.png")
 def img_bot_generic():
 	return send_file("static/bot_generic.png", mimetype="image/png")

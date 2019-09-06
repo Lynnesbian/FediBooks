@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FediBooks</title>
+	{% include 'imports.html' %}
+</head>
+
+<body>
+	<div class="container centred">
+		<h1 class="thin centred">Report a bug</h1>
+	</div>
+	
+	<div class="container centred">
+		<form method='POST'>
+			<label for="title" class="important">Bug title</label>
+			<p>A short, concise description of what happened.</p>
+			<input name="title" class="full-width" type="text" placeholder="I can't delete my bot">
+
+			<label for="description" class="important">Description</label>
+			<p>A more detailed description of what happened, including the steps you took that caused this issue to appear.</p>
+			<textarea name="description" class="full-width" placeholder="I clicked the delete bot button and clicked confirm, but the bot was still there afterwards."></textarea>
+
+			<label for="comments" class="important">Further comments</label>
+			<p>If you'd like to, you may add a comment here with any additional information.</p>
+			<textarea name="comments" class="full-width" placeholder="This started happening when I disabled replies on all my bots."></textarea>
+
+			<div class="container centred">
+				<a href="/" class="button btn-large btn-secondary"><i class="fas fa-times"></i> Cancel</a>
+				<button class="button btn-large btn-primary"><i class="fas fa-exclamation-circle"></i> Submit bug report</button>
+			</div>
+		</form>
+	</div>
+
+	{% include 'footer.html' %}
+</body>
+</html>

@@ -113,7 +113,7 @@ input.button, button.button {
 	background-color: #777;
 }
 
-.btn-large {
+.btn-large, button.btn-large {
 	font-size: 1.6em;
 }
 
@@ -150,14 +150,15 @@ label.important {
 	font-weight: 300;
 	display: block;
 }
-input, select {
+input, select, textarea {
 	font-size: 1.2em;
 	line-height: 1.4em;
 	border: 3px grey solid;
 	border-radius: none;
 	padding: 3px;
+	font-family: "Roboto", sans-serif;
 }
-input:focus, select:focus {
+input:focus, select:focus, textarea:focus {
 	border: 3px mediumpurple solid;
 }
 
