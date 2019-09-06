@@ -214,7 +214,7 @@ def bot_accounts_delete(id):
 		c.close()
 		mysql.connection.commit()
 
-		return redirect(url_for("/bot/accounts/{}".format(session['bot'])), 303)
+		return redirect("/bot/accounts/{}".format(session['bot']), 303)
 
 @app.route("/bot/create/", methods=['GET', 'POST'])
 def bot_create():
