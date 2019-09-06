@@ -100,3 +100,5 @@ accounts = cursor.fetchall()
 cursor.close()
 with Pool(8) as p:
 	p.map(scrape_posts, accounts)
+
+#TODO: other cron tasks should be done here, like updating profile pictures

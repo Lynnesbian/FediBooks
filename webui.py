@@ -128,6 +128,7 @@ def bot_accounts(id):
 		c.execute("SELECT COUNT(*) FROM `bot_learned_accounts` WHERE `bot_id` = %s", (id,))
 		user_count = c.fetchone()[0]
 		users = {}
+		post_count = {}
 
 		if user_count > 0:
 			dc = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -135,9 +136,14 @@ def bot_accounts(id):
 			users = dc.fetchall()
 			dc.close()
 
+			post_count = {}
+			for user in users:
+				c.execute("SELECT COUNT(*) FROM `posts` WHERE `fedi_id` = %s", (user['fedi_id'],))
+				post_count[user['fedi_id']] = c.fetchone()[0]
+
 		c.close()
 
-		return render_template("bot_accounts.html", users = users)
+		return render_template("bot_accounts.html", users = users, post_count = post_count)
 
 @app.route("/bot/accounts/add", methods = ['GET', 'POST'])
 def bot_accounts_add():
