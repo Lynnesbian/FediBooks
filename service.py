@@ -95,7 +95,7 @@ db = MySQLdb.connect(
 print("Downloading posts")
 
 cursor = db.cursor()
-cursor.execute("SELECT `handle`, `outbox` FROM `fedi_accounts`")
+cursor.execute("SELECT `handle`, `outbox` FROM `fedi_accounts` ORDER BY RAND()")
 accounts = cursor.fetchall()
 cursor.close()
 with Pool(8) as p:
