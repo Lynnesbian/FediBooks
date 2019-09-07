@@ -224,6 +224,7 @@ def bot_accounts_delete(id):
 
 @app.route("/bot/create/", methods=['GET', 'POST'])
 def bot_create():
+	login_check()
 	error = None
 	if request.method == 'POST':
 		if session['step'] == 1:
@@ -408,3 +409,10 @@ def bot_check(bot):
 	c = mysql.connection.cursor()
 	c.execute("SELECT COUNT(*) FROM `bots` WHERE `handle` = %s AND `user_id` = %s", (bot, session['user_id']))
 	return c.fetchone()[0] == 1
+
+@app.before_request
+def login_check():
+	if request.path not in ['/', '/about', '/welcome', '/login', '/signup', '/do/login', '/do/signup', '/static/style.css']:
+		# page requires authentication
+		if 'user_id' not in session:
+			return redirect(url_for('home'))
