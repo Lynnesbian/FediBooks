@@ -224,7 +224,6 @@ def bot_accounts_delete(id):
 
 @app.route("/bot/create/", methods=['GET', 'POST'])
 def bot_create():
-	login_check()
 	error = None
 	if request.method == 'POST':
 		if session['step'] == 1:
