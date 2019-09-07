@@ -84,6 +84,9 @@ def scrape_posts(account):
 		c.close()
 		print("Finished {}".format(handle))
 
+def make_post(bot):
+	pass
+
 print("Establishing DB connection")
 db = MySQLdb.connect(
 	host = cfg['db_host'],
@@ -93,12 +96,26 @@ db = MySQLdb.connect(
 )
 
 print("Downloading posts")
-
 cursor = db.cursor()
 cursor.execute("SELECT `handle`, `outbox` FROM `fedi_accounts` ORDER BY RAND()")
 accounts = cursor.fetchall()
-cursor.close()
 with Pool(8) as p:
 	p.map(scrape_posts, accounts)
+
+print("Generating posts")
+cursor.execute("""
+SELECT
+    bots.handle, credentials.client_id, credentials.client_secret, credentials.secret
+FROM
+    bots,
+    credentials
+WHERE
+    bots.credentials_id = credentials.id
+        AND bots.enabled = TRUE;
+""")
+bots = cursor.fetchall()
+
+with Pool(8) as p:
+	p.map(make_post, bots)
 
 #TODO: other cron tasks should be done here, like updating profile pictures
