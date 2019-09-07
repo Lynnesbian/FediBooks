@@ -82,10 +82,17 @@ def scrape_posts(account):
 
 		db.commit()
 		c.close()
-		print("Finished {}".format(handle))
 
 def make_post(bot):
-	pass
+	print("Generating post for {}".format(bot[0]))
+	client = Mastodon(
+		client_id = bot[1],
+		client_secret = bot[2],
+		access_token = bot[3],
+		api_base_url = "https://{}".format(bot[0].split("@")[2])
+	)
+
+	client.status_post("fedibooks posting test")
 
 print("Establishing DB connection")
 db = MySQLdb.connect(
