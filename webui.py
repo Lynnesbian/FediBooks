@@ -184,7 +184,7 @@ def bot_accounts_add():
 			if r.status_code == 200:
 				# success!!
 				c = mysql.connection.cursor()
-				c.execute("INSERT INTO `fedi_accounts` (`handle`, `outbox`) VALUES (%s, %s)", (request.form['account'], outbox))
+				c.execute("REPLACE INTO `fedi_accounts` (`handle`, `outbox`) VALUES (%s, %s)", (request.form['account'], outbox))
 				c.execute("INSERT INTO `bot_learned_accounts` (`bot_id`, `fedi_id`) VALUES (%s, %s)", (session['bot'], request.form['account']))
 				c.close()
 				mysql.connection.commit()
@@ -307,7 +307,7 @@ def bot_create():
 
 			# authentication success!!
 			c = mysql.connection.cursor()
-			c.execute("INSERT INTO `credentials` (client_id, client_secret, secret) VALUES (%s, %s, %s)", (session['client_id'], session['client_secret'], session['code']))
+			c.execute("INSERT INTO `credentials` (client_id, client_secret, secret) VALUES (%s, %s, %s)", (session['client_id'], session['client_secret'], session['secret']))
 			credentials_id = c.lastrowid
 			mysql.connection.commit()
 
