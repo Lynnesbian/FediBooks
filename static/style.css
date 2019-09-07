@@ -44,6 +44,9 @@ body {
 .full-width {
 	width: 100%;
 }
+.no-margin {
+	margin: 0;
+}
 
 .panel-icon {
 	width: 100px;
