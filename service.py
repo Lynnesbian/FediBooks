@@ -95,8 +95,12 @@ db = MySQLdb.connect(
 	db=cfg['db_name']
 )
 
-print("Downloading posts")
+print("Cleaning up database")
+# delete any fedi accounts we no longer need
 cursor = db.cursor()
+cursor.execute("DELETE FROM fedi_accounts WHERE handle NOT IN (SELECT fedi_id FROM bot_learned_accounts);")
+
+print("Downloading posts")
 cursor.execute("SELECT `handle`, `outbox` FROM `fedi_accounts` ORDER BY RAND()")
 accounts = cursor.fetchall()
 with Pool(8) as p:
