@@ -2,11 +2,16 @@
 from mastodon import Mastodon
 import MySQLdb
 import requests
+import markovify
 from multiprocessing import Pool
 import json, re
 import functions
 
 cfg = json.load(open('config.json'))
+
+class nlt_fixed(markovify.NewlineText): # modified version of NewlineText that never rejects sentences
+	def test_sentence_input(self, sentence):
+		return True # all sentences are valid <3
 
 def scrape_posts(account):
 	handle = account[0]
@@ -92,7 +97,36 @@ def make_post(bot):
 		api_base_url = "https://{}".format(bot[0].split("@")[2])
 	)
 
-	client.status_post("fedibooks posting test")
+	c = db.cursor()
+	# select 1000 random posts for the bot to learn from
+	# TODO: optionally don't learn from CW'd posts
+	c.execute("SELECT content FROM posts WHERE fedi_id IN (SELECT fedi_id FROM bot_learned_accounts WHERE bot_id = %s) ORDER BY RAND() LIMIT 1000", (bot[0],))
+
+	# this line is a little gross/optimised but here's what it does
+	# 1. fetch all of the results from the above query
+	# 2. turn (('this',), ('format')) into ('this', 'format')
+	# 3. convert the tuple to a list
+	# 4. join the list into a string separated by newlines
+	posts = "\n".join(list(sum(c.fetchall(), ())))
+
+	model = nlt_fixed(posts)
+	tries = 0
+	sentence = None
+	# even with such a high tries value for markovify, it still sometimes returns none.
+	# so we implement our own tries function as well, and try ten times.
+	while sentence is None and tries < 10:
+		sentence = model.make_short_sentence(500, tries = 10000)
+		tries += 1
+
+	# TODO: mention handling
+
+	if sentence == None:
+		# TODO: send an error email
+		pass
+	else:
+		client.status_post(sentence)
+
+	# TODO: update date of last post
 
 print("Establishing DB connection")
 db = MySQLdb.connect(
@@ -110,8 +144,8 @@ cursor.execute("DELETE FROM fedi_accounts WHERE handle NOT IN (SELECT fedi_id FR
 print("Downloading posts")
 cursor.execute("SELECT `handle`, `outbox` FROM `fedi_accounts` ORDER BY RAND()")
 accounts = cursor.fetchall()
-with Pool(8) as p:
-	p.map(scrape_posts, accounts)
+# with Pool(8) as p:
+# 	p.map(scrape_posts, accounts)
 
 print("Generating posts")
 cursor.execute("""
