@@ -88,19 +88,40 @@ def scrape_posts(account):
 		db.commit()
 		c.close()
 
-def make_post(bot):
-	print("Generating post for {}".format(bot[0]))
+def make_post(handle):
+	handle = handle[0]
+	print("Generating post for {}".format(handle))
+	c = db.cursor()
+	c.execute("""
+	SELECT 
+			learn_from_cw, client_id, client_secret, secret
+	FROM
+			bots, credentials
+	WHERE
+			bots.credentials_id = (SELECT 
+							credentials_id
+					FROM
+							bots
+					WHERE
+							handle = %s)
+	""", (handle,))
+
+	bot = c.fetchone()
 	client = Mastodon(
 		client_id = bot[1],
 		client_secret = bot[2],
 		access_token = bot[3],
-		api_base_url = "https://{}".format(bot[0].split("@")[2])
+		api_base_url = "https://{}".format(handle.split("@")[2])
 	)
 
-	c = db.cursor()
+	# by default, only select posts that don't have CWs.
+	# if learn_from_cw, then also select posts with CWs
+	cw_list = [False]
+	if bot[0]:
+		cw_list = [False, True]
+
 	# select 1000 random posts for the bot to learn from
-	# TODO: optionally don't learn from CW'd posts
-	c.execute("SELECT content FROM posts WHERE fedi_id IN (SELECT fedi_id FROM bot_learned_accounts WHERE bot_id = %s) ORDER BY RAND() LIMIT 1000", (bot[0],))
+	c.execute("SELECT content FROM posts WHERE fedi_id IN (SELECT fedi_id FROM bot_learned_accounts WHERE bot_id = %s) AND cw IN %s ORDER BY RAND() LIMIT 1000", (handle, cw_list))
 
 	# this line is a little gross/optimised but here's what it does
 	# 1. fetch all of the results from the above query
@@ -148,16 +169,7 @@ accounts = cursor.fetchall()
 # 	p.map(scrape_posts, accounts)
 
 print("Generating posts")
-cursor.execute("""
-SELECT
-    bots.handle, credentials.client_id, credentials.client_secret, credentials.secret
-FROM
-    bots,
-    credentials
-WHERE
-    bots.credentials_id = credentials.id
-        AND bots.enabled = TRUE;
-""")
+cursor.execute("SELECT handle FROM bots WHERE enabled = TRUE")
 bots = cursor.fetchall()
 
 with Pool(8) as p:
