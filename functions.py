@@ -122,6 +122,6 @@ def make_post(handle):
 				post = re.sub(r"@(\w+)@([\w.]+)", r"@{}\1".format(zws), post)		
 
 		print(post)
-		# client.status_post(post, visibility = bot['post_privacy'], spoiler_text = bot['content_warning'])
+		client.status_post(post, visibility = bot['post_privacy'], spoiler_text = bot['content_warning'])
 
 	# TODO: update date of last post
