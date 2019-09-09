@@ -20,6 +20,13 @@ mysql = MySQL(app)
 
 scopes = ['write:statuses', 'write:accounts', 'read:accounts', 'read:notifications', 'read:statuses', 'push']
 
+@app.before_request
+def login_check():
+	if request.path not in ['/', '/about', '/welcome', '/login', '/signup', '/do/login', '/do/signup', '/static/style.css']:
+		# page requires authentication
+		if 'user_id' not in session:
+			return redirect(url_for('home'))
+
 @app.route("/")
 def home():
 	if 'user_id' in session:
@@ -408,10 +415,3 @@ def bot_check(bot):
 	c = mysql.connection.cursor()
 	c.execute("SELECT COUNT(*) FROM `bots` WHERE `handle` = %s AND `user_id` = %s", (bot, session['user_id']))
 	return c.fetchone()[0] == 1
-
-@app.before_request
-def login_check():
-	if request.path not in ['/', '/about', '/welcome', '/login', '/signup', '/do/login', '/do/signup', '/static/style.css']:
-		# page requires authentication
-		if 'user_id' not in session:
-			return redirect(url_for('home'))
