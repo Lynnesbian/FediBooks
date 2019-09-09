@@ -10,9 +10,12 @@
 	<div class="container">
 		<h1 class="thin centred">Account settings</h1>
 	</div>
+
+	{% include 'error.html' %}
+	{% include 'success.html' %}
 	
 	<div class="container">
-		<form action="/do/bot/edit" method="post" class="full-width">
+		<form method="POST" class="full-width">
 			<div class="container light">
 				<h2 class="thin centred">Login settings</h2>
 				<p class="centred">Update your email and password here.</p>
@@ -30,6 +33,10 @@
 			<div class="container light">
 				<h2 class="thin centred">Contact settings</h2>
 				<p class="centred">When should FediBooks send you email?</p>
+			</div>
+
+			<div class="error err-small">
+				Note: This feature isn't ready yet. As of now, FediBooks will not send you email.
 			</div>
 
 			<div class="row">

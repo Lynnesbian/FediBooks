@@ -183,10 +183,18 @@ form .row {
 	display: inline-block;
 }
 
-.error {
-	background-color: #e66;
+.error, .success {
 	color: white;
 	text-align: center;
 	font-size: 1.6em;
 	padding: 10px;
+}
+.error {
+	background-color: #e66;
+}
+.error.err-small {
+	font-size: 1.0em;
+}
+.success {
+	background-color: #6e6;
 }

@@ -79,14 +79,59 @@ def show_signup_page():
 		error = session.pop('error')
 	return render_template("login.html", signup = True, error = error)
 
-@app.route("/settings")
+@app.route("/settings", methods=['GET', 'POST'])
 def settings():
-	return render_template("coming_soon.html")
-	dc = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-	dc.execute("SELECT * FROM `users` WHERE id = %s", (session['user_id'],))
-	user = dc.fetchone()
-	dc.close()
-	return render_template("settings.html", user = user)
+	error = None
+	if request.method == 'GET':
+		dc = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+		dc.execute("SELECT * FROM `users` WHERE id = %s", (session['user_id'],))
+		user = dc.fetchone()
+		dc.close()
+		if 'error' in session:
+			error = session.pop('error')
+		return render_template("settings.html", user = user, error = error, success = session.pop('success', None))
+
+	else:
+		# update settings
+		c = mysql.connection.cursor()
+
+		c.execute("SELECT COUNT(*) FROM users WHERE email = %s AND id != %s", (request.form['email'], session['user_id']))
+		if c.fetchone()[0] > 0:
+			session['error'] = "Email address already in use."
+			return redirect(url_for("settings"), 303)
+
+		for setting in [request.form['fetch-error'], request.form['submit-error'], request.form['reply-error'], request.form['generation-error']]:
+			if setting not in ['once', 'always', 'never']:
+				session['error'] = 'Invalid option "{}".'.format(setting)
+				return redirect(url_for('settings'), 303)
+
+		if request.form['password'] != '':
+			# user is updating their password
+			if len(request.form['password']) < 8:
+				session['error'] = "Password too short."
+				return redirect(url_for("settings"), 303)
+
+			pw_hashed = hashlib.sha256(request.form['password'].encode('utf-8')).digest()
+			pw = bcrypt.hashpw(pw_hashed, bcrypt.gensalt(12))
+			c.execute("UPDATE users SET password = %s WHERE id = %s", (pw, session['user_id']))
+		
+		try:
+			c.execute("UPDATE users SET email = %s, `fetch` = %s, submit = %s, generation = %s, reply = %s WHERE id = %s", (
+				request.form['email'],
+				request.form['fetch-error'],
+				request.form['submit-error'],
+				request.form['generation-error'],
+				request.form['reply-error'],
+				session['user_id']
+			))
+			c.close()
+			mysql.connection.commit()
+		except:
+			session['error'] = "Encountered an error while updating the database."
+			return redirect(url_for('settings'), 303)
+
+		session['success'] = True
+		return redirect(url_for('settings'), 303)
 
 @app.route("/bot/edit/<id>")
 def bot_edit(id):
@@ -364,11 +409,16 @@ def do_signup():
 		session['error'] = "Password too short."
 		return redirect(url_for("show_signup_page"), 303)
 
+	c = mysql.connection.cursor()
+	c.execute("SELECT COUNT(*) FROM users WHERE email = %s", (request.form['email'],))
+	if c.fetchone()[0] > 0:
+		session['error'] = "Email address already in use."
+		return redirect(url_for("show_signup_page"), 303)
+
 	pw_hashed = hashlib.sha256(request.form['password'].encode('utf-8')).digest()
 	pw = bcrypt.hashpw(pw_hashed, bcrypt.gensalt(12))
 
 	# try to sign up
-	c = mysql.connection.cursor()
 	c.execute("INSERT INTO `users` (email, password) VALUES (%s, %s)", (request.form['email'], pw))
 	user_id = c.lastrowid
 	mysql.connection.commit()
