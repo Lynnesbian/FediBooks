@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `bots` (
   `post_frequency` SMALLINT UNSIGNED DEFAULT 30,
   `content_warning` VARCHAR(128),
   `length` SMALLINT UNSIGNED DEFAULT 500,
-  `fake_mentions` ENUM('always', 'start', 'never') DEFAULT 'start',
+  `fake_mentions` ENUM('always', 'middle', 'never') DEFAULT 'middle',
   `fake_mentions_full` BOOLEAN DEFAULT 0,
   `post_privacy` ENUM('public', 'unlisted', 'followers_only') DEFAULT 'unlisted',
   `learn_from_cw` BOOLEAN DEFAULT 0,
