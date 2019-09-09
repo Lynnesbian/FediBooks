@@ -92,19 +92,36 @@ def make_post(handle):
 
 	model = nlt_fixed(posts)
 	tries = 0
-	sentence = None
+	post = None
 	# even with such a high tries value for markovify, it still sometimes returns none.
 	# so we implement our own tries function as well, and try ten times.
-	while sentence is None and tries < 10:
-		sentence = model.make_short_sentence(500, tries = 10000)
+
+	if bot['fake_mentions'] == 'never':
+		# remove all mentions from the training data before the markov model sees it
+		posts = re.sub(r"@(\w+)@([\w.]+)\s?", "", posts)
+
+	while post is None and tries < 10:
+		post = model.make_short_sentence(500, tries = 10000)
 		tries += 1
 
-	# TODO: mention handling
-
-	if sentence == None:
+	if post == None:
 		# TODO: send an error email
 		pass
 	else:
-		client.status_post(sentence, visibility = bot['post_privacy'], spoiler_text = bot['content_warning'])
+		if "@" in post and bot['fake_mentions'] != 'never':
+		# the unicode zero width space is a (usually) invisible character
+		# we can insert it between the @ symbols in a handle to make it appear fine while not mentioning the user
+			zws = "\u200B"
+			if bot['fake_mentions'] == 'middle':
+				# remove mentions at the start of a post
+				post = re.sub(r"^(@\w+@[\w.]+\s*)+", "", post)
+			# TODO: does this regex catch all valid handles?
+			if bot['fake_mentions_full']:
+				post = re.sub(r"@(\w+)@([\w.]+)", r"@{}\1@{}\2".format(zws, zws), post)
+			else:
+				post = re.sub(r"@(\w+)@([\w.]+)", r"@{}\1".format(zws), post)		
+
+		print(post)
+		# client.status_post(post, visibility = bot['post_privacy'], spoiler_text = bot['content_warning'])
 
 	# TODO: update date of last post
