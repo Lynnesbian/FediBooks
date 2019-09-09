@@ -109,8 +109,8 @@ def make_post(handle):
 		pass
 	else:
 		if "@" in post and bot['fake_mentions'] != 'never':
-		# the unicode zero width space is a (usually) invisible character
-		# we can insert it between the @ symbols in a handle to make it appear fine while not mentioning the user
+			# the unicode zero width space is a (usually) invisible character
+			# we can insert it between the @ symbols in a handle to make it appear fine while not mentioning the user
 			zws = "\u200B"
 			if bot['fake_mentions'] == 'middle':
 				# remove mentions at the start of a post
