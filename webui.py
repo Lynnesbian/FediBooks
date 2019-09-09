@@ -67,29 +67,20 @@ def about():
 
 @app.route("/login")
 def show_login_page():
-	error = None
-	if 'error' in session:
-		error = session.pop('error')
-	return render_template("login.html", signup = False, error = error)
+	return render_template("login.html", signup = False, error = session.pop('error', None))
 
 @app.route("/signup")
 def show_signup_page():
-	error = None
-	if 'error' in session:
-		error = session.pop('error')
-	return render_template("login.html", signup = True, error = error)
+	return render_template("login.html", signup = True, error = session.pop('error', None))
 
 @app.route("/settings", methods=['GET', 'POST'])
 def settings():
-	error = None
 	if request.method == 'GET':
 		dc = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 		dc.execute("SELECT * FROM `users` WHERE id = %s", (session['user_id'],))
 		user = dc.fetchone()
 		dc.close()
-		if 'error' in session:
-			error = session.pop('error')
-		return render_template("settings.html", user = user, error = error, success = session.pop('success', None))
+		return render_template("settings.html", user = user, error = session.pop('error', None), success = session.pop('success', None))
 
 	else:
 		# update settings
@@ -199,7 +190,6 @@ def bot_accounts(id):
 
 @app.route("/bot/accounts/add", methods = ['GET', 'POST'])
 def bot_accounts_add():
-	error = None
 	if request.method == 'POST':
 		if session['step'] == 1:
 			if request.form['account'] == session['bot']:
@@ -245,7 +235,7 @@ def bot_accounts_add():
 				error = "Couldn't access ActivityPub outbox. {} may require authenticated fetches, which FediBooks doesn't support yet."
 				return render_template("bot_accounts_add.html", error = error)
 
-	return render_template("bot_accounts_add.html", error = error)
+	return render_template("bot_accounts_add.html", error = session.pop('error', None))
 
 @app.route("/bot/accounts/toggle/<id>")
 def bot_accounts_toggle(id):
@@ -276,7 +266,6 @@ def bot_accounts_delete(id):
 
 @app.route("/bot/create/", methods=['GET', 'POST'])
 def bot_create():
-	error = None
 	if request.method == 'POST':
 		if session['step'] == 1:
 			# strip leading https://, if provided
@@ -382,9 +371,7 @@ def bot_create():
 			del session['client_id']
 			del session['client_secret']
 
-	if 'error' in session:
-		error = session.pop('error')
-	return render_template("bot_create.html", error = error)
+	return render_template("bot_create.html", error = session.pop('error', None))
 
 @app.route("/bot/create/back")
 def bot_create_back():
