@@ -43,33 +43,41 @@ def make_post(handle):
 		db=cfg['db_name']
 	)
 	print("Generating post for {}".format(handle))
+	dc = db.cursor(MySQLdb.cursors.DictCursor)
 	c = db.cursor()
-	c.execute("""
+	dc.execute("""
 	SELECT 
-			learn_from_cw, client_id, client_secret, secret
+		learn_from_cw, 
+		fake_mentions,
+		fake_mentions_full,
+		post_privacy,
+		content_warning,
+		client_id,
+		client_secret,
+		secret
 	FROM
-			bots, credentials
+		bots, credentials
 	WHERE
-			bots.credentials_id = (SELECT 
-							credentials_id
-					FROM
-							bots
-					WHERE
-							handle = %s)
+		bots.credentials_id = (SELECT 
+			credentials_id
+		FROM
+			bots
+		WHERE
+			handle = %s)
 	""", (handle,))
 
-	bot = c.fetchone()
+	bot = dc.fetchone()
 	client = Mastodon(
-		client_id = bot[1],
-		client_secret = bot[2],
-		access_token = bot[3],
+		client_id = bot['client_id'],
+		client_secret = bot['client_secret'],
+		access_token = bot['secret'],
 		api_base_url = "https://{}".format(handle.split("@")[2])
 	)
 
 	# by default, only select posts that don't have CWs.
 	# if learn_from_cw, then also select posts with CWs
 	cw_list = [False]
-	if bot[0]:
+	if bot['learn_from_cw']:
 		cw_list = [False, True]
 
 	# select 1000 random posts for the bot to learn from
@@ -97,6 +105,6 @@ def make_post(handle):
 		# TODO: send an error email
 		pass
 	else:
-		client.status_post(sentence)
+		client.status_post(sentence, visibility = bot['post_privacy'], spoiler_text = bot['content_warning'])
 
 	# TODO: update date of last post
