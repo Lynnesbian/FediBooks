@@ -104,6 +104,7 @@ accounts = cursor.fetchall()
 # 	p.map(scrape_posts, accounts)
 
 print("Generating posts")
+# TODO: check time between last post and now
 cursor.execute("SELECT handle FROM bots WHERE enabled = TRUE")
 bots = cursor.fetchall()
 

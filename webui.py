@@ -292,7 +292,7 @@ def bot_create():
 				else:
 					if 'is_pro' in j['contact_account']:
 						# gab instance
-						session['error'] = "Eat shit and die, fascist scum."
+						session['error'] = "Gab instances are not supported."
 					else:
 						session['instance_type'] = "Mastodon"
 						session['step'] += 1
