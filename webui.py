@@ -435,7 +435,7 @@ def bot_create():
 				return redirect(url_for("home"), 303)
 
 	else:
-		if session['step'] == 4:
+		if 'step' in session and session['step'] == 4:
 			try:
 				# test authentication
 				client = Mastodon(client_id=session['client_id'], client_secret=session['client_secret'], api_base_url=session['instance'])
