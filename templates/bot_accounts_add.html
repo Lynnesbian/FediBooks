@@ -14,7 +14,7 @@
 	{%include 'error.html' %}
 	
 	<div class="container centred">
-		<form action="/bot/accounts/add" method="POST">
+		<form method="POST">
 			{% if session['step'] == 1 %}
 			<label for="account" class="important">Account handle</label>
 			<input type="text" name="account" class="full-width" placeholder="@user@example.com">

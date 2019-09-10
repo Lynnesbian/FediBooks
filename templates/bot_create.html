@@ -14,7 +14,7 @@
 	{% include 'error.html' %}
 	
 	<div class="container centred">
-		<form action="/bot/create" method="POST">
+		<form method="POST">
 			{% if session['step'] == 1 %}
 			<label for="instance" class="important">What instance will your bot's account be on?</label>
 			<input type="text" name="instance" class="full-width" placeholder="botsin.space">
