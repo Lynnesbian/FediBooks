@@ -554,9 +554,6 @@ def img_bot_generic():
 
 @app.route("/favicon.ico")
 def favicon():
-	# so there's a weird bug where one of my firefox installs wants the favicon, and when it can't find it, it requests /
-	# requesting / resets your session['step'] to 1, which breaks all the multi-step things.
-	# so we need to give it a favicon.
 	return send_file("static/favicon.ico")
 
 def bot_check(bot):
