@@ -135,6 +135,10 @@ a:visited {
 	color: mediumpurple;
 }
 
+p {
+	line-height: 1.4em;
+}
+
 h1 {
 	font-size: 4em;
 	margin-top: 10px !important;
