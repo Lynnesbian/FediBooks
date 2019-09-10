@@ -30,7 +30,6 @@ def login_check():
 @app.route("/")
 def home():
 	if 'user_id' in session:
-		session['step'] = 1
 		c = mysql.connection.cursor()
 		c.execute("SELECT COUNT(*) FROM `bots` WHERE user_id = %s", (session['user_id'],))
 		bot_count = c.fetchone()[0]
@@ -334,6 +333,9 @@ def bot_accounts_add():
 			else:
 				error = "Couldn't access ActivityPub outbox. {} may require authenticated fetches, which FediBooks doesn't support yet.".format(instance)
 				return render_template("bot_accounts_add.html", error = error)
+	else:
+		# new account add request
+		session['step'] = 1
 
 	return render_template("bot_accounts_add.html", error = session.pop('error', None))
 
@@ -469,6 +471,10 @@ def bot_create():
 			del session['instance_type']
 			del session['client_id']
 			del session['client_secret']
+		else:
+			# user is starting a new bot create request
+			session['step'] = 1
+
 
 	return render_template("bot_create.html", error = session.pop('error', None))
 
