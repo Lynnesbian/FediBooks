@@ -6,7 +6,6 @@ import functions
 
 cfg = json.load(open('config.json'))
 
-
 print("Establishing DB connection")
 db = MySQLdb.connect(
 	host = cfg['db_host'],
