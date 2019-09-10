@@ -1,0 +1,9 @@
+{
+	"secret_key": "enter a random string here",
+	"db_name": "fedibooks",
+	"db_user": "fedibooks",
+	"db_pass": "enter your database password here",
+	"db_host": "localhost",
+	"base_uri": "enter your base URI here, e.g. https://example.com",
+	"service_threads": 8
+}
