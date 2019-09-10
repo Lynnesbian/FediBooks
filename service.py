@@ -23,7 +23,7 @@ print("Generating posts")
 cursor.execute("SELECT handle FROM bots WHERE enabled = TRUE AND TIMESTAMPDIFF(MINUTE, last_post, CURRENT_TIMESTAMP()) > post_frequency")
 bots = cursor.fetchall()
 
-with Pool(8) as p:
+with Pool(cfg['service_threads']) as p:
 	p.map(functions.make_post, bots)
 
 #TODO: other cron tasks should be done here, like updating profile pictures

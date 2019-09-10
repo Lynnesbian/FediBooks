@@ -94,7 +94,7 @@ cursor = db.cursor()
 print("Downloading posts")
 cursor.execute("SELECT `handle`, `outbox` FROM `fedi_accounts` ORDER BY RAND()")
 accounts = cursor.fetchall()
-with Pool(8) as p:
+with Pool(cfg['service_threads']) as p:
 	p.map(scrape_posts, accounts)
 
 print("Done!")
