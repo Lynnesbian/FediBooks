@@ -124,4 +124,5 @@ def make_post(handle):
 		print(post)
 		client.status_post(post, visibility = bot['post_privacy'], spoiler_text = bot['content_warning'])
 
-	# TODO: update date of last post
+	c.execute("UPDATE bots SET last_post = CURRENT_TIMESTAMP() WHERE handle = %s", (handle,))
+	db.commit()

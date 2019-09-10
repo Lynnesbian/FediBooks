@@ -104,8 +104,7 @@ accounts = cursor.fetchall()
 # 	p.map(scrape_posts, accounts)
 
 print("Generating posts")
-# TODO: check time between last post and now
-cursor.execute("SELECT handle FROM bots WHERE enabled = TRUE")
+cursor.execute("SELECT handle FROM bots WHERE enabled = TRUE AND TIMESTAMPDIFF(MINUTE, last_post, CURRENT_TIMESTAMP()) > post_frequency")
 bots = cursor.fetchall()
 
 with Pool(8) as p:
