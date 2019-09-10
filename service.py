@@ -11,7 +11,9 @@ db = MySQLdb.connect(
 	host = cfg['db_host'],
 	user=cfg['db_user'],
 	passwd=cfg['db_pass'],
-	db=cfg['db_name']
+	db=cfg['db_name'],
+	use_unicode=True,
+	charset="utf8mb4"
 )
 
 print("Cleaning up database")
