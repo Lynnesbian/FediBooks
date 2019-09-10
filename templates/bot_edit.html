@@ -9,14 +9,14 @@
 <body>
 	<div class="container">
 		<h1 class="thin centred">Configure bot</h1>
-		<p class="large centred">@botname@example.com</p>
+		<p class="large centred">{{ bot['handle'] }}</p>
 	</div>
 
 	{% include 'error.html' %}
 	{% include 'success.html' %}
-	
+
 	<div class="container centred">
-		<form action="/do/bot/edit" method="post" class="full-width">
+		<form method="POST" class="full-width">
 			<!-- <div class="row">
 				<label for="username" class="large">Username</label>
 				<input type="text" name="username" value="Bot Name">
@@ -27,7 +27,7 @@
 			</div>
 			<div class="row">
 				<label for="cw" class="large">Content warning (subject)</label>
-				<input type="text" placeholder="None" name="cw" value = "{{ bot['content_warning'] if bot['content_warning'] != None else '' }}">
+				<input type="text" placeholder="None" name="cw" pattern=".{0,128}" title="Content warning cannot exceed 128 characters." value = "{{ bot['content_warning'] if bot['content_warning'] != None else '' }}">
 			</div>
 			<div class="row">
 				<label for="length" class="large">Maximum post length (characters)</label>
