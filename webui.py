@@ -22,7 +22,7 @@ scopes = ['write:statuses', 'write:accounts', 'read:accounts', 'read:notificatio
 
 @app.before_request
 def login_check():
-	if request.path not in ['/', '/about', '/welcome', '/login', '/signup', '/do/login', '/do/signup', '/static/style.css']:
+	if request.path not in ['/', '/about', '/welcome', '/login', '/signup', '/do/login', '/do/signup', '/static/style.css'] and not request.path.startswith("/push"):
 		# page requires authentication
 		if 'user_id' not in session:
 			return redirect(url_for('home'))
@@ -488,6 +488,11 @@ def do_authenticate_bot():
 	session['code'] = request.args.get('code')
 	session['step'] = 4
 	return redirect(url_for("bot_create"), 303)
+
+@app.route("/push/<id>")
+def push(id):
+	c = db.cursor()
+	print(request.form)
 
 @app.route("/do/signup", methods=['POST'])
 def do_signup():
