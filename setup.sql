@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `email` VARCHAR(128) UNIQUE NOT NULL,
   `password` BINARY(60) NOT NULL,
+  `email_verified` BOOLEAN DEFAULT 0,
   `fetch` ENUM('always', 'once', 'never') DEFAULT 'once',
   `submit` ENUM('always', 'once', 'never') DEFAULT 'once',
   `generation` ENUM('always', 'once', 'never') DEFAULT 'once',

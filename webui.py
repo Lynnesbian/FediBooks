@@ -105,10 +105,21 @@ def settings():
 			pw_hashed = hashlib.sha256(request.form['password'].encode('utf-8')).digest()
 			pw = bcrypt.hashpw(pw_hashed, bcrypt.gensalt(12))
 			c.execute("UPDATE users SET password = %s WHERE id = %s", (pw, session['user_id']))
+
+		# don't require email verification again if the new email address is the same as the old one
+		c.execute("SELECT email_verified FROM users WHERE id = %s", (session['user_id'],))
+		if c.fetchone()[0]:
+			c.execute("SELECT email FROM users WHERE id = %s", (session['user_id'],))
+			previous_email = c.fetchone()[0]
+
+			email_verified = (previous_email == request.form['email'])
+		else:
+			email_verified = False
 		
 		try:
-			c.execute("UPDATE users SET email = %s, `fetch` = %s, submit = %s, generation = %s, reply = %s WHERE id = %s", (
+			c.execute("UPDATE users SET email = %s, email_verified = %s, `fetch` = %s, submit = %s, generation = %s, reply = %s WHERE id = %s", (
 				request.form['email'],
+				email_verified,
 				request.form['fetch-error'],
 				request.form['submit-error'],
 				request.form['generation-error'],
