@@ -137,7 +137,9 @@ def settings():
 
 @app.route("/bot/edit/<id>")
 def bot_edit(id):
-	return render_template("coming_soon.html")
+	dc = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+	dc.execute("SELECT * FROM bots WHERE handle = %s", (id,))
+	return render_template("bot_edit.html", bot = dc.fetchone())
 
 @app.route("/bot/delete/<id>", methods=['GET', 'POST'])
 def bot_delete(id):

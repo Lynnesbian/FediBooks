@@ -169,8 +169,13 @@ input:focus, select:focus, textarea:focus {
 	border: 3px mediumpurple solid;
 }
 
+input[type="checkbox"] {
+	height: 1.4em;
+}
+
 label, input {
 	flex-basis: 0;
+	text-align: left;
 }
 label {
 	flex-grow: 1;

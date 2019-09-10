@@ -13,7 +13,7 @@
 
 	{% include 'error.html' %}
 	{% include 'success.html' %}
-	
+
 	<div class="container">
 		<form method="POST" class="full-width">
 			<div class="container light">
@@ -27,7 +27,7 @@
 			</div>
 			<div class="row">
 				<label for="password" class="large">Password</label>
-				<input type="password" name="password" placeholder="Unchanged">
+				<input type="password" name="password"pattern=".{8,}" placeholder="Unchanged">
 			</div>
 
 			<div class="container light">

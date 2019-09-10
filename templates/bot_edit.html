@@ -11,55 +11,58 @@
 		<h1 class="thin centred">Configure bot</h1>
 		<p class="large centred">@botname@example.com</p>
 	</div>
+
+	{% include 'error.html' %}
+	{% include 'success.html' %}
 	
 	<div class="container centred">
 		<form action="/do/bot/edit" method="post" class="full-width">
-			<div class="row">
+			<!-- <div class="row">
 				<label for="username" class="large">Username</label>
 				<input type="text" name="username" value="Bot Name">
-			</div>
+			</div> -->
 			<div class="row">
 				<label for="freq" class="large">Post frequency (minutes)</label>
-				<input type="number" min="15" max="240" step="5" value="30" name="freq"> 
+				<input type="number" min="15" max="240" step="5" value="{{ bot['post_frequency'] }}" name="freq"> 
 			</div>
 			<div class="row">
 				<label for="cw" class="large">Content warning (subject)</label>
-				<input type="text" placeholder="None" name="cw">
+				<input type="text" placeholder="None" name="cw" value = "{{ bot['content_warning'] if bot['content_warning'] != None else '' }}">
 			</div>
 			<div class="row">
 				<label for="length" class="large">Maximum post length (characters)</label>
-				<input type="number" min="100" max="5000" value="500" name="length">
+				<input type="number" min="100" max="5000" value="{{ bot['length'] }}" name="length">
 			</div>
 			<div class="row">
 				<label for="fake-mentions" class="large">Fake mentions</label>
 				<select name="fake-mentions">
-					<option value="always">At any time</option>
-					<option value="middle" default>Only in the middle of posts</option>
-					<option value="never">Never</option>
+					<option value="always" {{ 'selected' if bot['fake_mentions'] == 'always' }}>At any time</option>
+					<option value="middle" {{ 'selected' if bot['fake_mentions'] == 'middle' }}>Only in the middle of posts</option>
+					<option value="never" {{ 'selected' if bot['fake_mentions'] == 'never' }}>Never</option>
 				</select>
 			</div>
 			<div class="row">
 					<label for="fake-mention-style" class="large">Fake mention style</label>
 					<select name="fake-mention-style">
-						<option value="full">@user@instan.ce</option>
-						<option value="brief" default>@user</option>
+						<option value="full" {{ 'selected' if bot['fake_mentions_full'] }}>@user@instan.ce</option>
+						<option value="brief" {{ 'selected' if not bot['fake_mentions_full'] }}>@user</option>
 					</select>
 				</div>
 			<div class="row">
 				<label for="privacy" class="large">Post privacy</label>
 				<select name="privacy">
-					<option value="public">Public</option>
-					<option value="unlisted">Unlisted</option>
-					<option value="followers">Followers only</option>
+					<option value="public" {{ 'selected' if bot['post_privacy'] == 'public' }}>Public</option>
+					<option value="unlisted" {{ 'selected' if bot['post_privacy'] == 'unlisted' }}>Unlisted</option>
+					<option value="followers" {{ 'selected' if bot['post_privacy'] == 'private' }}>Followers only</option>
 				</select>
 			</div>
 			<div class="row">
 				<label for="cw-learning" class="large">Learn from posts with content warnings (subjects)</label>
-				<input type="checkbox" name="cw-learning">
+				<input type="checkbox" name="cw-learning" {{ 'checked' if bot['learn_from_cw']}}>
 			</div>
 			<div class="row">
 				<label for="replies" class="large">Enable replies</label>
-				<input type="checkbox" name="replies">
+				<input type="checkbox" name="replies" {{ 'checked' if bot['replies_enabled']}}>
 			</div>
 			<div class="container centred">
 				<button class="button btn-primary"><i class="fas fa-save"></i> Save</button>
