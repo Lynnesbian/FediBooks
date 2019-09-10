@@ -279,7 +279,7 @@ def bot_accounts_add():
 				mysql.connection.commit()
 				return redirect("/bot/accounts/{}".format(session['bot']), 303)
 			else:
-				error = "Couldn't access ActivityPub outbox. {} may require authenticated fetches, which FediBooks doesn't support yet."
+				error = "Couldn't access ActivityPub outbox. {} may require authenticated fetches, which FediBooks doesn't support yet.".format(instance)
 				return render_template("bot_accounts_add.html", error = error)
 
 	return render_template("bot_accounts_add.html", error = session.pop('error', None))
