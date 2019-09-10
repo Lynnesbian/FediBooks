@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `bots` (
   `credentials_id` INT NOT NULL,
   `push_private_key` BINARY(128) NOT NULL,
   `push_public_key` BINARY(128) NOT NULL,
-  `push_secret` BINARY(16)),
+  `push_secret` BINARY(16),
   `enabled` BOOLEAN DEFAULT 0,
   `replies_enabled` BOOLEAN DEFAULT 1,
   `post_frequency` SMALLINT UNSIGNED DEFAULT 30,
