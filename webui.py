@@ -426,11 +426,11 @@ def bot_create():
 
 			else:
 				# the user clicked next on step 2 while having an unsupported instance type
-				# take them back to step 1
+				# take them back home
 				del session['instance']
 				del session['instance_type']
 				session['step'] = 1
-				return redirect(url_for("bot_create"), 303)
+				return redirect(url_for("home"), 303)
 
 	else:
 		if session['step'] == 4:
