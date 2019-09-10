@@ -212,6 +212,15 @@ def bot_accounts_add():
 			username = handle_list[1]
 			instance = handle_list[2]
 
+			# gab check
+			r = requests.get("https://{}/api/v1/instance".format(instance), timeout=10)
+			if r.status_code == 200:
+				j = r.json()
+				if 'is_pro' in j['contact_account']:
+					# gab instance
+					error = "Gab instances are not supported."
+					return render_template("bot_accounts_add.html", error = error)
+
 			# 1. download host-meta to find webfinger URL
 			r = requests.get("https://{}/.well-known/host-meta".format(instance), timeout=10)
 			# 2. use webfinger to find user's info page
