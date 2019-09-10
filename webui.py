@@ -192,9 +192,6 @@ def bot_edit(id):
 		session['success'] = True
 		return redirect("/bot/edit/{}".format(id), 303)
 
-		
-
-
 @app.route("/bot/delete/<id>", methods=['GET', 'POST'])
 def bot_delete(id):
 	if bot_check(id):
@@ -460,8 +457,7 @@ def bot_create():
 			private = privated['privkey']
 			public = publicd['pubkey']
 			secret = privated['auth']
-			# replace fedibooks.com with cfg['base_uri'] on release
-			client.push_subscription_set("https://fedibooks.com/push/{}".format(handle), publicd, mention_events = True)
+			client.push_subscription_set("{}/push/{}".format(cfg['base_uri'], handle), publicd, mention_events = True)
 
 			c.execute("INSERT INTO `bots` (handle, user_id, credentials_id, push_public_key, push_private_key, push_secret) VALUES (%s, %s, %s, %s, %s, %s)", (handle, session['user_id'], credentials_id, public, private, secret))
 			mysql.connection.commit()
