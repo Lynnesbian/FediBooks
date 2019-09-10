@@ -19,7 +19,7 @@
 				<label for="email" class="important full-width">Email</label>
 				<input type="email" name="email" placeholder="you@example.com">
 				{% if signup %}
-				<p class="small">
+				<p class="small full-width left-align">
 					FediBooks requires your email address in order to send you alerts when your bot stops working, and for password resets.
 				</p>
 				{% endif %}
@@ -27,12 +27,12 @@
 				<label for="password" class="important full-width">Password</label>
 				<input type="password" pattern=".{8,}" name="password">
 				{% if signup %}
-				<p class="small">
+				<p class="small full-width left-align">
 					Passwords must be at least eight characters long.
 				</p>
 				{% endif %}
 			</p>
-			<input type="submit" value="{% if signup %}Create my account{% else %}Log in{% endif %}" class="button btn-primary full-width">
+			<input type="submit" value="{% if signup %}Create my account{% else %}Log in{% endif %}" class="button centred btn-primary full-width">
 		</form>
 	</div>
 
