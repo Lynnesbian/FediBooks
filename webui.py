@@ -209,11 +209,24 @@ def bot_accounts_add():
 
 			# look up user
 			handle_list = request.form['account'].split('@')
+			if len(handle_list) != 3:
+				# not formatted correctly
+				error = "Incorrectly formatted handle."
+				return render_template("bot_accounts_add.html", error = error)
+
 			username = handle_list[1]
 			instance = handle_list[2]
 
 			# gab check
-			r = requests.get("https://{}/api/v1/instance".format(instance), timeout=10)
+			try:
+				r = requests.get("https://{}/api/v1/instance".format(instance), timeout=10)
+			except requests.exceptions.ConnectionError:
+				error = "Couldn't connect to {}.".format(instance)
+				return render_template("bot_accounts_add.html", error = error)
+			except:
+				error = "An unknown error occurred."
+				return render_template("bot_accounts_add.html", error = error)
+
 			if r.status_code == 200:
 				j = r.json()
 				if 'is_pro' in j['contact_account']:
@@ -223,12 +236,26 @@ def bot_accounts_add():
 
 			# 1. download host-meta to find webfinger URL
 			r = requests.get("https://{}/.well-known/host-meta".format(instance), timeout=10)
+			if r.status_code != 200:
+				error = "Couldn't get host-meta."
+				return render_template("bot_accounts_add.html", error = error)
+
 			# 2. use webfinger to find user's info page
 			#TODO: use more reliable method
-			uri = re.search(r'template="([^"]+)"', r.text).group(1)
-			uri = uri.format(uri = "{}@{}".format(username, instance))
+			try:
+				uri = re.search(r'template="([^"]+)"', r.text).group(1)
+				uri = uri.format(uri = "{}@{}".format(username, instance))
+			except:
+				error = "Couldn't find WebFinger URL."
+				return render_template("bot_accounts_add.html", error = error)
+
 			r = requests.get(uri, headers={"Accept": "application/json"}, timeout=10)
-			j = r.json()
+			try:
+				j = r.json()
+			except:
+				error = "Invalid WebFinger response."
+				return render_template("bot_accounts_add.html", error = error)
+
 			found = False
 			for link in j['links']:
 				if link['rel'] == 'self':
