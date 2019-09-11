@@ -31,9 +31,9 @@ CREATE TABLE IF NOT EXISTS `bots` (
   `fake_mentions_full` BOOLEAN DEFAULT 0,
   `post_privacy` ENUM('public', 'unlisted', 'private') DEFAULT 'unlisted',
   `learn_from_cw` BOOLEAN DEFAULT 0,
-  `last_post` DATETIME DEFAULT 0,
+  `last_post` DATETIME DEFAULT CURRENT_TIMESTAMP(),
   `icon` VARCHAR(512),
-  `icon_update_time` DATETIME DEFAULT 0,
+  `icon_update_time` DATETIME DEFAULT '1000-01-01 00:00:00',
   FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (`credentials_id`) REFERENCES credentials(id) ON DELETE CASCADE
 ) ENGINE=INNODB;
