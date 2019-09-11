@@ -52,11 +52,11 @@ def home():
 				# multiple SELECTS is slow, maybe SELECT all at once and filter with python?
 				c.execute("SELECT COUNT(*) FROM `bot_learned_accounts` WHERE bot_id = %s", (bot['handle'],))
 				bot_users[bot['handle']] = c.fetchone()[0]
-				c.execute("SELECT post_frequency - TIMESTAMPDIFF(MINUTE, last_post, CURRENT_TIMESTAMP()) FROM bots WHERE TIMESTAMPDIFF(MINUTE, last_post, CURRENT_TIMESTAMP()) <= post_frequency AND handle = %s", (bot['handle'],))
+				c.execute("SELECT post_frequency - TIMESTAMPDIFF(MINUTE, last_post, CURRENT_TIMESTAMP()) FROM bots WHERE TIMESTAMPDIFF(MINUTE, last_post, CURRENT_TIMESTAMP()) <= post_frequency AND enabled = TRUE AND handle = %s", (bot['handle'],))
 				next_post = c.fetchone()
 				if next_post is not None:
 					next_posts[bot['handle']] = next_post
-					
+
 		c.close()
 		return render_template("home.html", bot_count = bot_count, active_count = active_count, bots = bots, bot_users = bot_users, next_posts = next_posts)
 	else:
