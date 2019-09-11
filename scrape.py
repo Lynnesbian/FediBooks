@@ -81,6 +81,7 @@ def scrape_posts(account):
 
 			db.commit()
 		c.close()
+		print("Finished scraping {}".format(handle))
 
 print("Establishing DB connection")
 db = MySQLdb.connect(
