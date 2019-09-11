@@ -14,7 +14,7 @@ def scrape_posts(account):
 	last_post = 0
 	c.execute("SELECT COUNT(*) FROM `posts` WHERE `fedi_id` = %s", (handle,))
 	count = c.fetchone()
-	if count is not None and count > 0:
+	if count is not None and count[0] > 0:
 		# we've downloaded this user's posts before
 		# find out the most recently downloaded post of theirs
 		c.execute("SELECT `post_id` FROM `posts` WHERE `fedi_id` = %s ORDER BY `id` DESC LIMIT 1", (handle,))
