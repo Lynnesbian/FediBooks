@@ -29,3 +29,5 @@ with Pool(cfg['service_threads']) as p:
 	p.map(functions.make_post, bots)
 
 #TODO: other cron tasks should be done here, like updating profile pictures
+
+db.commit()

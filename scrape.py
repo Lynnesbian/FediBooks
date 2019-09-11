@@ -99,4 +99,6 @@ accounts = cursor.fetchall()
 with Pool(cfg['service_threads']) as p:
 	p.map(scrape_posts, accounts)
 
+db.commit()
+
 print("Done!")
