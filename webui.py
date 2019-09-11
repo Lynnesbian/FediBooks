@@ -379,9 +379,11 @@ def bot_create():
 				r = requests.get("https://{}/api/v1/instance".format(session['instance']), timeout=10)
 			except requests.ConnectionError:
 				session['error'] = "Couldn't connect to https://{}.".format(session['instance'])
+				return render_template("bot_create.html", error = session.pop('error', None))
 			except:
 				session['error'] = "An unknown error occurred while trying to load https://{}".format(session['instance'])
-				
+				return render_template("bot_create.html", error = session.pop('error', None))
+
 			if r.status_code == 200:
 				j = r.json()
 				if "Pleroma" in j['version']:
