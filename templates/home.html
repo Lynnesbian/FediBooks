@@ -23,7 +23,7 @@
 			<div class="panel-text">
 				{% set handle_list = bot['handle'].split('@') %}
 				<div class="panel-name">@{{ handle_list[1] }}<span class="subtle tiny">@{{ handle_list[2] }}</span></div>
-				<div class="panel-status">{{ "Online" if bot['enabled'] else "Offline"}}, learning from {{ bot_users[bot['handle']] }} accounts</div>
+				<div class="panel-status">{{ "Online" if bot['enabled'] else "Offline"}}, learning from {{ bot_users[bot['handle']] }} accounts.{% if bot['handle'] in next_posts %} Next post in {{ next_posts[bot['handle']] }} minutes.{% endif %}</div>
 			</div>
 			<div class="panel-actions">
 				<a class="button btn-secondary" href="/bot/toggle/{{ bot['handle'] }}" title="Turn on/off"><i class="fas fa-power-off"></i></a><a class="button btn-secondary" href="/bot/edit/{{ bot['handle'] }}" title="Configure"><i class="fas fa-cog"></i></a><a class="button btn-secondary" href="/bot/accounts/{{ bot['handle'] }}" title="Accounts learned from"><i class="fas fa-users"></i></a><a class="button btn-secondary" href="/bot/blacklist/{{ bot['handle'] }}" title="Banned words"><i class="fas fa-strikethrough"></i></a><a class="button btn-secondary" href="/bot/chat/{{ bot['handle'] }}" title="Chat"><i class="fas fa-comment"></i></a><a class="button btn-dangerous" href="/bot/delete/{{ bot['handle'] }}" title="Delete"><i class="fas fa-trash"></i></a>
