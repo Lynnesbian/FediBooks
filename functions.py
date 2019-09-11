@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import MySQLdb
 import markovify
-from mastodon import Mastodon
+from mastodon import Mastodon, MastodonUnauthorizedError
 import html, re, json
 
 cfg = json.load(open('config.json'))
@@ -138,7 +138,12 @@ def make_post(args):
 		# ensure post isn't longer than bot['length']
 		post = post[:bot['length']] 
 		# send toot!!
-		client.status_post(post, id, visibility = visibility, spoiler_text = bot['content_warning'])
+		try:
+			client.status_post(post, id, visibility = visibility, spoiler_text = bot['content_warning'])
+		except MastodonUnauthorizedError:
+			# user has revoked the token given to the bot
+			# this needs to be dealt with properly later on, but for now, we'll just disable the bot
+			c.execute("UPDATE bots SET enabled = FALSE WHERE handle = %s", (handle,))	
 
 	if id == None:
 		# this wasn't a reply, it was a regular post, so update the last post date
