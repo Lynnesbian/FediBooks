@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import MySQLdb
 import requests
 from multiprocessing import Pool
@@ -14,7 +16,7 @@ def scrape_posts(account):
 	last_post = 0
 	c.execute("SELECT COUNT(*) FROM `posts` WHERE `fedi_id` = %s", (handle,))
 	count = c.fetchone()
-	if count is not None and count[0] > 0:
+	if count is not None and int(count[0]) > 0:
 		# we've downloaded this user's posts before
 		# find out the most recently downloaded post of theirs
 		c.execute("SELECT `post_id` FROM `posts` WHERE `fedi_id` = %s ORDER BY `id` DESC LIMIT 1", (handle,))
@@ -41,7 +43,8 @@ def scrape_posts(account):
 					# first, check to see if we already have this in the database
 					post_id = re.search(r"([^\/]+)/?$", oi['object']['id']).group(1) # extract 123 from https://example.com/posts/123/
 					c.execute("SELECT COUNT(*) FROM `posts` WHERE `fedi_id` = %s AND `post_id` = %s", (handle, post_id))
-					if c.fetchone()[0] > 0:
+					count = c.fetchone()
+					if count is not None and int(count[0]) > 0:
 						# this post is already in the DB.
 						# we'll set done to true because we've caught up to where we were last time.
 						done = True
@@ -80,7 +83,7 @@ def scrape_posts(account):
 					j = r.json()
 
 			db.commit()
-		c.close()
+
 		print("Finished scraping {}".format(handle))
 
 print("Establishing DB connection")
