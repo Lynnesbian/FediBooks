@@ -489,10 +489,25 @@ def do_authenticate_bot():
 	session['step'] = 4
 	return redirect(url_for("bot_create"), 303)
 
-@app.route("/push/<id>")
+@app.route("/push/<id>", methods = ['POST'])
 def push(id):
-	c = db.cursor()
-	print(request.form)
+	c = mysql.connection.cursor()
+	c.execute("SELECT client_id, client_secret, secret FROM credentials WHERE id = (SELECT credentials_id FROM bots WHERE handle = %s)", (id,))
+	login = c.fetchone()
+	client = Mastodon(
+		client_id = login[0],
+		client_secret = login[1],
+		access_token = login[2],
+		api_base_url = "https://{}".format(id.split("@")[2])
+	)
+
+	c.execute("SELECT push_private_key, push_secret FROM bots WHERE handle = %s", (id,))
+	p = c.fetchone()
+	params = {
+		'privkey': int(p[0].rstrip("\0")),
+		'auth': p[1]
+	}
+	push_object = client.push_subscription_decrypt_push(request.data, params, request.headers['Encryption'], request.headers['Crypto-Key'])
 
 @app.route("/do/signup", methods=['POST'])
 def do_signup():
