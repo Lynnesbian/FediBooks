@@ -5,6 +5,7 @@ import requests
 import MySQLdb
 import bcrypt
 import json, hashlib, re
+import functions
 
 cfg = json.load(open("config.json"))
 
@@ -501,13 +502,39 @@ def push(id):
 		api_base_url = "https://{}".format(id.split("@")[2])
 	)
 
-	c.execute("SELECT push_private_key, push_secret FROM bots WHERE handle = %s", (id,))
-	p = c.fetchone()
+	c.execute("SELECT push_private_key, push_secret, replies_enabled FROM bots WHERE handle = %s", (id,))
+	bot = c.fetchone()
+	if not bot[2]:
+		return "Replies disabled."
+
 	params = {
-		'privkey': int(p[0].rstrip("\0")),
-		'auth': p[1]
+		'privkey': int(bot[0].rstrip("\0")),
+		'auth': bot[1]
 	}
 	push_object = client.push_subscription_decrypt_push(request.data, params, request.headers['Encryption'], request.headers['Crypto-Key'])
+	notification = client.notifications(id = push_object['notification_id'])
+	me = client.account_verify_credentials()['id']
+
+	# first, check how many times the bot has posted in this thread.
+	# if it's over 15, don't reply.
+	# this is to stop endless reply chains between two bots.
+	try:
+		context = client.status_context(notification['status']['id'])
+		my_posts = 0
+		for post in context['ancestors']:
+			if post['account']['id'] == me:
+				my_posts += 1
+			if my_posts >= 15:
+				# don't reply
+				return "Didn't reply."
+	except:
+		# failed to fetch context
+		# assume we haven't been participating in this thread
+		pass
+
+		functions.make_post([id, notification['status']['id']])
+
+	return "Success!"
 
 @app.route("/do/signup", methods=['POST'])
 def do_signup():

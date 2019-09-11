@@ -34,8 +34,11 @@ def extract_post(post):
 	text = text.rstrip("\n") # remove trailing newline(s)
 	return text
 
-def make_post(handle):
-	handle = handle[0]
+def make_post(args):
+	id = None
+	if len(args) == 2:
+		id = args[1]
+	handle = args[0]
 	db = MySQLdb.connect(
 		host = cfg['db_host'],
 		user=cfg['db_user'],
@@ -122,7 +125,9 @@ def make_post(handle):
 				post = re.sub(r"@(\w+)@([\w.]+)", r"@{}\1".format(zws), post)		
 
 		print(post)
-		client.status_post(post, visibility = bot['post_privacy'], spoiler_text = bot['content_warning'])
+		client.status_post(post, id, visibility = bot['post_privacy'], spoiler_text = bot['content_warning'])
 
-	c.execute("UPDATE bots SET last_post = CURRENT_TIMESTAMP() WHERE handle = %s", (handle,))
-	db.commit()
+	if id == None:
+		# this wasn't a reply, it was a regular post, so update the last post date
+		c.execute("UPDATE bots SET last_post = CURRENT_TIMESTAMP() WHERE handle = %s", (handle,))
+		db.commit()
