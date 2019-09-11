@@ -375,7 +375,13 @@ def bot_create():
 			session['instance'] = re.match(r"^(?:https?:\/\/)?(.*)", request.form['instance']).group(1)
 			
 			# check for mastodon/pleroma
-			r = requests.get("https://{}/api/v1/instance".format(session['instance']), timeout=10)
+			try:
+				r = requests.get("https://{}/api/v1/instance".format(session['instance']), timeout=10)
+			except requests.ConnectionError:
+				session['error'] = "Couldn't connect to https://{}.".format(session['instance'])
+			except:
+				session['error'] = "An unknown error occurred while trying to load https://{}".format(session['instance'])
+				
 			if r.status_code == 200:
 				j = r.json()
 				if "Pleroma" in j['version']:
