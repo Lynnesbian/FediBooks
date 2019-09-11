@@ -20,6 +20,7 @@ print("Cleaning up database")
 # delete any fedi accounts we no longer need
 cursor = db.cursor()
 cursor.execute("DELETE FROM fedi_accounts WHERE handle NOT IN (SELECT fedi_id FROM bot_learned_accounts)")
+db.commit()
 
 print("Generating posts")
 cursor.execute("SELECT handle FROM bots WHERE enabled = TRUE AND TIMESTAMPDIFF(MINUTE, last_post, CURRENT_TIMESTAMP()) > post_frequency")
