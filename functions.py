@@ -95,19 +95,22 @@ def make_post(args):
 	# 3. convert the tuple to a list
 	# 4. join the list into a string separated by newlines
 	posts = "\n".join(list(sum(c.fetchall(), ())))
+	if len(posts) == 0:
+		print("No posts to learn from.")
+		return
 
 	model = nlt_fixed(posts)
 	tries = 0
 	post = None
-	# even with such a high tries value for markovify, it still sometimes returns none.
-	# so we implement our own tries function as well, and try ten times.
 
 	if bot['fake_mentions'] == 'never':
 		# remove all mentions from the training data before the markov model sees it
 		posts = re.sub(r"@(\w+)@([\w.]+)\s?", "", posts)
 
+	# even with such a high tries value for markovify, it still sometimes returns none.
+	# so we implement our own tries function as well, and try ten times.
 	while post is None and tries < 10:
-		post = model.make_short_sentence(bot['length'], tries = 10000)
+		post = model.make_short_sentence(bot['length'], tries = 1000)
 		tries += 1
 
 	if post == None:
