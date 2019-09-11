@@ -79,7 +79,7 @@ def scrape_posts(account):
 				else:
 					j = r.json()
 
-		db.commit()
+			db.commit()
 		c.close()
 
 print("Establishing DB connection")
