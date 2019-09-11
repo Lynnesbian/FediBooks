@@ -36,8 +36,10 @@ def extract_post(post):
 
 def make_post(args):
 	id = None
-	if len(args) == 2:
+	acct = None
+	if len(args) > 1:
 		id = args[1]
+		acct = args[3]
 	handle = args[0]
 	db = MySQLdb.connect(
 		host = cfg['db_host'],
@@ -50,7 +52,8 @@ def make_post(args):
 	c = db.cursor()
 	dc.execute("""
 	SELECT 
-		learn_from_cw, 
+		learn_from_cw,
+		length,
 		fake_mentions,
 		fake_mentions_full,
 		post_privacy,
@@ -104,7 +107,7 @@ def make_post(args):
 		posts = re.sub(r"@(\w+)@([\w.]+)\s?", "", posts)
 
 	while post is None and tries < 10:
-		post = model.make_short_sentence(500, tries = 10000)
+		post = model.make_short_sentence(bot['length'], tries = 10000)
 		tries += 1
 
 	if post == None:
@@ -125,7 +128,14 @@ def make_post(args):
 				post = re.sub(r"@(\w+)@([\w.]+)", r"@{}\1".format(zws), post)		
 
 		print(post)
-		client.status_post(post, id, visibility = bot['post_privacy'], spoiler_text = bot['content_warning'])
+		visibility = bot['post_privacy'] if len(args) == 1 else args[2]
+		if acct is not None:
+			post = "{} {}".format(acct, post)
+
+		# ensure post isn't longer than bot['length']
+		post = post[:bot['length']] 
+		# send toot!!
+		client.status_post(post, id, visibility = visibility, spoiler_text = bot['content_warning'])
 
 	if id == None:
 		# this wasn't a reply, it was a regular post, so update the last post date

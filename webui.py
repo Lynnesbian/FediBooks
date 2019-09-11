@@ -532,7 +532,7 @@ def push(id):
 		# assume we haven't been participating in this thread
 		pass
 
-	functions.make_post([id, notification['status']['id']])
+	functions.make_post([id, notification['status']['id'], notification['status']['visibility'], "@" + notification['account']['acct']])
 
 	return "Success!"
 
