@@ -36,7 +36,8 @@ def home():
 		bot_count = c.fetchone()[0]
 		active_count = None
 		bots = {}
-		bot_users = None
+		bot_users = {}
+		next_posts = {}
 
 		if bot_count > 0:
 			c.execute("SELECT COUNT(*) FROM `bots` WHERE user_id = %s AND enabled = TRUE", (session['user_id'],))
@@ -45,8 +46,6 @@ def home():
 			dc.execute("SELECT `handle`, `enabled`, `last_post`, `post_frequency` FROM `bots` WHERE user_id = %s", (session['user_id'],))
 			bots = dc.fetchall()
 			dc.close()
-			bot_users = {}
-			next_posts = {}
 
 			for bot in bots:
 				# multiple SELECTS is slow, maybe SELECT all at once and filter with python?
