@@ -22,7 +22,7 @@
 
 			{% elif session['step'] == 2 %}
 			<h2 class="thin centred">Detected instance type: {{ session['instance_type'] }}</h2>
-			<p>{{ session['instance'] }} is a {{ session['instance_type'] }} instance. {% if session['instance_type'] == 'Pleroma' %}Unfortunately, bots on Pleroma instances cannot listen for replies yet. This means that your bot will have its reply functionality disabled.{% else %}{{ session['instance_type'] }} instances are fully supported, and your bot will have all functionality available.{% endif %}</p>
+			<p>{{ session['instance'] }} is a {{ session['instance_type'] }} instance. {% if session['instance_type'] == 'Pleroma' %}Pleroma's support for the Mastodon API is incomplete, and some functions may not work correctly. Additionally, FediBooks will need to request full read and write access to your account, as Pleroma does not support fine-grained app permissions.{% else %}{{ session['instance_type'] }} instances are fully supported, and your bot will have all functionality available.{% endif %}</p>
 
 			{% elif session['step'] == 3 %}
 			<p>You now need to give your bot access to the {{ session['instance'] }} account you have created for it. If you have not yet created an account on {{ session['instance'] }} for your bot to use, please do so now.</p>
