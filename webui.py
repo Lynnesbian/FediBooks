@@ -20,6 +20,7 @@ app.config['MYSQL_PASSWORD'] = cfg['db_pass']
 mysql = MySQL(app)
 
 scopes = ['write:statuses', 'write:accounts', 'read:accounts', 'read:notifications', 'read:statuses', 'push']
+scopes_pleroma = ['read', 'write', 'push']
 
 @app.before_request
 def login_check():
@@ -421,7 +422,7 @@ def bot_create():
 				session['client_id'], session['client_secret'] = Mastodon.create_app(
 					"FediBooks",
 					api_base_url="https://{}".format(session['instance']),
-					scopes=scopes,
+					scopes=scopes if session['instance_type'] == 'Mastodon' else scopes_pleroma,
 					redirect_uris=[redirect_uri],
 					website=cfg['base_uri']
 				)
@@ -432,7 +433,11 @@ def bot_create():
 					api_base_url="https://{}".format(session['instance'])
 				)
 
-				url = client.auth_request_url(client_id=session['client_id'], redirect_uris=redirect_uri, scopes=scopes)
+				url = client.auth_request_url(
+					client_id=session['client_id'],
+					redirect_uris=redirect_uri,
+					scopes=scopes if session['instance_type'] == 'Mastodon' else scopes_pleroma
+				)
 				return redirect(url, code=303)
 
 			elif session['instance_type'] == 'Misskey':
@@ -452,7 +457,11 @@ def bot_create():
 			try:
 				# test authentication
 				client = Mastodon(client_id=session['client_id'], client_secret=session['client_secret'], api_base_url=session['instance'])
-				session['secret'] = client.log_in(code = session['code'], scopes=scopes, redirect_uri='{}/do/authenticate_bot'.format(cfg['base_uri']))
+				session['secret'] = client.log_in(
+					code = session['code'],
+					scopes=scopes if session['instance_type'] == 'Mastodon' else scopes_pleroma,
+					redirect_uri='{}/do/authenticate_bot'.format(cfg['base_uri'])
+				)
 				username = client.account_verify_credentials()['username']
 				handle = "@{}@{}".format(username, session['instance'])
 			except:
