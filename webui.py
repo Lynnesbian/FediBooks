@@ -287,7 +287,7 @@ def bot_accounts_add():
 
 			if r.status_code == 200:
 				j = r.json()
-				if 'is_pro' in j['contact_account']:
+				if 'contact_account' in j and 'is_pro' in j['contact_account']:
 					# gab instance
 					error = "Gab instances are not supported."
 					return render_template("bot_accounts_add.html", error = error)
@@ -395,7 +395,7 @@ def bot_create():
 					session['instance_type'] = "Pleroma"
 					session['step'] += 1
 				else:
-					if 'is_pro' in j['contact_account']:
+					if 'contact_account' in j and 'is_pro' in j['contact_account']:
 						# gab instance
 						session['error'] = "Gab instances are not supported."
 					else:
