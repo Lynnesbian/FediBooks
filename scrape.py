@@ -78,6 +78,7 @@ def scrape_posts(account):
 
 				if r.status_code == 429:
 					# we are now being ratelimited, move on to the next user
+					print("Hit rate limit while scraping {}".format(handle))
 					done = True
 				else:
 					j = r.json()
