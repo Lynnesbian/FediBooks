@@ -9,6 +9,14 @@ import functions
 cfg = json.load(open('config.json'))
 
 def scrape_posts(account):
+	db = MySQLdb.connect(
+		host = cfg['db_host'],
+		user=cfg['db_user'],
+		passwd=cfg['db_pass'],
+		db=cfg['db_name'],
+		use_unicode=True,
+		charset="utf8mb4"
+	)
 	handle = account[0]
 	outbox = account[1]
 	print("Scraping {}".format(handle))
@@ -85,6 +93,7 @@ def scrape_posts(account):
 
 			db.commit()
 
+		db.commit()
 		print("Finished scraping {}".format(handle))
 
 print("Establishing DB connection")
@@ -102,9 +111,9 @@ cursor = db.cursor()
 print("Downloading posts")
 cursor.execute("SELECT `handle`, `outbox` FROM `fedi_accounts` ORDER BY RAND()")
 accounts = cursor.fetchall()
+cursor.close()
+db.close()
 with Pool(cfg['service_threads']) as p:
 	p.map(scrape_posts, accounts)
-
-db.commit()
 
 print("Done!")
