@@ -64,12 +64,8 @@ def make_post(args):
 	FROM
 		bots, credentials
 	WHERE
-		bots.credentials_id = (SELECT 
-			credentials_id
-		FROM
-			bots
-		WHERE
-			handle = %s)
+		bots.handle = %s 
+		AND bots.credentials_id = credentials.id
 	""", (handle,))
 
 	bot = dc.fetchone()
