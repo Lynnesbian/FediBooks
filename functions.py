@@ -101,7 +101,7 @@ def make_post(args):
 
 	if bot['fake_mentions'] == 'never':
 		# remove all mentions from the training data before the markov model sees it
-		posts = re.sub(r"@(\w+)@([\w.]+)\s?", "", posts)
+		posts = re.sub(r"(?<!\S)@\w+(@[\w.]+)?\s?", "", posts)
 
 	# even with such a high tries value for markovify, it still sometimes returns none.
 	# so we implement our own tries function as well, and try ten times.
@@ -119,12 +119,14 @@ def make_post(args):
 			zws = "\u200B"
 			if bot['fake_mentions'] == 'middle':
 				# remove mentions at the start of a post
-				post = re.sub(r"^(@\w+@[\w.]+\s*)+", "", post)
+				post = re.sub(r"^(@\w+(@[\w.]+)?\s*)+", "", post)
 			# TODO: does this regex catch all valid handles?
 			if bot['fake_mentions_full']:
 				post = re.sub(r"@(\w+)@([\w.]+)", r"@{}\1@{}\2".format(zws, zws), post)
 			else:
-				post = re.sub(r"@(\w+)@([\w.]+)", r"@{}\1".format(zws), post)		
+				post = re.sub(r"@(\w+)@([\w.]+)", r"@{}\1".format(zws), post)	
+			# also format handles without instances, e.g. @user instead of @user@instan.ce
+			post = re.sub(r"(?<!\S)@(\w+)", r"@{}\1".format(zws), post)
 
 		print(post)
 		visibility = bot['post_privacy'] if len(args) == 1 else args[2]
