@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FediBooks</title>
+	{% include 'imports.html' %}
+</head>
+<body>
+	<div class="container light">
+		<h1 class='thin centred'>About the Settings menu</h1>
+		<p class="centred">
+			<a class="button btn-primary" href="/" role="button"><i class="fas fa-home"></i> Home</a>
+		</p>
+	</div>
+
+	<div class="container">
+		<p>The settings menu allows you to change your account's email or password, as well as updating your contact information.</p>
+		<p>The email and password inputs allow you to change your account's email address or password respectively. If you don't edit these inputs, your login info will not be changed.</p>
+		<p>The contact settings menu allows you to specify when FediBooks should send you automated emails. There are four options for you to configure.</p>
+		<p>You can specify whether you'd like to be contacted <em>always</em>, <em>once</em>, or <em>never</em>. <em>Always</em> means you will be emailed every time this error occurs. <em>Once</em> means you will be emailed once if this occurs, and you won't be emailed again until you check FediBooks by viewing the home page. <em>Never</em> means you will never be emailed if this error occurs.</p>
+		<h2>When my bot(s) can't get new posts</h2>
+		<p>This error happens when your bot fails to download new posts from its followed accounts. This might happen because the instance is down, or when the admin changes authentication settings for the instance.</p>
+		<h2>When my bot(s) can't submit new posts</h2>
+		<p>This means that your bot was unable to post something. This might happen because the instance is down, or because you have revoked FediBooks' access to your bot from the Apps menu on your instance.</p>
+		<h2>When my bot(s) encounter an error generating new posts</h2>
+		<p>This happens when your bot is unable to generate a new post. This can happen when the database doesn't contain enough unique information for your bot to synthesise a new post. For example, if your bot only has one post to learn from, this will happen.</p>
+		<h2>When my bot(s) can't send replies</h2>
+		<p>This error occurs when your bot is unable to send a new reply. This generally happens for the same reason as submission errors.</p>
+	</div>
+	{% include 'footer.html' %}
+</body>
+</html>

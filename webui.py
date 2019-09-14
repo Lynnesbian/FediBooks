@@ -616,6 +616,10 @@ def do_login():
 def report_bug():
 	return render_template("report_bug.html")
 
+@app.route("/help/settings")
+def help_settings():
+	return render_template("help_settings.html")
+
 @app.route("/img/bot_generic.png")
 def img_bot_generic():
 	return send_file("static/bot_generic.png", mimetype="image/png")
