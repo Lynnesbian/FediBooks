@@ -107,7 +107,7 @@ def settings():
 				session['error'] = "Password too short."
 				return redirect(url_for("settings"), 303)
 
-			pw_hashed = hashlib.sha256(request.form['password'].encode('utf-8')).digest()
+			pw_hashed = hashlib.sha256(request.form['password'].encode('utf-8')).digest().replace(b"\0", b"\1")
 			pw = bcrypt.hashpw(pw_hashed, bcrypt.gensalt(12))
 			c.execute("UPDATE users SET password = %s WHERE id = %s", (pw, session['user_id']))
 
@@ -575,7 +575,7 @@ def do_signup():
 		session['error'] = "Email address already in use."
 		return redirect(url_for("show_signup_page"), 303)
 
-	pw_hashed = hashlib.sha256(request.form['password'].encode('utf-8')).digest()
+	pw_hashed = hashlib.sha256(request.form['password'].encode('utf-8')).digest().replace(b"\0", b"\1")
 	pw = bcrypt.hashpw(pw_hashed, bcrypt.gensalt(12))
 
 	# try to sign up
@@ -595,7 +595,7 @@ def do_signout():
 
 @app.route("/do/login", methods=['POST'])
 def do_login():
-	pw_hashed = hashlib.sha256(request.form['password'].encode('utf-8')).digest()
+	pw_hashed = hashlib.sha256(request.form['password'].encode('utf-8')).digest().replace(b"\0", b"\1")
 	c = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 	c.execute("SELECT * FROM users WHERE email = %s", (request.form['email'],))
 	data = c.fetchone()
