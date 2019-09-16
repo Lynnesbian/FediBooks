@@ -130,6 +130,10 @@ def make_post(args):
 
 		print(post)
 		visibility = bot['post_privacy'] if len(args) == 1 else args[2]
+		visibilities = ['public', 'unlisted', 'private']
+		if visibilities.index(visibility) < visibilities.index(bot['post_privacy']):
+			# if post_privacy is set to a more restricted level than the visibility of the post we're replying to, use the user's setting
+			visibility = bot['post_privacy']
 		if acct is not None:
 			post = "{} {}".format(acct, post)
 
