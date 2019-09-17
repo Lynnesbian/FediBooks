@@ -1,0 +1,15 @@
+version: '3'
+services: 
+  fedibooks:
+    build: .
+    links:
+      - db
+    ports:
+      5000:5000
+  db:
+    image: mariadb/server:10.4
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: fedibooks
+      MARIADB_USER: fedibooks
+      MARIADB_PASSWORD: fedibooks
