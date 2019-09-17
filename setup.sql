@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `bots` (
   `push_private_key` BINARY(128) NOT NULL,
   `push_public_key` BINARY(128) NOT NULL,
   `push_secret` BINARY(16),
+  `instance_type` VARCHAR(64) NOT NULL DEFAULT 'Mastodon',
   `enabled` BOOLEAN DEFAULT 0,
   `replies_enabled` BOOLEAN DEFAULT 1,
   `post_frequency` SMALLINT UNSIGNED DEFAULT 30,
