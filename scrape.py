@@ -41,55 +41,55 @@ def scrape_posts(account):
 		r = requests.get(uri)
 		j = r.json()
 
-		# here we go!
-		# warning: scraping posts from outbox.json is messy stuff
-		done = False
-		while not done and len(j['orderedItems']) > 0:
-			for oi in j['orderedItems']:
-				if oi['type'] == "Create":
-					# this is a status/post/toot/florp/whatever
-					# first, check to see if we already have this in the database
-					post_id = re.search(r"([^\/]+)/?$", oi['object']['id']).group(1) # extract 123 from https://example.com/posts/123/
-					c.execute("SELECT COUNT(*) FROM `posts` WHERE `fedi_id` = %s AND `post_id` = %s", (handle, post_id))
-					count = c.fetchone()
-					if count is not None and int(count[0]) > 0:
-						# this post is already in the DB.
-						# we'll set done to true because we've caught up to where we were last time.
-						done = True
-						# we'll still iterate over the rest of the posts, though, in case there are still some new ones on this page.
-						continue
-
-					content = oi['object']['content']
-					# remove HTML tags and such from post
-					content = functions.extract_post(content)
-
-					if len(content) > 65535:
-						# post is too long to go into the DB
-						continue
-
-					try:
-						c.execute("INSERT INTO `posts` (`fedi_id`, `post_id`, `content`, `cw`) VALUES (%s, %s, %s, %s)", (
-							handle,
-							post_id,
-							content,
-							1 if (oi['object']['summary'] != None and oi['object']['summary'] != "") else 0
-						))
-					except:
-						#TODO: error handling
-						raise
-
-			if not done:
-				if pleroma:
-					r = requests.get(j['next'], timeout = 10)
-				else:
-					r = requests.get(j['prev'], timeout = 10)
-
-				if r.status_code == 429:
-					# we are now being ratelimited, move on to the next user
-					print("Hit rate limit while scraping {}".format(handle))
+	# here we go!
+	# warning: scraping posts from outbox.json is messy stuff
+	done = False
+	while not done and len(j['orderedItems']) > 0:
+		for oi in j['orderedItems']:
+			if oi['type'] == "Create":
+				# this is a status/post/toot/florp/whatever
+				# first, check to see if we already have this in the database
+				post_id = re.search(r"([^\/]+)/?$", oi['object']['id']).group(1) # extract 123 from https://example.com/posts/123/
+				c.execute("SELECT COUNT(*) FROM `posts` WHERE `fedi_id` = %s AND `post_id` = %s", (handle, post_id))
+				count = c.fetchone()
+				if count is not None and int(count[0]) > 0:
+					# this post is already in the DB.
+					# we'll set done to true because we've caught up to where we were last time.
 					done = True
-				else:
-					j = r.json()
+					# we'll still iterate over the rest of the posts, though, in case there are still some new ones on this page.
+					continue
+
+				content = oi['object']['content']
+				# remove HTML tags and such from post
+				content = functions.extract_post(content)
+
+				if len(content) > 65535:
+					# post is too long to go into the DB
+					continue
+
+				try:
+					c.execute("INSERT INTO `posts` (`fedi_id`, `post_id`, `content`, `cw`) VALUES (%s, %s, %s, %s)", (
+						handle,
+						post_id,
+						content,
+						1 if (oi['object']['summary'] != None and oi['object']['summary'] != "") else 0
+					))
+				except:
+					#TODO: error handling
+					raise
+
+		if not done:
+			if pleroma:
+				r = requests.get(j['next'], timeout = 10)
+			else:
+				r = requests.get(j['prev'], timeout = 10)
+
+			if r.status_code == 429:
+				# we are now being ratelimited, move on to the next user
+				print("Hit rate limit while scraping {}".format(handle))
+				done = True
+			else:
+				j = r.json()
 
 			db.commit()
 
