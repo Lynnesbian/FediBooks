@@ -1,11 +1,16 @@
 from flask import Flask, render_template, session, request, redirect, url_for, send_file
 from flask_mysqldb import MySQL
+
 from mastodon import Mastodon
+
 import requests
 import MySQLdb
 import bcrypt
 import json, hashlib, re
+
 import functions
+from pages.home import home
+from pages.settings import settings
 
 cfg = json.load(open("config.json"))
 
@@ -30,37 +35,8 @@ def login_check():
 			return redirect(url_for('home'))
 
 @app.route("/")
-def home():
-	if 'user_id' in session:
-		c = mysql.connection.cursor()
-		c.execute("SELECT COUNT(*) FROM `bots` WHERE user_id = %s", (session['user_id'],))
-		bot_count = c.fetchone()[0]
-		active_count = None
-		bots = {}
-		bot_users = {}
-		next_posts = {}
-
-		if bot_count > 0:
-			c.execute("SELECT COUNT(*) FROM `bots` WHERE user_id = %s AND enabled = TRUE", (session['user_id'],))
-			active_count = c.fetchone()[0]
-			dc = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-			dc.execute("SELECT `handle`, `enabled`, `last_post`, `post_frequency`, `icon` FROM `bots` WHERE user_id = %s", (session['user_id'],))
-			bots = dc.fetchall()
-			dc.close()
-
-			for bot in bots:
-				# multiple SELECTS is slow, maybe SELECT all at once and filter with python?
-				c.execute("SELECT COUNT(*) FROM `bot_learned_accounts` WHERE bot_id = %s", (bot['handle'],))
-				bot_users[bot['handle']] = c.fetchone()[0]
-				c.execute("SELECT post_frequency - TIMESTAMPDIFF(MINUTE, last_post, CURRENT_TIMESTAMP()) FROM bots WHERE TIMESTAMPDIFF(MINUTE, last_post, CURRENT_TIMESTAMP()) <= post_frequency AND enabled = TRUE AND handle = %s", (bot['handle'],))
-				next_post = c.fetchone()
-				if next_post is not None:
-					next_posts[bot['handle']] = next_post
-
-		c.close()
-		return render_template("home.html", bot_count = bot_count, active_count = active_count, bots = bots, bot_users = bot_users, next_posts = next_posts)
-	else:
-		return render_template("front_page.html")
+def render_home():
+	return home(mysql)
 
 @app.route("/welcome")
 def welcome():
@@ -79,66 +55,8 @@ def show_signup_page():
 	return render_template("login.html", signup = True, error = session.pop('error', None))
 
 @app.route("/settings", methods=['GET', 'POST'])
-def settings():
-	if request.method == 'GET':
-		dc = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-		dc.execute("SELECT * FROM `users` WHERE id = %s", (session['user_id'],))
-		user = dc.fetchone()
-		dc.close()
-		return render_template("settings.html", user = user, error = session.pop('error', None), success = session.pop('success', None))
-
-	else:
-		# update settings
-		c = mysql.connection.cursor()
-
-		c.execute("SELECT COUNT(*) FROM users WHERE email = %s AND id != %s", (request.form['email'], session['user_id']))
-		if c.fetchone()[0] > 0:
-			session['error'] = "Email address already in use."
-			return redirect(url_for("settings"), 303)
-
-		for setting in [request.form['fetch-error'], request.form['submit-error'], request.form['reply-error'], request.form['generation-error']]:
-			if setting not in ['once', 'always', 'never']:
-				session['error'] = 'Invalid option "{}".'.format(setting)
-				return redirect(url_for('settings'), 303)
-
-		if request.form['password'] != '':
-			# user is updating their password
-			if len(request.form['password']) < 8:
-				session['error'] = "Password too short."
-				return redirect(url_for("settings"), 303)
-
-			pw_hashed = hashlib.sha256(request.form['password'].encode('utf-8')).digest().replace(b"\0", b"\1")
-			pw = bcrypt.hashpw(pw_hashed, bcrypt.gensalt(12))
-			c.execute("UPDATE users SET password = %s WHERE id = %s", (pw, session['user_id']))
-
-		# don't require email verification again if the new email address is the same as the old one
-		c.execute("SELECT email_verified FROM users WHERE id = %s", (session['user_id'],))
-		if c.fetchone()[0]:
-			c.execute("SELECT email FROM users WHERE id = %s", (session['user_id'],))
-			previous_email = c.fetchone()[0]
-
-			email_verified = (previous_email == request.form['email'])
-		else:
-			email_verified = False
-		
-		try:
-			c.execute("UPDATE users SET email = %s, email_verified = %s, `fetch` = %s, submit = %s, generation = %s, reply = %s WHERE id = %s", (
-				request.form['email'],
-				email_verified,
-				request.form['fetch-error'],
-				request.form['submit-error'],
-				request.form['generation-error'],
-				request.form['reply-error'],
-				session['user_id']
-			))
-			c.close()
-			mysql.connection.commit()
-		except:
-			session['error'] = "Encountered an error while updating the database."
-			return redirect(url_for('settings'), 303)
-
-		session['success'] = True
-		return redirect(url_for('settings'), 303)
+def render_settings():
+	return settings(mysql)
 
 @app.route("/bot/edit/<id>", methods = ['GET', 'POST'])
 def bot_edit(id):
