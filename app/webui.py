@@ -483,7 +483,7 @@ def bot_create():
 			secret = privated['auth']
 			client.push_subscription_set("{}/push/{}".format(cfg['base_uri'], handle), publicd, mention_events = True)
 
-			c.execute("INSERT INTO `bots` (handle, user_id, credentials_id, push_public_key, push_private_key, push_secret, instance_type) VALUES (%s, %s, %s, %s, %s, %s)", (handle, session['user_id'], credentials_id, public, private, secret, session['instance_type']))
+			c.execute("INSERT INTO `bots` (handle, user_id, credentials_id, push_public_key, push_private_key, push_secret, instance_type) VALUES (%s, %s, %s, %s, %s, %s, %s)", (handle, session['user_id'], credentials_id, public, private, secret, session['instance_type']))
 			mysql.connection.commit()
 			c.close()
 
