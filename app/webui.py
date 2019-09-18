@@ -145,7 +145,7 @@ def bot_edit(id):
 	if request.method == "GET":
 		dc = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 		dc.execute("SELECT * FROM bots WHERE handle = %s", (id,))
-		return render_template("bot_edit.html", bot = dc.fetchone(), error = session.pop('error', None), success = session.pop('success', None))
+		return render_template("bot/edit.html", bot = dc.fetchone(), error = session.pop('error', None), success = session.pop('success', None))
 	else:
 		# update stored settings
 		replies_enabled = 'replies' in request.form
@@ -202,7 +202,7 @@ def bot_delete(id):
 	if bot_check(id):
 		if request.method == 'GET':
 			instance = id.split("@")[2]
-			return render_template("bot_delete.html", instance = instance)
+			return render_template("bot/delete.html", instance = instance)
 		else:
 			# delete bot by deleting its credentials
 			# FK constraint will delete bot
@@ -255,7 +255,7 @@ def bot_accounts(id):
 
 		c.close()
 
-		return render_template("bot_accounts.html", users = users, post_count = post_count)
+		return render_template("bot/accounts.html", users = users, post_count = post_count)
 
 @app.route("/bot/accounts/add", methods = ['GET', 'POST'])
 def bot_accounts_add():
@@ -263,14 +263,14 @@ def bot_accounts_add():
 		if session['step'] == 1:
 			if request.form['account'] == session['bot']:
 				error = "Bots cannot learn from themselves."
-				return render_template("bot_accounts_add.html", error = error)
+				return render_template("bot/accounts_add.html", error = error)
 
 			# look up user
 			handle_list = request.form['account'].split('@')
 			if len(handle_list) != 3:
 				# not formatted correctly
 				error = "Incorrectly formatted handle."
-				return render_template("bot_accounts_add.html", error = error)
+				return render_template("bot/accounts_add.html", error = error)
 
 			username = handle_list[1]
 			instance = handle_list[2]
@@ -280,23 +280,23 @@ def bot_accounts_add():
 				r = requests.get("https://{}/api/v1/instance".format(instance), timeout=10)
 			except requests.exceptions.ConnectionError:
 				error = "Couldn't connect to {}.".format(instance)
-				return render_template("bot_accounts_add.html", error = error)
+				return render_template("bot/accounts_add.html", error = error)
 			except:
 				error = "An unknown error occurred."
-				return render_template("bot_accounts_add.html", error = error)
+				return render_template("bot/accounts_add.html", error = error)
 
 			if r.status_code == 200:
 				j = r.json()
 				if 'contact_account' in j and 'is_pro' in j['contact_account']:
 					# gab instance
 					error = "Gab instances are not supported."
-					return render_template("bot_accounts_add.html", error = error)
+					return render_template("bot/accounts_add.html", error = error)
 
 			# 1. download host-meta to find webfinger URL
 			r = requests.get("https://{}/.well-known/host-meta".format(instance), timeout=10)
 			if r.status_code != 200:
 				error = "Couldn't get host-meta."
-				return render_template("bot_accounts_add.html", error = error)
+				return render_template("bot/accounts_add.html", error = error)
 
 			# 2. use webfinger to find user's info page
 			#TODO: use more reliable method
@@ -305,14 +305,14 @@ def bot_accounts_add():
 				uri = uri.format(uri = "{}@{}".format(username, instance))
 			except:
 				error = "Couldn't find WebFinger URL."
-				return render_template("bot_accounts_add.html", error = error)
+				return render_template("bot/accounts_add.html", error = error)
 
 			r = requests.get(uri, headers={"Accept": "application/json"}, timeout=10)
 			try:
 				j = r.json()
 			except:
 				error = "Invalid WebFinger response."
-				return render_template("bot_accounts_add.html", error = error)
+				return render_template("bot/accounts_add.html", error = error)
 
 			found = False
 			for link in j['links']:
@@ -323,7 +323,7 @@ def bot_accounts_add():
 					break
 			if not found:
 				error = "Couldn't find a valid ActivityPub outbox URL."
-				return render_template("bot_accounts_add.html", error = error)
+				return render_template("bot/accounts_add.html", error = error)
 
 			# 3. format as outbox URL and check to make sure it works
 			outbox = "{}/outbox?page=true".format(uri)
@@ -338,12 +338,12 @@ def bot_accounts_add():
 				return redirect("/bot/accounts/{}".format(session['bot']), 303)
 			else:
 				error = "Couldn't access ActivityPub outbox. {} may require authenticated fetches, which FediBooks doesn't support yet.".format(instance)
-				return render_template("bot_accounts_add.html", error = error)
+				return render_template("bot/accounts_add.html", error = error)
 	else:
 		# new account add request
 		session['step'] = 1
 
-	return render_template("bot_accounts_add.html", error = session.pop('error', None))
+	return render_template("bot/accounts_add.html", error = session.pop('error', None))
 
 @app.route("/bot/accounts/toggle/<id>")
 def bot_accounts_toggle(id):
@@ -357,7 +357,7 @@ def bot_accounts_toggle(id):
 def bot_accounts_delete(id):
 	if request.method == 'GET':
 		instance = id.split("@")[2]
-		return render_template("bot_accounts_delete.html", user = id, instance = instance)
+		return render_template("bot/accounts_delete.html", user = id, instance = instance)
 	else:
 		#NOTE: when user credential support is added, we'll need to delete the creds too
 		c = mysql.connection.cursor()
@@ -384,10 +384,10 @@ def bot_create():
 				r = requests.get("https://{}/api/v1/instance".format(session['instance']), timeout=10)
 			except requests.ConnectionError:
 				session['error'] = "Couldn't connect to https://{}.".format(session['instance'])
-				return render_template("bot_create.html", error = session.pop('error', None))
+				return render_template("bot/create.html", error = session.pop('error', None))
 			except:
 				session['error'] = "An unknown error occurred while trying to load https://{}".format(session['instance'])
-				return render_template("bot_create.html", error = session.pop('error', None))
+				return render_template("bot/create.html", error = session.pop('error', None))
 
 			if r.status_code == 200:
 				j = r.json()
@@ -468,7 +468,7 @@ def bot_create():
 				# authentication error occurred
 				error = "Authentication failed."
 				session['step'] = 3
-				return render_template("bot_create.html", error = error)
+				return render_template("bot/create.html", error = error)
 
 			# authentication success!!
 			c = mysql.connection.cursor()
@@ -498,7 +498,7 @@ def bot_create():
 			session['step'] = 1
 
 
-	return render_template("bot_create.html", error = session.pop('error', None))
+	return render_template("bot/create.html", error = session.pop('error', None))
 
 @app.route("/bot/create/back")
 def bot_create_back():
@@ -618,7 +618,7 @@ def report_bug():
 
 @app.route("/help/settings")
 def help_settings():
-	return render_template("help_settings.html")
+	return render_template("help/settings.html")
 
 @app.route("/img/bot_generic.png")
 def img_bot_generic():
