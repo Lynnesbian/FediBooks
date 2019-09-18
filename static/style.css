@@ -55,6 +55,7 @@ body {
 	width: 100px;
 	height: 100px;
 	background: center/contain url("/img/bot_generic.png");
+	background-repeat: no-repeat;
 }
 .panel-icon.large {
 	width: 150px;
