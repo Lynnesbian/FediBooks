@@ -12,8 +12,8 @@ import functions
 from pages.home import home
 from pages.settings import settings
 from pages.bot.edit import bot_edit
-from pages.bot.accounts_add import accounts_add
-from pages.bot.create import create
+from pages.bot.accounts_add import bot_accounts_add
+from pages.bot.create import bot_create
 
 cfg = json.load(open("config.json"))
 
