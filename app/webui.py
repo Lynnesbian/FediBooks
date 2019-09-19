@@ -127,7 +127,7 @@ def bot_accounts(id):
 
 @app.route("/bot/accounts/add", methods = ['GET', 'POST'])
 def render_bot_accounts_add():
-	return bot_accounts_add(mysql)
+	return bot_accounts_add(mysql, cfg)
 
 @app.route("/bot/accounts/toggle/<id>")
 def bot_accounts_toggle(id):

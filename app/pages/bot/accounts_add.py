@@ -2,7 +2,7 @@ from flask import session, render_template, request, redirect
 import requests
 from mastodon import Mastodon
 
-def bot_accounts_add(mysql):
+def bot_accounts_add(mysql, cfg):
 	if request.method == 'POST':
 		if session['step'] == 1:
 			if request.form['account'] == session['bot']:
@@ -79,6 +79,27 @@ def bot_accounts_add(mysql):
 				c.execute("INSERT INTO `bot_learned_accounts` (`bot_id`, `fedi_id`) VALUES (%s, %s)", (session['bot'], request.form['account']))
 				c.close()
 				mysql.connection.commit()
+
+				if 'account' in cfg:
+					client = Mastodon(
+						cfg['account']['client_id'],
+						cfg['account']['client_secret'],
+						cfg['account']['secret'],
+						"https://{}".format(cfg['account']['instance'])
+					)
+					status = """
+Hi, {user}. Someone has created a FediBooks bot that learns from your posts. The bot's username is {bot}. Your public posts are now being downloaded and stored for use by this bot.
+If you do not want {bot} to learn from your posts, click here: {overview}
+If you want to ensure that nobody can use {home} to create bots that use your post history, click here: {blacklist}
+					""".format(
+						user = request.form['account'],
+						bot = session['bot'].replace("@", "@\u200B"),
+						overview = "{}/overview/{}".format(cfg['base_uri'], request.form['account']),
+						blacklist = "{}/blacklist".format(cfg['base_uri']),
+						home = cfg['base_uri']
+					)
+
+					client.status_post(status)
 				return redirect("/bot/accounts/{}".format(session['bot']), 303)
 			else:
 				error = "Couldn't access ActivityPub outbox. {} may require authenticated fetches, which FediBooks doesn't support yet.".format(instance)
