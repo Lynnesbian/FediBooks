@@ -95,13 +95,13 @@ def make_post(args):
 		print("No posts to learn from.")
 		return
 
-	model = nlt_fixed(posts)
-	tries = 0
-	post = None
-
 	if bot['fake_mentions'] == 'never':
 		# remove all mentions from the training data before the markov model sees it
 		posts = re.sub(r"(?<!\S)@\w+(@[\w.]+)?\s?", "", posts)
+
+	model = nlt_fixed(posts)
+	tries = 0
+	post = None
 
 	# even with such a high tries value for markovify, it still sometimes returns none.
 	# so we implement our own tries function as well, and try ten times.
