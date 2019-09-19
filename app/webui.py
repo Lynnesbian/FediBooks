@@ -163,13 +163,13 @@ def render_bot_create():
 @app.route("/bot/create/back")
 def bot_create_back():
 	session['step'] -= 1
-	return redirect(url_for("bot_create"), 303)
+	return redirect(url_for("render_bot_create"), 303)
 
 @app.route("/do/authenticate_bot")
 def do_authenticate_bot():
 	session['code'] = request.args.get('code')
 	session['step'] = 4
-	return redirect(url_for("bot_create"), 303)
+	return redirect(url_for("render_bot_create"), 303)
 
 @app.route("/push/<id>", methods = ['POST'])
 def push(id):
@@ -246,12 +246,12 @@ def do_signup():
 
 	# success!
 	session['user_id'] = user_id
-	return redirect(url_for('home'))
+	return redirect(url_for('render_home'))
 
 @app.route("/do/signout")
 def do_signout():
 	session.clear()
-	return redirect(url_for("home"))
+	return redirect(url_for("render_home"))
 
 @app.route("/do/login", methods=['POST'])
 def do_login():
@@ -266,7 +266,7 @@ def do_login():
 	
 	if bcrypt.checkpw(pw_hashed, data['password']):
 		session['user_id'] = data['id']
-		return redirect(url_for("home"))
+		return redirect(url_for("render_home"))
 
 	else:
 		session['error'] = "Incorrect login information."
