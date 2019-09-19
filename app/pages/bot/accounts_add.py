@@ -1,6 +1,7 @@
 from flask import session, render_template, request, redirect
 import requests
 from mastodon import Mastodon
+import re
 
 def bot_accounts_add(mysql, cfg):
 	if request.method == 'POST':
