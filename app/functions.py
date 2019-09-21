@@ -29,8 +29,8 @@ def extract_post(post):
 		link.decompose()
 
 	text = soup.get_text()
-	text = re.sub("https://([^/]+)/(@[^\s]+)", r"\2@\1", text) # put mastodon-style mentions back in
-	text = re.sub("https://([^/]+)/users/([^\s/]+)", r"@\2@\1", text) # put pleroma-style mentions back in
+	text = re.sub(r"https://([^/]+)/(@[^\s]+)", r"\2@\1", text) # put mastodon-style mentions back in
+	text = re.sub(r"https://([^/]+)/users/([^\s/]+)", r"@\2@\1", text) # put pleroma-style mentions back in
 	text = text.rstrip("\n") # remove trailing newline(s)
 	return text
 
