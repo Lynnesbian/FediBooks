@@ -35,7 +35,7 @@ def login_check():
 	if request.path not in ['/', '/about', '/welcome', '/login', '/signup', '/do/login', '/do/signup', '/static/style.css'] and not request.path.startswith("/push"):
 		# page requires authentication
 		if 'user_id' not in session:
-			return redirect(url_for('home'))
+			return redirect(url_for('render_home'))
 
 @app.route("/")
 def render_home():
