@@ -99,7 +99,7 @@ def bot_toggle(id):
 		c.execute("UPDATE `bots` SET `enabled` = NOT `enabled` WHERE `handle` = %s", (id,))
 		mysql.connection.commit()
 		c.close()
-		return redirect(url_for("home"), 303)
+		return redirect(url_for("render_home"), 303)
 
 @app.route("/bot/chat/<id>")
 def bot_chat(id):
