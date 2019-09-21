@@ -70,12 +70,15 @@ def bot_delete(id):
 	if bot_check(id):
 		if request.method == 'GET':
 			instance = id.split("@")[2]
-			return render_template("bot/delete.html", instance = instance)
+			c = mysql.connection.cursor()
+			c.execute("SELECT icon FROM bots WHERE handle = %s", (id,))
+			icon = c.fetchone()[0]
+			return render_template("bot/delete.html", instance = instance, icon = icon)
 		else:
 			# delete bot by deleting its credentials
 			# FK constraint will delete bot
 			c = mysql.connection.cursor()
-			c.execute("SELECT `credentials_id` FROM `bots` WHERE `handle` = %s", (id,))
+			c.execute("SELECT credentials_id FROM bots WHERE handle = %s", (id,))
 			credentials_id = c.fetchone()[0]
 			c.execute("SELECT client_id, client_secret, secret FROM credentials WHERE id = %s", (credentials_id,))
 			credentials = c.fetchone()

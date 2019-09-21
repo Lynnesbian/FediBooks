@@ -13,10 +13,10 @@
 	
 	<div class="container centred">
 		<form method='POST'>
-			<div class="panel-icon large"></div>
+			<div class="panel-icon large" style="{{ 'background-image: url(\'' + icon + '\')' if icon else '' }}"></div>
 			<div class="container centred">
 				<p>Are you sure you want to <strong>permanently</strong> delete this bot?</p>
-				<p>The account on {{ instance }} will remain open, but your bot will stop posting from it.</p>
+				<p>The account on {{ instance }} will remain open, but FediBooks will stop posting from it.</p>
 				<a class="button btn-secondary" href="/"><i class="fas fa-times"></i> Cancel</a>
 				<button class="button btn-dangerous"><i class="fas fa-trash"></i> Delete bot</button>
 			</div>

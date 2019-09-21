@@ -19,7 +19,7 @@
 	<div class="container" style="min-height: 300px;">
 		{% for bot in bots %}
 		<div class="row light">
-			<div class="panel-icon {{ "online" if bot['enabled'] else "offline"}}" style="{{ "background-image: url('" + bot['icon'] + "')" if bot['icon'] else "" }}"></div>
+			<div class="panel-icon {{ 'online' if bot['enabled'] else 'offline'}}" style="{{ 'background-image: url(\'' + bot['icon'] + '\')' if bot['icon'] else '' }}"></div>
 			<div class="panel-text">
 				{% set handle_list = bot['handle'].split('@') %}
 				<div class="panel-name">@{{ handle_list[1] }}<span class="subtle tiny">@{{ handle_list[2] }}</span></div>
