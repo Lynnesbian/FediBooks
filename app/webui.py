@@ -77,11 +77,20 @@ def bot_delete(id):
 			c = mysql.connection.cursor()
 			c.execute("SELECT `credentials_id` FROM `bots` WHERE `handle` = %s", (id,))
 			credentials_id = c.fetchone()[0]
+			c.execute("SELECT client_id, client_secret, secret FROM credentials WHERE id = %s", (credentials_id,))
+			credentials = c.fetchone()
+			client = Mastodon(
+				credentials[0],
+				credentials[1],
+				credentials[2],
+				"https://{}".format(id.split("@")[2])
+			)
+			client.push_subscription_delete()
 			c.execute("DELETE FROM `credentials` WHERE `id` = %s", (credentials_id,))
 			c.close()
 			mysql.connection.commit()
 
-			return redirect(url_for("home"), 303)
+			return redirect(url_for("render_home"), 303)
 
 @app.route("/bot/toggle/<id>")
 def bot_toggle(id):
