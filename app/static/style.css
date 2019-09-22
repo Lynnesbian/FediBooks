@@ -160,6 +160,7 @@ label.important {
 	margin: 10px 0;
 	font-weight: 300;
 	display: block;
+	text-align: center;
 }
 input, select, textarea {
 	font-size: 1.2em;

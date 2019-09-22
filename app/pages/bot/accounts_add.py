@@ -17,14 +17,14 @@ def bot_accounts_add(mysql, cfg):
 				error = "Incorrectly formatted handle."
 				return render_template("bot/accounts_add.html", error = error)
 
-			username = handle_list[1]
-			instance = handle_list[2]
+			session['username'] = handle_list[1]
+			session['instance'] = handle_list[2]
+			session['handle'] = request.form['account']
 
-			# gab check
 			try:
-				r = requests.get("https://{}/api/v1/instance".format(instance), timeout=10)
+				r = requests.get("https://{}/api/v1/instance".format(session['instance']), timeout=10)
 			except requests.exceptions.ConnectionError:
-				error = "Couldn't connect to {}.".format(instance)
+				error = "Couldn't connect to {}.".format(session['instance'])
 				return render_template("bot/accounts_add.html", error = error)
 			except:
 				error = "An unknown error occurred."
@@ -32,13 +32,56 @@ def bot_accounts_add(mysql, cfg):
 
 			if r.status_code == 200:
 				j = r.json()
-				if 'contact_account' in j and 'is_pro' in j['contact_account']:
-					# gab instance
-					error = "Gab instances are not supported."
-					return render_template("bot/accounts_add.html", error = error)
+				if "Pleroma" in j['version']:
+					session['instance_type'] = "Pleroma"
+					session['step'] += 1
+				else:
+					if 'contact_account' in j and 'is_pro' in j['contact_account']:
+						# gab instance
+						session['error'] = "Gab instances are not supported."
+						return render_template("bot/accounts_add.html", error = error)
+					else:
+						session['instance_type'] = "Mastodon"
+						session['step'] += 1
+			
+			else:
+				error = "Unsupported instance type. Misskey support is planned."
+				return render_template("bot/accounts_add.html", error = error)
 
+			session['client_id'], session['client_secret'] = Mastodon.create_app(
+				"FediBooks User Authenticator",
+				api_base_url="https://{}".format(session['instance']),
+				scopes=["read:statuses"] if session['instance_type'] == 'Mastodon' else ["read"],
+				website=cfg['base_uri']
+			)
+
+			client = Mastodon(
+				client_id=session['client_id'],
+				client_secret=session['client_secret'],
+				api_base_url="https://{}".format(session['instance'])
+			)
+
+			session['url'] = client.auth_request_url(
+				client_id=session['client_id'],
+				scopes=["read:statuses"] if session['instance_type'] == 'Mastodon' else ["read"]
+			)
+
+		elif session['step'] == 2:
+			# test authentication
+			try:
+				client = Mastodon(client_id=session['client_id'], client_secret=session['client_secret'], api_base_url=session['instance'])
+				session['secret'] = client.log_in(
+					code = request.form['code'],
+					scopes=["read:statuses"] if session['instance_type'] == 'Mastodon' else ["read"],
+				)
+				client.account_verify_credentials()
+			except:
+				session['step'] = 1
+				error = "Authentication failed."
+				return render_template("bot/accounts_add.html", error = error)
+			
 			# 1. download host-meta to find webfinger URL
-			r = requests.get("https://{}/.well-known/host-meta".format(instance), timeout=10)
+			r = requests.get("https://{}/.well-known/host-meta".format(session['instance']), timeout=10)
 			if r.status_code != 200:
 				error = "Couldn't get host-meta."
 				return render_template("bot/accounts_add.html", error = error)
@@ -47,7 +90,7 @@ def bot_accounts_add(mysql, cfg):
 			#TODO: use more reliable method
 			try:
 				uri = re.search(r'template="([^"]+)"', r.text).group(1)
-				uri = uri.format(uri = "{}@{}".format(username, instance))
+				uri = uri.format(uri = "{}@{}".format(session['username'], session['instance']))
 			except:
 				error = "Couldn't find WebFinger URL."
 				return render_template("bot/accounts_add.html", error = error)
@@ -72,38 +115,18 @@ def bot_accounts_add(mysql, cfg):
 
 			# 3. format as outbox URL and check to make sure it works
 			outbox = "{}/outbox?page=true".format(uri)
-			r = requests.get(uri, headers={"Accept": "application/json"}, timeout=10)
+			r = requests.get(outbox, headers={"Accept": "application/json,application/activity+json"}, timeout=10)
 			if r.status_code == 200:
 				# success!!
 				c = mysql.connection.cursor()
-				c.execute("REPLACE INTO `fedi_accounts` (`handle`, `outbox`) VALUES (%s, %s)", (request.form['account'], outbox))
-				c.execute("INSERT INTO `bot_learned_accounts` (`bot_id`, `fedi_id`) VALUES (%s, %s)", (session['bot'], request.form['account']))
+				c.execute("REPLACE INTO `fedi_accounts` (`handle`, `outbox`) VALUES (%s, %s)", (session['handle'], outbox))
+				c.execute("INSERT INTO `bot_learned_accounts` (`bot_id`, `fedi_id`) VALUES (%s, %s)", (session['bot'], session['handle']))
 				c.close()
 				mysql.connection.commit()
 
-				if 'account' in cfg:
-					client = Mastodon(
-						cfg['account']['client_id'],
-						cfg['account']['client_secret'],
-						cfg['account']['secret'],
-						"https://{}".format(cfg['account']['instance'])
-					)
-					status = """
-Hi, {user}. Someone has created a FediBooks bot that learns from your posts. The bot's username is {bot}. Your public posts are now being downloaded and stored for use by this bot.
-If you do not want {bot} to learn from your posts, click here: {overview}
-If you want to ensure that nobody can use {home} to create bots that use your post history, click here: {blacklist}
-					""".format(
-						user = request.form['account'],
-						bot = session['bot'].replace("@", "@\u200B"),
-						overview = "{}/overview/{}".format(cfg['base_uri'], request.form['account']),
-						blacklist = "{}/blacklist".format(cfg['base_uri']),
-						home = cfg['base_uri']
-					)
-
-					client.status_post(status)
 				return redirect("/bot/accounts/{}".format(session['bot']), 303)
 			else:
-				error = "Couldn't access ActivityPub outbox. {} may require authenticated fetches, which FediBooks doesn't support yet.".format(instance)
+				error = "Couldn't access ActivityPub outbox. {} may require authenticated fetches, which FediBooks doesn't support yet.".format(session['instance'])
 				return render_template("bot/accounts_add.html", error = error)
 	else:
 		# new account add request

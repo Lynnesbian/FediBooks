@@ -22,7 +22,10 @@
 
 			{% elif session['step'] == 2 %}
 			<h2 class="thin centred">Authentication required</h2>
-			<p>{{ session['instance'] }} requires authentication to view public posts. Ensure you're signed in as {{ session['account'] }}, and click Next. You will be prompted to give FediBooks access to read your posts, which is required for your bot.</p>
+			<p>You now need to authenticate with {{ session['instance'] }}. If {{ session['handle'] }} is your account, click "Open". If it's someone else's account, copy the URL in the box below and send it to them, and ask them to send you the code they receive.</p>
+			<input readonly value="{{ session['url'] }}"> <a href="{{ session['url'] }}" target="_blank" class="button btn-primary"><i class="fas fa-external-link-alt"></i>Open</a>
+			<p>After you've authenticated, paste the code returned by {{ session['instance'] }} into the textbox below.</p>
+			<input name="code" placeholder="OAuth code">
 
 			{% elif session['step'] == 3 %}
 
@@ -37,7 +40,7 @@
 			{% endif %}
 
 			<div class="container centred">
-					<a href="/" class="button btn-secondary"><i class="fas fa-times"></i> Cancel</a>
+					<a href="/bot/accounts/{{ session['bot'] }}" class="button btn-secondary"><i class="fas fa-times"></i> Cancel</a>
 				{% if session['step'] != 1 %}
 					<a href="/bot/accounts/add/back" class="button btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
 				{% endif %}
