@@ -74,7 +74,10 @@ def bot_accounts_add(mysql, cfg):
 					code = request.form['code'],
 					scopes=["read:statuses"] if session['instance_type'] == 'Mastodon' else ["read"],
 				)
-				client.account_verify_credentials()
+				username = client.account_verify_credentials()['username']
+				if username != session['username']:
+					error = "Incorrect username."
+					return render_template("bot/accounts_add.html", error = error)
 			except:
 				session['step'] = 1
 				error = "Authentication failed."
