@@ -100,8 +100,15 @@ def bot_create(mysql, cfg, scopes, scopes_pleroma):
 				session['step'] = 3
 				return render_template("bot/create.html", error = error)
 
-			# authentication success!!
 			c = mysql.connection.cursor()
+			c.execute("SELECT COUNT(*) FROM bots WHERE handle = %s", (handle,))
+			count = c.fetchone()
+			if count != None and count[0] == 1:
+				session['error'] = "{} is currently in use by another FediBooks bot.".format(handle)
+				session['step'] = 1
+				return redirect(url_for("render_bot_create"), 303)
+
+			# authentication success!!
 			c.execute("INSERT INTO `credentials` (client_id, client_secret, secret) VALUES (%s, %s, %s)", (session['client_id'], session['client_secret'], session['secret']))
 			credentials_id = c.lastrowid
 			mysql.connection.commit()
@@ -123,6 +130,7 @@ def bot_create(mysql, cfg, scopes, scopes_pleroma):
 			del session['instance_type']
 			del session['client_id']
 			del session['client_secret']
+
 		else:
 			# user is starting a new bot create request
 			session['step'] = 1
