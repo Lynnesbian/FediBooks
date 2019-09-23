@@ -106,7 +106,7 @@ def bot_toggle(id):
 
 @app.route("/bot/chat/<id>")
 def bot_chat(id):
-	return render_template("coming_soon.html")
+	return render_template("/bot/chat.html", bot = id)
 
 @app.route("/bot/blacklist/<id>")
 def bot_blacklist(id):
