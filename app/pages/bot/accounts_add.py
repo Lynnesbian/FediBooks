@@ -76,7 +76,7 @@ def bot_accounts_add(mysql, cfg):
 				)
 				username = client.account_verify_credentials()['username']
 				if username != session['username']:
-					error = "Incorrect username."
+					error = "Please authenticate as {}.".format(session['username'])
 					return render_template("bot/accounts_add.html", error = error)
 			except:
 				session['step'] = 1
