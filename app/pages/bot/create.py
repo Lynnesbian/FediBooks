@@ -1,13 +1,17 @@
 from flask import request, session, render_template, redirect, url_for
 import requests
 from mastodon import Mastodon
-import re
+import re, json
 
 def bot_create(mysql, cfg, scopes, scopes_pleroma):
 	if request.method == 'POST':
 		if session['step'] == 1:
 			# strip leading https://, if provided
 			session['instance'] = re.match(r"^(?:https?:\/\/)?(.*)", request.form['instance']).group(1)
+
+			if session['instance'] in json.load(open("blacklist.json")):
+				session['error'] = "Creating a bot on this instance is not allowed."
+				return redirect(url_for("render_bot_create"))
 			
 			# check for mastodon/pleroma
 			try:

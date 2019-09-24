@@ -1,7 +1,7 @@
-from flask import session, render_template, request, redirect
+from flask import session, render_template, request, redirect, url_for
 import requests
 from mastodon import Mastodon
-import re
+import re, json
 
 def bot_accounts_add(mysql, cfg):
 	if request.method == 'POST':
@@ -20,6 +20,10 @@ def bot_accounts_add(mysql, cfg):
 			session['username'] = handle_list[1]
 			session['instance'] = handle_list[2]
 			session['handle'] = request.form['account']
+
+			if session['instance'] in json.load(open("blacklist.json")):
+				session['error'] = "Learning from accounts on this instance is not allowed."
+				return redirect(url_for("render_bot_accounts_add"))
 
 			try:
 				r = requests.get("https://{}/api/v1/instance".format(session['instance']), timeout=10)
