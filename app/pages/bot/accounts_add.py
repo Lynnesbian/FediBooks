@@ -51,7 +51,7 @@ def bot_accounts_add(mysql, cfg):
 			session['client_id'], session['client_secret'] = Mastodon.create_app(
 				"FediBooks User Authenticator",
 				api_base_url="https://{}".format(session['instance']),
-				scopes=["read:statuses"] if session['instance_type'] == 'Mastodon' else ["read"],
+				scopes=["read:statuses", "read:accounts"] if session['instance_type'] == 'Mastodon' else ["read"],
 				website=cfg['base_uri']
 			)
 
@@ -63,7 +63,7 @@ def bot_accounts_add(mysql, cfg):
 
 			session['url'] = client.auth_request_url(
 				client_id=session['client_id'],
-				scopes=["read:statuses"] if session['instance_type'] == 'Mastodon' else ["read"]
+				scopes=["read:statuses", "read:accounts"] if session['instance_type'] == 'Mastodon' else ["read"]
 			)
 
 		elif session['step'] == 2:
@@ -72,7 +72,7 @@ def bot_accounts_add(mysql, cfg):
 				client = Mastodon(client_id=session['client_id'], client_secret=session['client_secret'], api_base_url=session['instance'])
 				session['secret'] = client.log_in(
 					code = request.form['code'],
-					scopes=["read:statuses"] if session['instance_type'] == 'Mastodon' else ["read"],
+					scopes=["read:statuses", "read:accounts"] if session['instance_type'] == 'Mastodon' else ["read"],
 				)
 				username = client.account_verify_credentials()['username']
 				if username != session['username']:
