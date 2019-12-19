@@ -287,7 +287,8 @@ def do_login():
 
 @app.route("/issue/bug")
 def report_bug():
-	return render_template("report_bug.html")
+	# return render_template("report_bug.html")
+	return render_template("coming_soon.html")
 
 @app.route("/help/settings")
 def help_settings():
