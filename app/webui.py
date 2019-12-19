@@ -61,6 +61,10 @@ def show_signup_page():
 def render_settings():
 	return settings(mysql)
 
+@app.route("/delete")
+def render_delete():
+	return render_template("close_account.html", error = session.pop('error', None))
+
 @app.route("/bot/edit/<id>", methods = ['GET', 'POST'])
 def render_bot_edit(id):
 	return bot_edit(id, mysql)

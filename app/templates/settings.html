@@ -18,7 +18,7 @@
 		<form method="POST" class="full-width">
 			<div class="container light">
 				<h2 class="thin centred">Login settings</h2>
-				<p class="centred">Update your email and password here.</p>
+				<p class="centred">Update your email and password here, or close your account.</p>
 			</div>
 
 			<div class="row">
@@ -28,6 +28,10 @@
 			<div class="row">
 				<label for="password" class="large">Password</label>
 				<input type="password" name="password"pattern=".{8,}" placeholder="Unchanged">
+			</div>
+			<div class="row">
+				<label for="delete" class="large">Delete account</label>
+				<a name="delete" class="button btn-dangerous" href="/delete"><i class="fas fa-trash"></i> Close account</a>
 			</div>
 
 			<div class="container light">
@@ -73,10 +77,10 @@
 			</div>
 
 			<div class="container centred">
-					<button class="button btn-primary"><i class="fas fa-save"></i> Save</button>
-					<a href="/" class="button btn-secondary"><i class="fas fa-times"></i> Cancel</a>
-					<a href="/help/settings" target="_blank" class="button btn-secondary"><i class="fas fa-question"></i> Help</a>
-				</div>
+				<button class="button btn-primary"><i class="fas fa-save"></i> Save</button>
+				<a href="/" class="button btn-secondary"><i class="fas fa-times"></i> Cancel</a>
+				<a href="/help/settings" target="_blank" class="button btn-secondary"><i class="fas fa-question"></i> Help</a>
+			</div>
 		</form>
 	</div>
 

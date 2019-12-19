@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FediBooks</title>
+	{% include 'imports.html' %}
+</head>
+
+<body>
+	<div class="container centred">
+		<h1 class="thin centred">Close your FediBooks account</h1>
+	</div>
+
+	{% include 'error.html' %}
+	
+	<div class="container centred">
+		<form method='POST'>
+			<h2>
+				<i class="fas fa-user-slash" style="font-size:3em;"></i>
+			</h2>
+			<div class="container centred">
+				<p>Are you sure you want to <strong>permanently</strong> delete your account?</p>
+				<p>All of your FediBooks bots will stop working, but their accounts will remain open. You can delete them manually or repurpose them for something else.</p>
+				<p>If you're sure you want to delete your account, enter your password below and click "Close my account".</p>
+				<p>
+					<input type="password" placeholder="Password">
+				</p>
+				<a class="button btn-secondary" href="/"><i class="fas fa-times"></i> Cancel</a>
+				<button class="button btn-dangerous"><i class="fas fa-trash"></i> Close my account</button>
+			</div>
+		</form>
+	</div>
+
+	{% include 'footer.html' %}
+</body>
+</html>
