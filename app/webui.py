@@ -61,9 +61,58 @@ def show_signup_page():
 def render_settings():
 	return settings(mysql)
 
-@app.route("/delete")
+@app.route("/delete", methods=['GET', 'POST'])
 def render_delete():
-	return render_template("close_account.html", error = session.pop('error', None))
+	if request.method == 'GET':
+		return render_template("close_account.html", error = session.pop('error', None))
+	else:
+		# deletion logic
+			pw_hashed = hashlib.sha256(request.form['password'].encode('utf-8')).digest().replace(b"\0", b"\1")
+			c = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+			c.execute("SELECT * FROM users WHERE id = %s", (session['user_id'],))
+			data = c.fetchone()
+			c.close()
+			if data == None:
+				# should never happen ;)
+				session['error'] = "An unknown error occurred."
+				return redirect(url_for("render_delete"), 303)
+			
+			if bcrypt.checkpw(pw_hashed, data['password']):
+				# passwords match, delete the account
+				session['error'] = "succ ess"
+				c = mysql.connection.cursor()
+				c.execute("SELECT credentials_id FROM bots WHERE user_id = %s", (session['user_id'],))
+				credentials_list = c.fetchall()
+				for credentials_id in credentials_list:
+					c.execute("SELECT client_id, client_secret, secret FROM credentials WHERE id = %s", (credentials_id,))
+					# TODO: maybe schedule the push deletions on a cron job or something, if the user has a lot of accounts (or they're on slow instances) this could take a while or even time out
+					credentials = c.fetchone()
+					try:
+						client = Mastodon(
+							credentials[0],
+							credentials[1],
+							credentials[2],
+							"https://{}".format(id.split("@")[2])
+						)
+						client.push_subscription_delete()
+					except:
+						# if it fails, don't prevent the user from deleting their account
+						# TODO: maybe notify that some accounts failed to unregister push
+						pass
+					c.execute("DELETE FROM `credentials` WHERE `id` = %s", (credentials_id,))
+
+				# the big boy step
+				c.execute("DELETE FROM users WHERE id = %s", (session['user_id'],))
+
+				c.close()
+				mysql.connection.commit()
+				
+				# TODO: show a "deletion successful" message or something
+				return redirect(url_for("do_signout"), 303)
+
+			else:
+				session['error'] = "Password incorrect."
+				return redirect(url_for("render_delete"), 303)
 
 @app.route("/bot/edit/<id>", methods = ['GET', 'POST'])
 def render_bot_edit(id):
