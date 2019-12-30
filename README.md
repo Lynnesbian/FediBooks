@@ -14,9 +14,9 @@ A web UI for creating your very own ebooks bots.
 
 If this doesn't work, try using ``pip`` instead. If it still doesn't work, you might have to install an additional package (for example, ``python-pip`` on Arch Linux).
 
-3. Go to the ``app`` directory and copy the config.sample.json file to ``config.json``.
+3. Copy the ``app/config.sample.json`` file to ``app/config.json``.
 
-4. Fill in the newly created ``config.json`` file.
+4. Fill in the ``app/config.json`` file.
 
 5. Run ``python3 app/setup.py`` and follow the on-screen prompts.
 
