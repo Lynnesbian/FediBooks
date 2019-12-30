@@ -20,35 +20,20 @@ body {
 	flex-basis: 0;
 	padding: 10px;
 }
-.large {
-	font-size: 1.2em;
-}
-.small {
-	font-size: 0.8em;
-}
-.tiny {
-	font-size: 0.5em;
-}
-.centred {
+.large { font-size: 1.2em; }
+.small { font-size: 0.8em; }
+.tiny { font-size: 0.5em; }
+.centred { text-align: center; }
+.thin { font-weight: 300; }
+.subtle { color: #ccc; }
+.row { display: flex; }
+.full-width { width: 100%; }
+.no-margin { margin: 0; }
+.left-align { text-align: left; }
+
+.bot-panel {
 	text-align: center;
-}
-.thin {
-	font-weight: 300;
-}
-.subtle {
-	color: #ccc;
-}
-.row {
-	display: flex;
-}
-.full-width {
-	width: 100%;
-}
-.no-margin {
-	margin: 0;
-}
-.left-align {
-	text-align: left;
+	padding: 10px;
 }
 
 .panel-icon {
@@ -56,35 +41,19 @@ body {
 	height: 100px;
 	background: center/contain url("/img/bot_generic.png");
 	background-repeat: no-repeat;
+	border-radius: 4px;
 }
-.panel-icon.large {
-	width: 150px;
-	height: 150px;
-}
-.panel-icon.online, .panel-icon.offline {
-	width: 105px;
-}
-.panel-icon.online {
-	border-left: 5px #5c5 solid;
-}
-.panel-icon.offline {
-	border-left: 5px #c33 solid;
-}
-.panel-icon, .panel-text, .panel-actions {
-	display: inline-block;
-	align-self: center;
-}
-.panel-text {
-	flex-grow: 1;
-	margin: 0 0 10px 15px;
-}
-.panel-name {
-	font-size: 1.8em;
-	margin: 10px 0;
-}
-.panel-actions {
-	margin-right: 10px;
-}
+.panel-icon.large { width: 150px; height: 150px; }
+.panel-icon.online  { width: 105px; border: 3px #5c5 solid; }
+.panel-icon.offline { width: 105px; border: 3px #c33 solid; }
+.panel-icon, .panel-text, .panel-actions { display: inline-block; align-self: center; }
+.panel-text { flex-grow: 1;}
+.panel-name { font-size: 1.8em; margin: 10px 0; }
+.panel-name h2 { font-size: 1em; margin: 0; padding: 0; }
+.panel-name .tiny { padding: 0; margin: 0; }
+.panel-status { padding-bottom: 10px; }
+.panel-actions a { width: 75%; }
+.panel-pane { width: 50%; }
 
 .button {
 	color: white;
@@ -245,4 +214,10 @@ form .row {
 .message.user {
 	background-color: #ddd;
 	color: #333;
+}
+
+@media screen and (max-width: 600px) {
+	.panel-actions a { width: 100%; margin-bottom: 10px; height: 50px; font-size: 1.2em; display: flex; align-items: center; justify-content: center; }
+	.row { display: block; }
+	.panel-pane { width: 100%; }
 }
