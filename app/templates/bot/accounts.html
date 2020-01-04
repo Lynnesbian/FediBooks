@@ -25,8 +25,8 @@
 				<div class="panel-status">{{ "Active" if user['enabled'] else "Inactive" }}, {{ post_count[user['fedi_id']] }} posts in database</div>
 			</div>
 			<div class="panel-actions panel-pane">
-				<a class="button btn-secondary" href="/bot/accounts/toggle/{{ user['fedi_id'] }}" title="Turn on/off"><span><i class="fas fa-power-off"></i> Turn on/off</span></a>
-				<a class="button btn-dangerous" href="/bot/accounts/delete/{{ user['fedi_id'] }}" title="Delete"><span><i class="fas fa-trash"></i> Delete</span></a>
+				<a class="button btn-secondary" href="/bot/accounts/toggle/{{ user['fedi_id'] }}" title="Turn on/off"><i class="fas fa-power-off"></i> Turn on/off</a>
+				<a class="button btn-dangerous" href="/bot/accounts/delete/{{ user['fedi_id'] }}" title="Delete"><i class="fas fa-trash"></i> Delete</a>
 			</div>
 		</div>
 		{% endfor %}

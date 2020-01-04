@@ -31,12 +31,12 @@
 				<div class="panel-status">{{ "Online" if bot['enabled'] else "Offline"}}, learning from {{ bot_users[bot['handle']] }} accounts.{% if bot['handle'] in next_posts %} Next post in {{ next_posts[bot['handle']][0] }} minutes.{% endif %}</div>
 			</div>
 			<div class="panel-actions panel-pane">
-				<a class="button btn-secondary" href="/bot/toggle/{{ bot['handle'] }}" title="Turn on/off"><span><i class="fas fa-power-off"></i> Turn on/off</span></a>
-				<a class="button btn-secondary" href="/bot/edit/{{ bot['handle'] }}" title="Configure"><span><i class="fas fa-cog"></i> Configure</span></a>
-				<a class="button btn-secondary" href="/bot/accounts/{{ bot['handle'] }}" title="Accounts learned from"><span><i class="fas fa-users"></i> Accounts learned from</span></a>
-				<a class="button btn-secondary" href="/bot/blacklist/{{ bot['handle'] }}" title="Banned words"><span><i class="fas fa-strikethrough"></i> Banned words</span></a>
-				<a class="button btn-secondary" href="/bot/chat/{{ bot['handle'] }}" title="Chat"><span><i class="fas fa-comment"></i> Chat</span></a>
-				<a class="button btn-dangerous" href="/bot/delete/{{ bot['handle'] }}" title="Delete"><span><i class="fas fa-trash"></i> Delete</span></a>
+				<a class="button btn-secondary" href="/bot/toggle/{{ bot['handle'] }}" title="Turn on/off"><i class="fas fa-power-off"></i> Turn on/off</a>
+				<a class="button btn-secondary" href="/bot/edit/{{ bot['handle'] }}" title="Configure"><i class="fas fa-cog"></i> Configure</a>
+				<a class="button btn-secondary" href="/bot/accounts/{{ bot['handle'] }}" title="Accounts learned from"><i class="fas fa-users"></i> Accounts learned from</a>
+				<a class="button btn-secondary" href="/bot/blacklist/{{ bot['handle'] }}" title="Banned words"><i class="fas fa-strikethrough"></i> Banned words</a>
+				<a class="button btn-secondary" href="/bot/chat/{{ bot['handle'] }}" title="Chat"><i class="fas fa-comment"></i> Chat</a>
+				<a class="button btn-dangerous" href="/bot/delete/{{ bot['handle'] }}" title="Delete"><i class="fas fa-trash"></i> Delete</a>
 			</div>
 		</div>
 		{% endfor %}
