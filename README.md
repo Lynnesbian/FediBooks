@@ -4,7 +4,9 @@ A web UI for creating your very own ebooks bots.
 
 # Selfhosting
 
-1. Install ``python3`` and ``mariadb``. If you're installing on Windows, make sure to check "Add Python to PATH" during Python installation.
+FediBooks is currently unfinished - many functions don't work yet, and future updates may make major, breaking changes. I don't recommend self-hosting it yet unless you're willing to work through the potential growing pains.
+
+1. Install ``python3`` and ``mariadb`` or ``mysql``. If you're installing on Windows, make sure to check "Add Python to PATH" during Python installation.
 
 2. Install the requirements, using ``pip``:
 
