@@ -149,8 +149,6 @@ def make_post(args):
 	# TODO: ehhhhhhhhh
 	post = post[:bot['length']]
 	# send toot!!
-	print(post)
-	return
 	try:
 		client.status_post(post, id, visibility = visibility, spoiler_text = bot['content_warning'])
 	except MastodonUnauthorizedError:
