@@ -27,8 +27,7 @@ If this doesn't work, try using ``pip`` instead. If it still doesn't work, you m
 ```
 CREATE DATABASE `fedibooks`;
 CREATE USER 'myuser' IDENTIFIED BY 'mypassword';
-GRANT USAGE ON *.* TO 'myuser'@localhost IDENTIFIED BY 'mypassword';
-GRANT ALL privileges ON `fedibooks`.* TO 'myuser'@localhost;
+GRANT ALL PRIVILEGES ON `fedibooks`.* TO 'myuser';
 FLUSH PRIVILEGES;
 exit
 ```
