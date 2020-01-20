@@ -127,14 +127,14 @@ def make_post(args):
 		acct = args[3]
 	handle = args[0]
 
+	bot, post = generate_output(handle)
+
 	client = Mastodon(
 		client_id = bot['client_id'],
 		client_secret = bot['client_secret'],
 		access_token = bot['secret'],
 		api_base_url = "https://{}".format(handle.split("@")[2])
 	)
-
-	bot, post = generate_output(handle)
 
 	# print(post)
 	visibility = bot['post_privacy'] if len(args) == 1 else args[2]
