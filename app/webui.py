@@ -76,7 +76,7 @@ def render_delete():
 				# should never happen ;)
 				session['error'] = "An unknown error occurred."
 				return redirect(url_for("render_delete"), 303)
-			
+
 			if bcrypt.checkpw(pw_hashed, data['password']):
 				# passwords match, delete the account
 				session['error'] = "succ ess"
@@ -106,7 +106,7 @@ def render_delete():
 
 				c.close()
 				mysql.connection.commit()
-				
+
 				# TODO: show a "deletion successful" message or something
 				return redirect(url_for("do_signout"), 303)
 
@@ -258,9 +258,12 @@ def push(id):
 		'privkey': int(bot[0].rstrip("\0")),
 		'auth': bot[1]
 	}
-	push_object = client.push_subscription_decrypt_push(request.data, params, request.headers['Encryption'], request.headers['Crypto-Key'])
-	notification = client.notifications(id = push_object['notification_id'])
-	me = client.account_verify_credentials()['id']
+	try:
+		push_object = client.push_subscription_decrypt_push(request.data, params, request.headers['Encryption'], request.headers['Crypto-Key'])
+		notification = client.notifications(id = push_object['notification_id'])
+		me = client.account_verify_credentials()['id']
+	except:
+		return "Push failed - do we still have access to {}?".format(id)
 
 	# first, check how many times the bot has posted in this thread.
 	# if it's over 15, don't reply.
@@ -329,7 +332,7 @@ def do_login():
 	if data == None:
 		session['error'] = "Incorrect login information."
 		return redirect(url_for("show_login_page"), 303)
-	
+
 	if bcrypt.checkpw(pw_hashed, data['password']):
 		session['user_id'] = data['id']
 		return redirect(url_for("render_home"))
