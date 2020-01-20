@@ -127,6 +127,8 @@ def make_post(args):
 		acct = args[3]
 	handle = args[0]
 
+	# print("Generating post for {}".format(handle))
+
 	bot, post = generate_output(handle)
 
 	client = Mastodon(
@@ -135,6 +137,14 @@ def make_post(args):
 		access_token = bot['secret'],
 		api_base_url = "https://{}".format(handle.split("@")[2])
 	)
+
+	db = MySQLdb.connect(
+		host = cfg['db_host'],
+		user=cfg['db_user'],
+		passwd=cfg['db_pass'],
+		db=cfg['db_name']
+	)
+	c = db.cursor()
 
 	# print(post)
 	visibility = bot['post_privacy'] if len(args) == 1 else args[2]
