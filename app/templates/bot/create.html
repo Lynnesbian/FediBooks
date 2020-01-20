@@ -12,7 +12,7 @@
 	</div>
 
 	{% include 'error.html' %}
-	
+
 	<div class="container centred">
 		<form method="POST">
 			{% if session['step'] == 1 %}
@@ -26,7 +26,7 @@
 
 			{% elif session['step'] == 3 %}
 			<p>You now need to give your bot access to the {{ session['instance'] }} account you have created for it. If you have not yet created an account on {{ session['instance'] }} for your bot to use, please do so now.</p>
-			<p>Sign in to the {{ session['instance'] }} account you want your bot to use, then click next to begin the authorisation process.</p>
+			<p>In another tab, sign in to the {{ session['instance'] }} account you want your bot to use. Once that's done, click next to begin the authorisation process.</p>
 
 			{% elif session['step'] == 4 %}
 			<h2 class="thin centred">Congratulations!</h2>
