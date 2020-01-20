@@ -47,7 +47,7 @@ def bot_accounts_add(mysql, cfg):
 					else:
 						session['instance_type'] = "Mastodon"
 						session['step'] += 1
-			
+
 			else:
 				error = "Unsupported instance type. Misskey support is planned."
 				return render_template("bot/accounts_add.html", error = error)
@@ -81,12 +81,13 @@ def bot_accounts_add(mysql, cfg):
 				username = client.account_verify_credentials()['username']
 				if username != session['username']:
 					error = "Please authenticate as {}.".format(session['username'])
+					print("Auth error - {} is not {}".format(session['username'], username))
 					return render_template("bot/accounts_add.html", error = error)
 			except:
 				session['step'] = 1
 				error = "Authentication failed."
 				return render_template("bot/accounts_add.html", error = error)
-			
+
 			# 1. download host-meta to find webfinger URL
 			r = requests.get("https://{}/.well-known/host-meta".format(session['instance']), timeout=10)
 			if r.status_code != 200:
