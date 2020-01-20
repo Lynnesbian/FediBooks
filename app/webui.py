@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, redirect, url_for, send_file, jsonify
+from flask import Flask, render_template, session, request, redirect, url_for, send_file
 from flask_mysqldb import MySQL
 
 from mastodon import Mastodon
@@ -369,11 +369,6 @@ def img_bot_generic():
 @app.route("/favicon.ico")
 def favicon():
 	return send_file("static/favicon.ico")
-
-@app.route("/.well-known/webfinger")
-def webfinger():
-	return render_template("webfinger.json", base_uri = cfg['base_uri']), 200, {'Content-type':'application/json'}
-
 
 def bot_check(bot):
 	# check to ensure bot is owned by user
