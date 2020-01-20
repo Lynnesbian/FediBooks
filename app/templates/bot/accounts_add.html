@@ -12,10 +12,11 @@
 	</div>
 
 	{%include 'error.html' %}
-	
+
 	<div class="container centred">
 		<form method="POST">
 			{% if session['step'] == 1 %}
+			<p>Please enter the full handle of the account you'd like your bot to learn from. Note that this is case sensitive.</p>
 			<label for="account" class="important">Account handle</label>
 			<input type="text" name="account" class="full-width" placeholder="@user@example.com">
 			<br>
