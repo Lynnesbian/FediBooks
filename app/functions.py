@@ -63,12 +63,6 @@ def generate_output(handle):
 	""", (handle,))
 
 	bot = dc.fetchone()
-	client = Mastodon(
-		client_id = bot['client_id'],
-		client_secret = bot['client_secret'],
-		access_token = bot['secret'],
-		api_base_url = "https://{}".format(handle.split("@")[2])
-	)
 
 	# by default, only select posts that don't have CWs.
 	# if learn_from_cw, then also select posts with CWs
@@ -132,6 +126,13 @@ def make_post(args):
 		id = args[1]
 		acct = args[3]
 	handle = args[0]
+
+	client = Mastodon(
+		client_id = bot['client_id'],
+		client_secret = bot['client_secret'],
+		access_token = bot['secret'],
+		api_base_url = "https://{}".format(handle.split("@")[2])
+	)
 
 	bot, post = generate_output(handle)
 
