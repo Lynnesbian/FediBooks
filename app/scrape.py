@@ -80,9 +80,15 @@ def scrape_posts(account):
 
 		if not done:
 			if pleroma:
-				r = requests.get(j['next'], timeout = 10)
+				if 'next' in j:
+					r = requests.get(j['next'], timeout = 10)
+				else:
+					done = True
 			else:
-				r = requests.get(j['prev'], timeout = 10)
+				if 'prev' in j:
+					r = requests.get(j['prev'], timeout = 10)
+				else:
+					done = True
 
 			if r.status_code == 429:
 				# we are now being ratelimited, move on to the next user
