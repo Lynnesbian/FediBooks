@@ -4,6 +4,12 @@
 	<meta charset="UTF-8">
 	<title>FediBooks</title>
 	{% include 'imports.html' %}
+	<script>
+		window.onload = function() {
+			document.getElementById("chatbox-input-box").focus();
+			document.getElementById("chatbox-input").onsubmit = sendMessage;
+		}
+	</script>
 </head>
 
 <body>
@@ -33,7 +39,7 @@
 		</div>
 
 		<form id="chatbox-input">
-			<input name="message" placeholder="Press enter to send">
+			<input id="chatbox-input-box" name="message" placeholder="Press enter to send">
 		</form>
 	</div>
 

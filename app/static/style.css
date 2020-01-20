@@ -221,11 +221,19 @@ form .row {
 #chatbox-input, #chatbox-input input{
 	width: 100%;
 }
+#chatbox, #chatbox-input {
+	max-width: 600px;
+	margin: 0 auto;
+}
+#chatbox-input {
+	display: block;
+}
 .message {
 	display: inline-block;
 	padding: 5px;
 	min-height: 30px;
 	max-width: 60%;
+	margin-bottom: 5px;
 }
 .message-container.user {
 	text-align: right;
