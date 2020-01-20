@@ -217,6 +217,7 @@ form .row {
 	height: 90vh;
 	background-color: #3d4353;
 	padding: 10px;
+	overflow-y: scroll;
 }
 #chatbox-input, #chatbox-input input{
 	width: 100%;
@@ -239,7 +240,6 @@ form .row {
 	text-align: right;
 }
 .message-container .bot-icon {
-	background: center / contain url("https://lynnesbian.space/img/bune.png") no-repeat;
 	height: 30px;
 	width: 30px;
 	display: inline-block;

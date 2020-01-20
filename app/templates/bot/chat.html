@@ -4,6 +4,11 @@
 	<meta charset="UTF-8">
 	<title>FediBooks</title>
 	{% include 'imports.html' %}
+	<style>
+		.bot-icon {
+			background: center / contain url("{{icon}}") no-repeat;
+		}
+	</style>
 	<script>
 		window.onload = function() {
 			document.getElementById("chatbox-input-box").focus();
@@ -39,7 +44,7 @@
 		</div>
 
 		<form id="chatbox-input">
-			<input id="chatbox-input-box" name="message" placeholder="Press enter to send">
+			<input id="chatbox-input-box" autocomplete="off" required name="message" placeholder="Press enter to send">
 		</form>
 	</div>
 

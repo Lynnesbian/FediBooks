@@ -161,7 +161,12 @@ def bot_toggle(id):
 def bot_chat(id):
 	# return render_template("coming_soon.html")
 	if bot_check(id):
-		return render_template("/bot/chat.html", bot = id)
+		c = mysql.connection.cursor()
+		c.execute("SELECT icon FROM `bots` WHERE handle = %s", (id,))
+		icon = c.fetchone()[0]
+		if icon is None:
+			icon = "/img/bot_generic.png"
+		return render_template("/bot/chat.html", bot = id, icon = icon)
 
 @app.route("/bot/chat/<id>/message")
 def bot_chat_message(id):
