@@ -34,13 +34,7 @@ def extract_post(post):
 	text = text.rstrip("\n") # remove trailing newline(s)
 	return text
 
-def make_post(args):
-	id = None
-	acct = None
-	if len(args) > 1:
-		id = args[1]
-		acct = args[3]
-	handle = args[0]
+def generate_output(handle):
 	db = MySQLdb.connect(
 		host = cfg['db_host'],
 		user=cfg['db_user'],
@@ -128,25 +122,40 @@ def make_post(args):
 			# also format handles without instances, e.g. @user instead of @user@instan.ce
 			post = re.sub(r"(?<!\S)@(\w+)", r"@{}\1".format(zws), post)
 
-		# print(post)
-		visibility = bot['post_privacy'] if len(args) == 1 else args[2]
-		visibilities = ['public', 'unlisted', 'private']
-		if visibilities.index(visibility) < visibilities.index(bot['post_privacy']):
-			# if post_privacy is set to a more restricted level than the visibility of the post we're replying to, use the user's setting
-			visibility = bot['post_privacy']
-		if acct is not None:
-			post = "{} {}".format(acct, post)
+	return post
 
-		# ensure post isn't longer than bot['length']
-		# TODO: ehhhhhhhhh
-		post = post[:bot['length']]
-		# send toot!!
-		try:
-			client.status_post(post, id, visibility = visibility, spoiler_text = bot['content_warning'])
-		except MastodonUnauthorizedError:
-			# user has revoked the token given to the bot
-			# this needs to be dealt with properly later on, but for now, we'll just disable the bot
-			c.execute("UPDATE bots SET enabled = FALSE WHERE handle = %s", (handle,))
+
+def make_post(args):
+	id = None
+	acct = None
+	if len(args) > 1:
+		id = args[1]
+		acct = args[3]
+	handle = args[0]
+
+	post = generate_output(handle)
+
+	# print(post)
+	visibility = bot['post_privacy'] if len(args) == 1 else args[2]
+	visibilities = ['public', 'unlisted', 'private']
+	if visibilities.index(visibility) < visibilities.index(bot['post_privacy']):
+		# if post_privacy is set to a more restricted level than the visibility of the post we're replying to, use the user's setting
+		visibility = bot['post_privacy']
+	if acct is not None:
+		post = "{} {}".format(acct, post)
+
+	# ensure post isn't longer than bot['length']
+	# TODO: ehhhhhhhhh
+	post = post[:bot['length']]
+	# send toot!!
+	print(post)
+	return
+	try:
+		client.status_post(post, id, visibility = visibility, spoiler_text = bot['content_warning'])
+	except MastodonUnauthorizedError:
+		# user has revoked the token given to the bot
+		# this needs to be dealt with properly later on, but for now, we'll just disable the bot
+		c.execute("UPDATE bots SET enabled = FALSE WHERE handle = %s", (handle,))
 
 	if id == None:
 		# this wasn't a reply, it was a regular post, so update the last post date
