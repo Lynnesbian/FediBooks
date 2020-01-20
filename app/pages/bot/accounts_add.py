@@ -81,7 +81,8 @@ def bot_accounts_add(mysql, cfg):
 				username = client.account_verify_credentials()['username']
 				if username != session['username']:
 					error = "Please authenticate as {}.".format(session['username'])
-					print("Auth error - {} is not {}".format(session['username'], username))
+					if username.lower() == session['username'].lower():
+						error += " Make sure you capitalised the name properly - @user and @USER are different."
 					return render_template("bot/accounts_add.html", error = error)
 			except:
 				session['step'] = 1

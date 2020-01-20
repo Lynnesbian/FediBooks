@@ -76,3 +76,5 @@ CREATE TABLE IF NOT EXISTS `contact_history` (
   `reply` BOOLEAN DEFAULT 0,
   FOREIGN KEY (`user_id`) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=INNODB;
+
+you need to generate an RSA key and store it in a new table for authorised fetches
