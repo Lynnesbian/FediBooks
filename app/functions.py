@@ -122,7 +122,7 @@ def generate_output(handle):
 			# also format handles without instances, e.g. @user instead of @user@instan.ce
 			post = re.sub(r"(?<!\S)@(\w+)", r"@{}\1".format(zws), post)
 
-	return post
+	return bot, post
 
 
 def make_post(args):
@@ -133,7 +133,7 @@ def make_post(args):
 		acct = args[3]
 	handle = args[0]
 
-	post = generate_output(handle)
+	bot, post = generate_output(handle)
 
 	# print(post)
 	visibility = bot['post_privacy'] if len(args) == 1 else args[2]

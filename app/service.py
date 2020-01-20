@@ -48,6 +48,7 @@ db.commit()
 
 print("Generating posts")
 cursor.execute("SELECT handle FROM bots WHERE enabled = TRUE AND TIMESTAMPDIFF(MINUTE, last_post, CURRENT_TIMESTAMP()) >= post_frequency")
+# cursor.execute("SELECT handle FROM bots WHERE enabled = TRUE")
 bots = cursor.fetchall()
 
 with Pool(cfg['service_threads']) as p:
