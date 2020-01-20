@@ -19,7 +19,7 @@ def scrape_posts(account):
 	)
 	handle = account[0]
 	outbox = account[1]
-	print("Scraping {}".format(handle))
+	# print("Scraping {}".format(handle))
 	c = db.cursor()
 	last_post = 0
 	c.execute("SELECT COUNT(*) FROM `posts` WHERE `fedi_id` = %s", (handle,))
@@ -94,7 +94,7 @@ def scrape_posts(account):
 			db.commit()
 
 		db.commit()
-		print("Finished scraping {}".format(handle))
+	# print("Finished scraping {}".format(handle))
 
 print("Establishing DB connection")
 db = MySQLdb.connect(
