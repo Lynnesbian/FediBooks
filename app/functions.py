@@ -47,11 +47,11 @@ def make_post(args):
 		passwd=cfg['db_pass'],
 		db=cfg['db_name']
 	)
-	print("Generating post for {}".format(handle))
+	# print("Generating post for {}".format(handle))
 	dc = db.cursor(MySQLdb.cursors.DictCursor)
 	c = db.cursor()
 	dc.execute("""
-	SELECT 
+	SELECT
 		learn_from_cw,
 		length,
 		fake_mentions,
@@ -64,7 +64,7 @@ def make_post(args):
 	FROM
 		bots, credentials
 	WHERE
-		bots.handle = %s 
+		bots.handle = %s
 		AND bots.credentials_id = credentials.id
 	""", (handle,))
 
@@ -92,7 +92,7 @@ def make_post(args):
 	# 4. join the list into a string separated by newlines
 	posts = "\n".join(list(sum(c.fetchall(), ())))
 	if len(posts) == 0:
-		print("No posts to learn from.")
+		print("{} - No posts to learn from.".format(handle))
 		return
 
 	if bot['fake_mentions'] == 'never':
@@ -124,11 +124,11 @@ def make_post(args):
 			if bot['fake_mentions_full']:
 				post = re.sub(r"@(\w+)@([\w.]+)", r"@{}\1@{}\2".format(zws, zws), post)
 			else:
-				post = re.sub(r"@(\w+)@([\w.]+)", r"@{}\1".format(zws), post)	
+				post = re.sub(r"@(\w+)@([\w.]+)", r"@{}\1".format(zws), post)
 			# also format handles without instances, e.g. @user instead of @user@instan.ce
 			post = re.sub(r"(?<!\S)@(\w+)", r"@{}\1".format(zws), post)
 
-		print(post)
+		# print(post)
 		visibility = bot['post_privacy'] if len(args) == 1 else args[2]
 		visibilities = ['public', 'unlisted', 'private']
 		if visibilities.index(visibility) < visibilities.index(bot['post_privacy']):
@@ -138,14 +138,15 @@ def make_post(args):
 			post = "{} {}".format(acct, post)
 
 		# ensure post isn't longer than bot['length']
-		post = post[:bot['length']] 
+		# TODO: ehhhhhhhhh
+		post = post[:bot['length']]
 		# send toot!!
 		try:
 			client.status_post(post, id, visibility = visibility, spoiler_text = bot['content_warning'])
 		except MastodonUnauthorizedError:
 			# user has revoked the token given to the bot
 			# this needs to be dealt with properly later on, but for now, we'll just disable the bot
-			c.execute("UPDATE bots SET enabled = FALSE WHERE handle = %s", (handle,))	
+			c.execute("UPDATE bots SET enabled = FALSE WHERE handle = %s", (handle,))
 
 	if id == None:
 		# this wasn't a reply, it was a regular post, so update the last post date
