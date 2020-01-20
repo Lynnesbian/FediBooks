@@ -13,7 +13,7 @@ function sendMessage() {
 			} else {
 				message = "Encountered an error while trying to get a response.";
 			}
-			chatbox.innerHTML += `<div class="message-container bot"><div class="bot-icon"></div><div class="message bot">${this.responseText}</div></div>`;
+			chatbox.innerHTML += `<div class="message-container bot"><div class="bot-icon"></div><div class="message bot">${message}</div></div>`;
 			chatbox.scrollTop = chatbox.scrollHeight;
     }
   };
