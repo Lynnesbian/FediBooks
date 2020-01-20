@@ -165,8 +165,11 @@ def make_post(args):
 		# user has revoked the token given to the bot
 		# this needs to be dealt with properly later on, but for now, we'll just disable the bot
 		c.execute("UPDATE bots SET enabled = FALSE WHERE handle = %s", (handle,))
+	except:
+		print("Failed to create post for {}".format(handle))
 
 	if id == None:
 		# this wasn't a reply, it was a regular post, so update the last post date
 		c.execute("UPDATE bots SET last_post = CURRENT_TIMESTAMP() WHERE handle = %s", (handle,))
 		db.commit()
+	c.close()
