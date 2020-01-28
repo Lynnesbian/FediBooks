@@ -32,7 +32,7 @@ scopes_pleroma = ['read', 'write', 'push']
 
 @app.before_request
 def login_check():
-	if request.path not in ['/', '/about', '/welcome', '/login', '/signup', '/do/login', '/do/signup', '/static/style.css'] and not request.path.startswith("/push"):
+	if request.path not in ['/', '/about', '/welcome', '/login', '/signup', '/do/login', '/do/signup'] and not request.path.startswith("/push") and not request.path.startswith('/static'):
 		# page requires authentication
 		if 'user_id' not in session:
 			return redirect(url_for('render_home'))
