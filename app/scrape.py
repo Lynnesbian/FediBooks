@@ -36,7 +36,7 @@ def scrape_posts(account):
 	pleroma = 'next' not in j
 	if pleroma:
 		if 'first' in j:
-			# backwards compatibility for older (pre-v1.0.4) pleroma instances
+			# backwards compatibility for older (pre-v1.0.7) pleroma instances
 			j = j['first']
 	else:
 		uri = "{}&min_id={}".format(outbox, last_post)
