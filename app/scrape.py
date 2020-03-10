@@ -35,7 +35,9 @@ def scrape_posts(account):
 	# check for pleroma
 	pleroma = 'next' not in j
 	if pleroma:
-		j = j['first']
+		if 'first' in j:
+			# backwards compatibility for older (pre-v1.0.4) pleroma instances
+			j = j['first']
 	else:
 		uri = "{}&min_id={}".format(outbox, last_post)
 		r = requests.get(uri)
