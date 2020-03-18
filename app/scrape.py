@@ -30,18 +30,22 @@ def scrape_posts(account):
 		c.execute("SELECT `post_id` FROM `posts` WHERE `fedi_id` = %s ORDER BY `id` DESC LIMIT 1", (handle,))
 		last_post = c.fetchone()[0]
 
-	r = requests.get(outbox)
-	j = r.json()
-	# check for pleroma
-	pleroma = 'next' not in j
-	if pleroma:
-		if 'first' in j:
-			# backwards compatibility for older (pre-v1.0.7) pleroma instances
-			j = j['first']
-	else:
-		uri = "{}&min_id={}".format(outbox, last_post)
-		r = requests.get(uri)
+	try:
+		r = requests.get(outbox, timeout = 10)
 		j = r.json()
+		# check for pleroma
+		pleroma = 'next' not in j
+		if pleroma:
+			if 'first' in j:
+				# backwards compatibility for older (pre-v1.0.7) pleroma instances
+				j = j['first']
+		else:
+			uri = "{}&min_id={}".format(outbox, last_post)
+			r = requests.get(uri, timeout = 10)
+			j = r.json()
+	except:
+		print("Couldn't load or parse outbox at URL {}".format(outbox))
+		done = True
 
 	# here we go!
 	# warning: scraping posts from outbox.json is messy stuff
@@ -78,19 +82,24 @@ def scrape_posts(account):
 					))
 				except:
 					#TODO: error handling
-					raise
+					print("Failed to insert post {} for user {}".format(handle, post_id))
 
 		if not done:
-			if pleroma:
-				if 'next' in j:
-					r = requests.get(j['next'], timeout = 10)
+			try:
+				if pleroma:
+					if 'next' in j:
+						r = requests.get(j['next'], timeout = 10)
+					else:
+						done = True
 				else:
-					done = True
-			else:
-				if 'prev' in j:
-					r = requests.get(j['prev'], timeout = 10)
-				else:
-					done = True
+					if 'prev' in j:
+						r = requests.get(j['prev'], timeout = 10)
+					else:
+						done = True
+			except requests.Timeout:
+				print("Timed out while loading next page for {}".format(handle))
+			except:
+				print("Encountered unknown error while getting next page for {}".format(handle))
 
 			if r.status_code == 429:
 				# we are now being ratelimited, move on to the next user
