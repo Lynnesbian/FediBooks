@@ -370,9 +370,9 @@ def img_bot_generic():
 def favicon():
 	return send_file("static/favicon.ico")
 
-@app.route("/.well-known/webfinger")
-def webfinger():
-	return render_template("webfinger.json", base_uri = cfg['base_uri']), 200, {'Content-type':'application/json'}
+# @app.route("/.well-known/webfinger")
+# def webfinger():
+# 	return render_template("webfinger.json", base_uri = cfg['base_uri']), 200, {'Content-type':'application/json'}
 
 
 def bot_check(bot):
