@@ -82,7 +82,7 @@ def scrape_posts(account):
 					))
 				except:
 					#TODO: error handling
-					print("Failed to insert post {} for user {}".format(handle, post_id))
+					print("Failed to insert post {} for user {}".format(post_id, handle))
 
 		if not done:
 			try:
