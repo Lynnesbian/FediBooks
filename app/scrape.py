@@ -30,6 +30,8 @@ def scrape_posts(account):
 		c.execute("SELECT `post_id` FROM `posts` WHERE `fedi_id` = %s ORDER BY `id` DESC LIMIT 1", (handle,))
 		last_post = c.fetchone()[0]
 
+	done = False
+
 	try:
 		r = requests.get(outbox, timeout = 10)
 		j = r.json()
@@ -49,7 +51,6 @@ def scrape_posts(account):
 
 	# here we go!
 	# warning: scraping posts from outbox.json is messy stuff
-	done = False
 	while not done and len(j['orderedItems']) > 0:
 		for oi in j['orderedItems']:
 			if oi['type'] == "Create":
