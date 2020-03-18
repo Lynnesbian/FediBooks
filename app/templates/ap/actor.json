@@ -5,10 +5,7 @@
 			"manuallyApprovesFollowers": "as:manuallyApprovesFollowers"
 		}
 	],
-	"endpoints": {
-		"sharedInbox": "{{ base_uri }}/inbox"
-	},
-	"inbox": "{{ base_uri }}/inbox",
+	"endpoints": {},
 	"name": "FediBooks",
 	"type": "Application",
 	"id": "{{ base_uri }}/actor",
