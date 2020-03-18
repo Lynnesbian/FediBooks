@@ -32,7 +32,11 @@ scopes_pleroma = ['read', 'write', 'push']
 
 @app.before_request
 def login_check():
-	if request.path not in ['/', '/about', '/welcome', '/login', '/signup', '/do/login', '/do/signup'] and not request.path.startswith("/push") and not request.path.startswith('/static'):
+	if request.path not in ['/', '/about', '/welcome', '/login', '/signup', '/do/login', '/do/signup'] \
+		and not request.path.startswith("/push") \
+		and not request.path.startswith('/static') \
+		and not request.path.startswith('/actor') \
+		and not request.path.startswith('/.well-known'):
 		# page requires authentication
 		if 'user_id' not in session:
 			return redirect(url_for('render_home'))
@@ -370,9 +374,14 @@ def img_bot_generic():
 def favicon():
 	return send_file("static/favicon.ico")
 
-# @app.route("/.well-known/webfinger")
-# def webfinger():
-# 	return render_template("webfinger.json", base_uri = cfg['base_uri']), 200, {'Content-type':'application/json'}
+@app.route("/.well-known/webfinger")
+def webfinger():
+	return render_template("ap/webfinger.json", base_uri = cfg['base_uri']), 200, {'Content-type':'application/json'}
+
+@app.route("/actor")
+def actor():
+	pubkey = functions.get_key()['public'].replace("\n", "\\n")
+	return render_template("ap/actor.json", base_uri = cfg['base_uri'], pubkey = pubkey), 200, {'Content-type':'application/json'}
 
 
 def bot_check(bot):

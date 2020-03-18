@@ -1,0 +1,24 @@
+{
+	"@context": [
+		"https://www.w3.org/ns/activitystreams",
+		{
+			"manuallyApprovesFollowers": "as:manuallyApprovesFollowers"
+		}
+	],
+	"endpoints": {
+		"sharedInbox": "{{ base_uri }}/inbox"
+	},
+	"inbox": "{{ base_uri }}/inbox",
+	"name": "FediBooks",
+	"type": "Application",
+	"id": "{{ base_uri }}/actor",
+	"manuallyApprovesFollowers": true,
+	"publicKey": {
+		"id": "{{ base_uri }}/actor#main-key",
+		"owner": "{{ base_uri }}/actor",
+		"publicKeyPem": "{{ pubkey }}"
+	},
+	"summary": "FediBooks Actor",
+	"preferredUsername": "fedibooks",
+	"url": "{{ base_uri }}/actor"
+}

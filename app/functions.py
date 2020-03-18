@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import MySQLdb
 import markovify
+from Crypto.PublicKey import RSA
 from mastodon import Mastodon, MastodonUnauthorizedError
 import html, re, json
 
@@ -175,3 +176,29 @@ def make_post(args):
 		c.execute("UPDATE bots SET last_post = CURRENT_TIMESTAMP() WHERE handle = %s", (handle,))
 		db.commit()
 	c.close()
+
+def get_key():
+	db = MySQLdb.connect(
+		host = cfg['db_host'],
+		user=cfg['db_user'],
+		passwd=cfg['db_pass'],
+		db=cfg['db_name']
+	)
+
+	dc = db.cursor(MySQLdb.cursors.DictCursor)
+	dc.execute("SELECT * FROM http_auth_key")
+	key = dc.fetchone()
+	if key == None:
+		# generate new key
+		key = {}
+		privkey = RSA.generate(4096)
+
+		key['private'] = privkey.exportKey('PEM').decode('utf-8')
+		key['public'] = privkey.publickey().exportKey('PEM').decode('utf-8')
+		
+		dc.execute("INSERT INTO http_auth_key (private, public) VALUES (%s, %s)", (key['private'], key['public']))
+	
+	dc.close()
+	db.commit()
+
+	return key

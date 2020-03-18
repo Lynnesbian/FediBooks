@@ -1,0 +1,13 @@
+{
+	"aliases": [
+		"{{ base_uri }}/actor"
+	],
+	"links": [
+		{
+			"href": "{{ base_uri }}/actor",
+			"rel": "self",
+			"type": "application/activity+json"
+		}
+	],
+	"subject": "acct:fedibooks@{{ base_uri }}"
+}
