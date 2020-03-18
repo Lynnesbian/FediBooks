@@ -25,7 +25,9 @@ def extract_post(post):
 		ht.unwrap()
 
 	for link in soup.select("a"): #ocnvert <a href='https://example.com>example.com</a> to just https://example.com
-		link.insert_after(link["href"])
+		if 'href' in link:
+			# apparently not all a tags have a href, which is understandable if you're doing normal web stuff, but on a social media platform??
+			link.insert_after(link["href"])
 		link.decompose()
 
 	text = soup.get_text()
