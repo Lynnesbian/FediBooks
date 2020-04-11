@@ -1,11 +1,11 @@
-Mastodon.py==1.5.0
+Mastodon.py==1.5.1
 markovify==0.8.0
-beautifulsoup4==4.8.2
+beautifulsoup4==4.9.0
 requests==2.23.0
-Flask==1.1.1
+Flask==1.1.2
 flask-mysqldb==0.2.0
 bcrypt == 3.1.7
 requests==2.23.0
 http-ece==1.1.0
-cryptography==2.8
 pycryptodome==3.9.7 
+cryptography==2.9
