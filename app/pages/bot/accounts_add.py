@@ -129,7 +129,7 @@ def bot_accounts_add(mysql, cfg):
 			if r.status_code == 200:
 				# success!!
 				c = mysql.connection.cursor()
-				c.execute("REPLACE INTO `fedi_accounts` (`handle`, `outbox`) VALUES (%s, %s)", (session['handle'], outbox))
+				c.execute("INSERT IGNORE INTO `fedi_accounts` (`handle`, `outbox`) VALUES (%s, %s)", (session['handle'], outbox))
 				c.execute("INSERT INTO `bot_learned_accounts` (`bot_id`, `fedi_id`) VALUES (%s, %s)", (session['bot'], session['handle']))
 				c.close()
 				mysql.connection.commit()
