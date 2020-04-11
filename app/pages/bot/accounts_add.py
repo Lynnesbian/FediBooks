@@ -5,13 +5,15 @@ import re, json
 
 def bot_accounts_add(mysql, cfg):
 	if request.method == 'POST':
+		# remove leading/trailing whitespace
+		session['handle'] = request.form['account'].rstrip().lstrip()
 		if session['step'] == 1:
-			if request.form['account'] == session['bot']:
+			if session['handle'] == session['bot']:
 				error = "Bots cannot learn from themselves."
 				return render_template("bot/accounts_add.html", error = error)
 
 			# look up user
-			handle_list = request.form['account'].split('@')
+			handle_list = session['handle'].split('@')
 			if len(handle_list) != 3:
 				# not formatted correctly
 				error = "Incorrectly formatted handle."
@@ -19,7 +21,6 @@ def bot_accounts_add(mysql, cfg):
 
 			session['username'] = handle_list[1]
 			session['instance'] = handle_list[2]
-			session['handle'] = request.form['account']
 
 			if session['instance'] in json.load(open("blacklist.json")):
 				session['error'] = "Learning from accounts on this instance is not allowed."
@@ -96,7 +97,7 @@ def bot_accounts_add(mysql, cfg):
 				return render_template("bot/accounts_add.html", error = error)
 
 			# 2. use webfinger to find user's info page
-			#TODO: use more reliable method
+			# TODO: use more reliable method
 			try:
 				uri = re.search(r'template="([^"]+)"', r.text).group(1)
 				uri = uri.format(uri = "{}@{}".format(session['username'], session['instance']))
@@ -114,7 +115,7 @@ def bot_accounts_add(mysql, cfg):
 			found = False
 			for link in j['links']:
 				if link['rel'] == 'self':
-					#this is a link formatted like "https://instan.ce/users/username", which is what we need
+					# this is a link formatted like "https://instan.ce/users/username", which is what we need
 					uri = link['href']
 					found = True
 					break
