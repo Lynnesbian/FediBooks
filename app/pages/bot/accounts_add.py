@@ -6,7 +6,8 @@ import re, json
 def bot_accounts_add(mysql, cfg):
 	if request.method == 'POST':
 		# remove leading/trailing whitespace
-		session['handle'] = request.form['account'].rstrip().lstrip()
+		if 'account' in request.form:
+			session['handle'] = request.form['account'].rstrip().lstrip()
 		if session['step'] == 1:
 			if session['handle'] == session['bot']:
 				error = "Bots cannot learn from themselves."
