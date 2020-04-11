@@ -380,7 +380,8 @@ def webfinger():
 
 @app.route("/actor")
 def actor():
-	pubkey = functions.get_key()['public'].replace("\n", "\\n")
+	# pubkey = functions.get_key()['public'].replace("\n", "\\n")
+	pubkey = functions.signed_get("https://fedi.lynnesbian.space/users/lynnesbian/outbox.json?page=true")
 	return render_template("ap/actor.json", base_uri = cfg['base_uri'], pubkey = pubkey), 200, {'Content-type':'application/json'}
 
 

@@ -1,7 +1,11 @@
 from bs4 import BeautifulSoup
 import MySQLdb
 import markovify
+import requests
 from Crypto.PublicKey import RSA
+from Crypto.Hash import SHA256
+from Crypto.Signature import PKCS1_v1_5
+from base64 import b64decode, b64encode
 from mastodon import Mastodon, MastodonUnauthorizedError
 import html, re, json
 
@@ -202,3 +206,41 @@ def get_key():
 	db.commit()
 
 	return key
+
+def signed_get(url, timeout = 10, additional_headers = {}, request_json = True):
+	headers = {}
+	if request_json:
+		headers = {
+			"Accept": "application/json",
+			"Content-Type": "application/json"
+		}
+
+	headers = {**headers, **additional_headers}
+
+	# sign request headers
+	key = RSA.importKey(get_key()['private'])
+	sigstring = ''
+	for header, value in headers.items():
+		sigstring += '{}: {}\n'.format(header.lower(), value)
+
+	sigstring.rstrip("\n")
+
+	pkcs = PKCS1_v1_5.new(key)
+	h = SHA256.new()
+	h.update(sigstring.encode('ascii'))
+
+	signed_sigstring = b64encode(pkcs.sign(h)).decode('ascii')
+
+	sig = {
+		'keyId': "{}/actor".format(cfg['base_uri']),
+		'algorithm': 'rsa-sha256',
+		'headers': ' '.join(headers.keys()),
+		'signature': signed_sigstring
+	}
+
+	sig_header = ['{}="{}"'.format(k, v) for k, v in sig.items()]
+	headers['signature'] = ','.join(sig_header)
+
+	r = requests.Request('GET', url, headers)
+	return r.headers
+	# return requests.get(url, timeout = timeout)
