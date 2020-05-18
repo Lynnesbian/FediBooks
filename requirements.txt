@@ -1,6 +1,6 @@
 Mastodon.py==1.5.1
 markovify==0.8.0
-beautifulsoup4==4.9.0
+beautifulsoup4==4.9.1
 requests==2.23.0
 Flask==1.1.2
 flask-mysqldb==0.2.0
