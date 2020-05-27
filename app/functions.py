@@ -177,7 +177,7 @@ def make_post(args):
 		# this needs to be dealt with properly later on, but for now, we'll just disable the bot
 		c.execute("UPDATE bots SET enabled = FALSE WHERE handle = %s", (handle,))
 	except:
-		print("Failed to create post for {}".format(handle))
+		print("Failed to submit post for {}".format(handle))
 
 	if id == None:
 		# this wasn't a reply, it was a regular post, so update the last post date
