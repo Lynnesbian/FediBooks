@@ -4,3 +4,4 @@ planning.txt
 *.pyc
 /debug
 lynnesbian.json
+test.py

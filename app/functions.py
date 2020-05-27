@@ -191,22 +191,19 @@ def make_post(args):
 		db.commit()
 	c.close()
 
-def do_in_pool(function, data, timeout=30, silent=False):
-	with ProcessPool(max_workers=cfg['service_threads']) as p:
-		index = 0
-		future = p.map(function, data)
-		iterator = future.result()
+def task_done(future):
+	try:
+		result = future.result()  # blocks until results are ready
+	except TimeoutError as error:
+		if not future.silent: print("Timed out on {}.".format(future.function_data))
 
-		while True:
-			try:
-				result = next(iterator)
-			except StopIteration:
-				# all threads are done
-				break
-			except TimeoutError as error:
-				if not silent: print("Timed out on {}.".format(data[index]))
-			finally:
-				index += 1
+def do_in_pool(function, data, timeout=30, silent=False):
+	with ProcessPool(max_workers=5, max_tasks=10) as pool:
+		for i in data:
+			future = pool.schedule(function, args=[i], timeout=timeout)
+			future.silent = silent
+			future.function_data = i
+			future.add_done_callback(task_done)
 
 def get_key():
 	db = MySQLdb.connect(
