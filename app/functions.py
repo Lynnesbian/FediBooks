@@ -88,7 +88,7 @@ def generate_output(handle):
 	posts = "\n".join(list(sum(c.fetchall(), ())))
 	if len(posts) == 0:
 		print("{} - No posts to learn from.".format(handle))
-		return
+		return bot, None
 
 	if bot['fake_mentions'] == 'never':
 		# remove all mentions from the training data before the markov model sees it
@@ -99,8 +99,8 @@ def generate_output(handle):
 	post = None
 
 	# even with such a high tries value for markovify, it still sometimes returns none.
-	# so we implement our own tries function as well, and try ten times.
-	while post is None and tries < 10:
+	# so we implement our own tries function as well, and try five times.
+	while post is None and tries < 5:
 		post = model.make_short_sentence(bot['length'], tries = 1000)
 		tries += 1
 
@@ -137,6 +137,10 @@ def make_post(args):
 	# print("Generating post for {}".format(handle))
 
 	bot, post = generate_output(handle)
+
+	# post will be None if there's no posts for the bot to learn from.
+	# in such a case, we should just exit without doing anything.
+	if post == None: return
 
 	client = Mastodon(
 		client_id = bot['client_id'],
@@ -199,9 +203,9 @@ def get_key():
 
 		key['private'] = privkey.exportKey('PEM').decode('utf-8')
 		key['public'] = privkey.publickey().exportKey('PEM').decode('utf-8')
-		
+
 		dc.execute("INSERT INTO http_auth_key (private, public) VALUES (%s, %s)", (key['private'], key['public']))
-	
+
 	dc.close()
 	db.commit()
 
