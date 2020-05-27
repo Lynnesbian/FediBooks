@@ -30,7 +30,7 @@ def update_icon(bot):
 		if r.status_code != 200:
 			raise
 	except:
-		print("{} is down.".format(url))
+		print("{} is down - can't update icon for {}.".format(url, handle))
 		return
 
 	client = Mastodon(
