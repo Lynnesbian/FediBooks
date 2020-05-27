@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
 import MySQLdb
+from pebble import ProcessPool
+from concurrent.futures import TimeoutError
 import markovify
 import requests
 from Crypto.PublicKey import RSA
@@ -188,6 +190,23 @@ def make_post(args):
 		c.execute("UPDATE bots SET last_post = CURRENT_TIMESTAMP() WHERE handle = %s", (handle,))
 		db.commit()
 	c.close()
+
+def do_in_pool(function, data, timeout=30, silent=False):
+	with ProcessPool(max_workers=cfg['service_threads']) as p:
+		index = 0
+		future = p.map(function, data)
+		iterator = future.result()
+
+		while True:
+			try:
+				result = next(iterator)
+			except StopIteration:
+				# all threads are done
+				break
+			except TimeoutError as error:
+				if not silent: print("Timed out on {}.".format(data[index]))
+			finally:
+				index += 1
 
 def get_key():
 	db = MySQLdb.connect(

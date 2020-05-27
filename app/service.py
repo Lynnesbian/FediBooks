@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
+import json
+
 import MySQLdb
 from mastodon import Mastodon
-from multiprocessing import Pool
 import requests
-import json
+
 import functions
 
 cfg = json.load(open('config.json'))
@@ -73,8 +74,7 @@ cursor.execute("SELECT handle FROM bots WHERE enabled = TRUE AND TIMESTAMPDIFF(M
 # cursor.execute("SELECT handle FROM bots WHERE enabled = TRUE")
 bots = cursor.fetchall()
 
-with Pool(cfg['service_threads']) as p:
-	p.map(functions.make_post, bots)
+functions.do_in_pool(functions.make_post, bots, 15)
 
 print("Updating cached icons")
 dc = db.cursor(MySQLdb.cursors.DictCursor)
@@ -86,7 +86,6 @@ ON bots.credentials_id = credentials.id
 WHERE TIMESTAMPDIFF(HOUR, icon_update_time, CURRENT_TIMESTAMP()) > 2""")
 bots = dc.fetchall()
 
-with Pool(cfg['service_threads']) as p:
-	p.map(update_icon, bots)
+functions.do_in_pool(update_icon, bots)
 
 db.commit()

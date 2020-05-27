@@ -2,7 +2,6 @@
 
 import MySQLdb
 import requests
-from multiprocessing import Pool
 import json, re
 import functions
 
@@ -131,7 +130,7 @@ cursor.execute("SELECT `handle`, `outbox` FROM `fedi_accounts` ORDER BY RAND()")
 accounts = cursor.fetchall()
 cursor.close()
 db.close()
-with Pool(cfg['service_threads']) as p:
-	p.map(scrape_posts, accounts)
+
+functions.do_in_pool(scrape_posts, accounts, timeout=60)
 
 print("Done!")
