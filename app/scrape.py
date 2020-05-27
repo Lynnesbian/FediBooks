@@ -50,7 +50,7 @@ def scrape_posts(account):
 
 	# here we go!
 	# warning: scraping posts from outbox.json is messy stuff
-	while not done and len(j['orderedItems']) > 0:
+	while not done and 'orderedItems' in j and len(j['orderedItems']) > 0:
 		for oi in j['orderedItems']:
 			if oi['type'] == "Create":
 				# this is a status/post/toot/florp/whatever

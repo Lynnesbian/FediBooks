@@ -21,12 +21,10 @@ def extract_post(post):
 	post = html.unescape(post) # convert HTML escape codes to text
 	soup = BeautifulSoup(post, "html.parser")
 	for lb in soup.select("br"): # replace <br> with linebreak
-		lb.insert_after("\n")
-		lb.decompose()
+		lb.replace_with("\n")
 
 	for p in soup.select("p"): # ditto for <p>
-		p.insert_after("\n")
-		p.unwrap()
+		p.replace_with("\n")
 
 	for ht in soup.select("a.hashtag"): # convert hashtags from links to text
 		ht.unwrap()
@@ -34,8 +32,7 @@ def extract_post(post):
 	for link in soup.select("a"): #ocnvert <a href='https://example.com>example.com</a> to just https://example.com
 		if 'href' in link:
 			# apparently not all a tags have a href, which is understandable if you're doing normal web stuff, but on a social media platform??
-			link.insert_after(link["href"])
-		link.decompose()
+			link.replace_with(link["href"])
 
 	text = soup.get_text()
 	text = re.sub(r"https://([^/]+)/(@[^\s]+)", r"\2@\1", text) # put mastodon-style mentions back in
