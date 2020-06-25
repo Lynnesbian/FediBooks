@@ -7,6 +7,6 @@ flask-mysqldb==0.2.0
 bcrypt == 3.1.7
 requests==2.23.0
 http-ece==1.1.0
-pycryptodome==3.9.7
+pycryptodome==3.9.8
 cryptography==2.9.2
 pebble==4.5.3
